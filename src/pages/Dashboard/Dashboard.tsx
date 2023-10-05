@@ -1,7 +1,8 @@
 import { FeatureDashboard } from '~/features'
 
 const Dashboard = () => {
-  return <FeatureDashboard />
+  return  <FeatureDashboard />
+ 
 }
 
 export default Dashboard

@@ -1,21 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useRef, useState } from 'react'
-
 import { BarsIcon } from '~/components'
-import { Menu } from 'antd'
+import { Menu, Tooltip } from 'antd'
 import { NavLink } from 'react-router-dom'
-import { items } from './components'
-
+import { items, itemsUser } from './components'
+import { AiFillHome } from 'react-icons/ai'
 interface SidebarProps {
   sidebarOpen: boolean
   setSidebarOpen: (arg: boolean) => void
+  textUi: string
 }
-
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
   const trigger = useRef<any>(null)
   const sidebar = useRef<any>(null)
-
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
 
@@ -29,7 +27,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     document.addEventListener('click', clickHandler)
     return () => document.removeEventListener('click', clickHandler)
   }, [])
-
   // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
@@ -39,7 +36,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
   }, [])
-
   useEffect(() => {
     localStorage.setItem('sidebar-expanded', sidebarExpanded.toString())
     if (sidebarExpanded) {
@@ -48,7 +44,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       document.querySelector('body')?.classList.remove('sidebar-expanded')
     }
   }, [sidebarExpanded])
-
+  const isAuth = false
   return (
     <aside
       ref={sidebar}
@@ -58,10 +54,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className='lg:py-6 flex items-center justify-between gap-2 px-3 py-5'>
-        <NavLink to='/'>
-          <img src={`Logo`} alt='Logo' />
-        </NavLink>
-
+        <p style={{ color: 'red' }} className='pl-5 font-medium  text-xl font-mono'>
+          {textUi}
+        </p>
+        <span className='z-10'>
+          <Tooltip placement='right' title={'Quay Lại Trang Home !'}>
+            <NavLink to='/'>
+              <AiFillHome className='text-[30px]' />
+            </NavLink>
+          </Tooltip>
+        </span>
         <button
           ref={trigger}
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -73,19 +75,22 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         </button>
       </div>
       {/* <!-- SIDEBAR HEADER --> */}
-
       <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
         {/* <!-- Sidebar Menu --> */}
         <nav className='px-3 mt-5'>
           <div className='select-none'>
             <h3 className='text-bodydark2 mb-4 ml-4 text-sm font-semibold select-none'>MENU</h3>
-
-            <Menu theme='dark' defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={items} />
+            <Menu
+              theme='dark'
+              defaultSelectedKeys={['1']}
+              defaultOpenKeys={['sub1']}
+              mode='inline'
+              items={isAuth ? items : itemsUser}
+            />
           </div>
         </nav>
       </div>
     </aside>
   )
 }
-
 export default Sidebar

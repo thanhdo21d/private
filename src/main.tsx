@@ -1,17 +1,19 @@
 import './styles/GlobalStyles.css'
-
 import App from './App.tsx'
-import { BrowserRouter } from 'react-router-dom'
-import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom/client'
-import { Toaster } from 'react-hot-toast'
-import { store } from './store/store.ts'
-
+import ErrorBoundary from './pages/errors/ErrorBourory.tsx'
+import { HelmetProvider } from 'react-helmet-async'
+import React, { StrictMode } from 'react'
+import { Provider } from 'react-redux'
+import { store } from './store/root/store.ts'
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <Toaster position='top-right' reverseOrder={false} containerClassName='overflow-auto' />
-      <App />
-    </Provider>
-  </BrowserRouter>
+  <React.StrictMode>
+    <HelmetProvider>
+      <Provider store={store}>
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
+      </Provider>
+    </HelmetProvider>
+  </React.StrictMode>
 )

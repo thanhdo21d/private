@@ -1,12 +1,10 @@
 import { CardFour, CardThree, CardTwo } from '~/components'
-
 import { AreaChart } from '~/components/Charts'
 import { CardOne } from '~/components/Cart/CardOne'
 import ChatCard from '~/components/Cart/ChatCart/ChatCard'
 import { DoughnutChart } from '~/components/Charts/DoughnutChart'
 import { GroupedBarChart } from '~/components/Charts/GroupedBarChart'
 import { VerticalBarChart } from '~/components/Charts/VerticalBarChart'
-
 const FeatureDashboard = () => {
   return (
     <>
@@ -22,7 +20,6 @@ const FeatureDashboard = () => {
         <GroupedBarChart />
         <DoughnutChart />
         <AreaChart />
-        {/* <div className='col-span-12 xl:col-span-8'></div> */}
         <ChatCard />
       </div>
     </>

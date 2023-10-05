@@ -1,15 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ArrowDown, ContactIcon, ProfileIcon, SettingIcon } from '~/components'
 import { useEffect, useRef, useState } from 'react'
-
-import { Link } from 'react-router-dom'
-
+import { Link, useNavigate } from 'react-router-dom'
 const DropdownUser = () => {
+  const navigate = useNavigate()
   const [dropdownOpen, setDropdownOpen] = useState(false)
-
   const trigger = useRef<any>(null)
   const dropdown = useRef<any>(null)
-
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -20,7 +17,6 @@ const DropdownUser = () => {
     document.addEventListener('click', clickHandler)
     return () => document.removeEventListener('click', clickHandler)
   }, [])
-
   // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
@@ -30,15 +26,13 @@ const DropdownUser = () => {
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
   }, [])
-
   return (
     <div className='relative'>
       <Link ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='flex items-center gap-4' to='#'>
         <span className='lg:block hidden text-right'>
-          <span className='dark:text-white block text-sm font-medium text-black'>Thomas Anree</span>
-          <span className='block text-xs'>UX Designer</span>
+          <span className='dark:text-white block text-sm font-medium text-black'>Vũ Thành Đô</span>
+          <span className='block text-xs'>Admin</span>
         </span>
-
         <span className='w-12 h-12 rounded-full'>
           <img
             src={`https://1.bp.blogspot.com/-6wptfQdSYb4/XVABmPVTAkI/AAAAAAAAQ5Q/xS0VuLwlPg8G8T2vPVQgohiUFP1DeS9GgCLcBGAs/s1600/hinh-nen-anime-girl-de-thuong-full-hd-cuc-dep-cho-dien-thoai-6.jpg`}
@@ -46,10 +40,8 @@ const DropdownUser = () => {
             alt='User'
           />
         </span>
-
         <ArrowDown />
       </Link>
-
       {/* <!-- Dropdown Start --> */}
       <div
         ref={dropdown}
@@ -59,7 +51,7 @@ const DropdownUser = () => {
           dropdownOpen === true ? 'block' : 'hidden'
         }`}
       >
-        <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark'>
+        {/* <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark'>
           <li>
             <Link
               to='/profile'
@@ -87,8 +79,11 @@ const DropdownUser = () => {
               Account Settings
             </Link>
           </li>
-        </ul>
-        <button className='flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'>
+        </ul> */}
+        <button
+          onClick={() => navigate('/login')}
+          className='flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
+        >
           <svg
             className='fill-current'
             width='22'

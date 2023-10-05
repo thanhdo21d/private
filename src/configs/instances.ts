@@ -1,5 +1,4 @@
 import axios, { AxiosInstance } from 'axios'
-
 class Http {
   instance: AxiosInstance
   constructor() {
@@ -12,7 +11,6 @@ class Http {
     })
   }
 }
-
 const http = new Http().instance
 
 export default http

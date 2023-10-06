@@ -24,7 +24,7 @@ const Signin = () => {
   }
   return (
     <section className='min-h-screen flex items-stretch text-white '>
-       <Helmet>
+      <Helmet>
         <title> Đăng Nhập </title>
         <meta name='description' />
       </Helmet>
@@ -74,8 +74,8 @@ const Signin = () => {
               <p className='text-danger float-left font-medium text-md'>{errors.code && errors.code.message}</p>
             </div>
             <div className='pb-4 pt-4'>
-            <label className='float-left pb-3' htmlFor='password'>
-                Mật Khẩu 
+              <label className='float-left pb-3' htmlFor='password'>
+                Mật Khẩu
               </label>
               <input
                 className='block w-full p-4 text-lg rounded-sm bg-black'

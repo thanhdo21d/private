@@ -23,7 +23,7 @@ export const items: MenuProps['items'] = [
   getItem('Bộ Đề Thi', 'products', <AppstoreOutlined />, [
     getItem(<NavLink to={`/manager/products`}>Cấp Độ Khó</NavLink>, 'product'),
     getItem(<NavLink to={`/manager/toppings`}>Cấp Độ Trung Bình</NavLink>, 'Cấp Độ Trung Bình'),
-    getItem(<NavLink to={`/manager/toppings`}>Cấp Độ Dễ</NavLink>, 'Cấp Độ Trung Bình')
+    getItem(<NavLink to={`/manager/toppings`}>Cấp Độ Dễ</NavLink>, 'Cấp Độ Dễ')
   ]),
   getItem('Người dùng', 'users', <AppstoreOutlined />, [
     getItem(<NavLink to={`/admin/all-member`}>Thành Viên</NavLink>, 'Thành Viên'),
@@ -31,7 +31,6 @@ export const items: MenuProps['items'] = [
   ]),
   // SettingOutlined
   getItem(<NavLink to={`/`}>Vai Trò</NavLink>, 'Vai Trò', <AppstoreOutlined />, [
-    getItem(<NavLink to={`/admin`}>Thêm Vai Trò</NavLink>, 'a'),
     getItem(<NavLink to={`/admin/roles`}>Vai Trò</NavLink>, 'b')
   ])
 ]

@@ -44,7 +44,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
       document.querySelector('body')?.classList.remove('sidebar-expanded')
     }
   }, [sidebarExpanded])
-  const isAuth = false
+  const isAuth = true
   return (
     <aside
       ref={sidebar}

@@ -1,8 +1,7 @@
-import { Dashboard } from './pages'
-import { Route, RouterProvider, Routes } from 'react-router-dom'
-import DefaultLayout from './layouts/DefaultLayout'
+import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { routers } from './routes'
+import 'react-toastify/dist/ReactToastify.css'
 const App = () => {
   return (
     <>

@@ -14,6 +14,7 @@ import Achievements from './pages/thanh-tich/Achievements'
 import DetailsResult from './pages/ket-qua-thi/details/DetailsResult'
 import HelloUser from './layouts/trangThi/components/default/HelloUser'
 import PopQuesion from './layouts/trangThi/components/Popup-thi/PopQuesion'
+import EditRoles from './pages/roles/EditRoles'
 export const routers = createBrowserRouter([
   {
     path: '*',
@@ -60,8 +61,11 @@ export const routers = createBrowserRouter([
           { index: true, element: <Navigate to='dashboard' /> },
           { path: 'dashboard', element: <Dashboard /> },
           { path: 'roles', element: <Roles /> },
+          { path: 'roles/:id/edit', element: <EditRoles /> },
           { path: 'all-member', element: <AllMember /> },
-          { path: 'all-member/add', element: <AddMember /> }
+          { path: 'all-member/add', element: <AddMember /> },
+          { path: 'roles/add', element: <EditRoles /> }
+
         ]
       }
     ]

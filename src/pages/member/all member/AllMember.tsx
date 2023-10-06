@@ -2,51 +2,69 @@ import React from 'react'
 import { Input, Pagination, Popconfirm, Table } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '~/components'
+import { useGetAllUserQuery } from '~/apis/user/user.api'
 const AllMember = () => {
   const navigate = useNavigate()
   const confirm = (id: number | string) => {}
-  const dataSource = [
-    {
-      key: '1',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street'
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street'
-    }
-  ]
+  const { data } = useGetAllUserQuery()
+  console.log(data)
+  const dataSource = data?.docs.map((item: any) => ({
+    key: item._id,
+    name: item.username,
+    avatar: item.avatar,
+    users: item.code,
+    update: item.updatedAt,
+    gender: item.gender,
+    email: item.email,
+    department: item.Department
+  }))
 
   const columns = [
     {
-      title: 'Tiêu Đề',
+      title: 'Tên',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      render: (text: string) => <a className='text-md font-bold'>{text}</a>
     },
     {
-      title: 'Người Dùng',
-      dataIndex: 'age',
-      key: 'age'
+      title: 'Phòng Ban',
+      dataIndex: 'department',
+      key: 'department',
+      render: (text: string) => <a className='text-md font-bold'>{text}</a>
     },
     {
-      title: 'Trạng Thái',
-      dataIndex: 'address',
-      key: 'address'
+      title: 'Ảnh',
+      dataIndex: 'avatar',
+      key: 'age',
+      render: (text: string) => <img className='text-md w-[50px] font-bold' src={`${text}`} />
+    },
+    {
+      title: 'code',
+      dataIndex: 'users',
+      key: 'users',
+      render: (text: string) => <a className='text-danger font-bold'>{text}</a>
     },
     {
       title: 'Ngày sửa',
-      dataIndex: 'address',
-      key: 'address'
+      dataIndex: 'update',
+      key: 'update',
+      render: (text: string) => {
+        const date = text.split('T')[0]
+        return <a className='text-md font-normal'>{date}</a>
+      }
     },
     {
-      title: 'Tác vụ',
-      dataIndex: 'address',
-      key: 'address'
+      title: 'giới tính',
+      dataIndex: 'gender',
+      key: 'gender'
     },
     {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email'
+    },
+    {
+      title: 'Tác Vụ',
       render: ({ key: id }: { key: number | string }) => (
         <div className='flex space-x-2'>
           <Popconfirm

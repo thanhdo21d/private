@@ -5,6 +5,7 @@ import ErrorBoundary from './pages/errors/ErrorBourory.tsx'
 import { HelmetProvider } from 'react-helmet-async'
 import React, { StrictMode } from 'react'
 import { Provider } from 'react-redux'
+import 'react-toastify/dist/ReactToastify.css'
 import { store } from './store/root/store.ts'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -37,8 +37,8 @@ const Signin = () => {
       >
         <div className='absolute bg-black opacity-60 inset-0 z-0' />
         <div className='w-full px-24 z-10'>
-          <h1 className='text-5xl font-bold text-left tracking-wide'>Hệ Thống Thi Denso Vietnam</h1>
-          <p className='text-3xl my-4'>Exam System Denso Vietnam.</p>
+          <h1 className='text-5xl font-bold text-left tracking-wide'>Hệ Thống Thi  Vietnam</h1>
+          <p className='text-3xl my-4'>Exam System  Vietnam.</p>
         </div>
         <div className='bottom-0 absolute p-4 text-center right-0 left-0 flex justify-center space-x-4'>
           Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.

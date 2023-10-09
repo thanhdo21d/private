@@ -16,7 +16,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
   const sidebar = useRef<any>(null)
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
-
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {

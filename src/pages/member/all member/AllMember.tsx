@@ -16,7 +16,7 @@ const AllMember = () => {
     update: item.updatedAt,
     gender: item.gender,
     email: item.email,
-    department: item.Department
+    department: item.Department,
   }))
 
   const columns = [
@@ -35,6 +35,7 @@ const AllMember = () => {
     {
       title: 'Ảnh',
       dataIndex: 'avatar',
+
       key: 'age',
       render: (text: string) => <img className='text-md w-[50px] font-bold' src={`${text}`} />
     },
@@ -42,7 +43,7 @@ const AllMember = () => {
       title: 'code',
       dataIndex: 'users',
       key: 'users',
-      render: (text: string) => <a className='text-danger font-bold'>{text}</a>
+      render: (text: string) => <a className='text-danger font-bold'>{text}</a>,
     },
     {
       title: 'Ngày sửa',
@@ -97,7 +98,6 @@ const AllMember = () => {
         <Button styleClass='w-[150px] h-[50px] bg-graydark'>Tìm Kiếm</Button>
       </div>
       <hr className='mt-5' />
-
       <div className='mt-2'>
         <Table dataSource={dataSource} pagination={false} columns={columns} />
         <div className='mt-5 float-right'>
@@ -108,5 +108,4 @@ const AllMember = () => {
     </div>
   )
 }
-
 export default AllMember

@@ -4,6 +4,7 @@ import { SigninForm, siginSchema } from '~/schemas/login.schemas'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import { toastService } from '~/utils/toask/toaskMessage'
 const Signin = () => {
   const navigate = useNavigate()
   const {
@@ -17,6 +18,7 @@ const Signin = () => {
   const onSubmit = async (data: SigninForm) => {
     try {
       console.log(data)
+      toastService.success('Đăng Nhập Thành Công')
       navigate('/')
     } catch (error) {
       console.log(error)

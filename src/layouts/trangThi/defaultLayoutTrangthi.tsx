@@ -40,7 +40,7 @@ const DefaultLayoutTrangthi = () => {
   return (
     <section className='min-h-screen  flex items-stretch text-white'>
       <Helmet>
-        <title> Đề Thi Khảo Sát Denso </title>
+        <title> Đề Thi Khảo Sát  </title>
         <meta name='description' />
       </Helmet>
       <div

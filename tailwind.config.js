@@ -43,7 +43,8 @@ export default {
       success: '#219653',
       danger: '#D34053',
       warning: '#FFA70B',
-      login : '#f0f8ff'
+      login: '#f0f8ff',
+      blue23: '#00BFFF'
     },
     screens: {
       '2xsm': '375px',

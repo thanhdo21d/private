@@ -1,7 +1,6 @@
 import { Empty, Popconfirm } from 'antd'
 import React from 'react'
 import logoUrl from '../../assets/images/logo/bg-thi.jpg'
-import { AiOutlineLogin } from 'react-icons/ai'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { Tooltip } from 'antd'
 import { Helmet } from 'react-helmet-async'
@@ -9,6 +8,7 @@ import { RxAvatar } from 'react-icons/rx'
 import { toast } from 'react-toastify'
 import { Button } from '~/components'
 import { PiKeyReturnFill } from 'react-icons/pi'
+import { LuLogOut } from 'react-icons/lu'
 const DefaultLayoutTrangthi = () => {
   const navigate = useNavigate()
   const handelLogOut = () => {
@@ -20,10 +20,8 @@ const DefaultLayoutTrangthi = () => {
   const Completionist = () => <span>You are good to go!</span>
   const renderer = ({ hours, minutes, seconds, completed }: any) => {
     if (completed) {
-      // Render a completed state
       return <Completionist />
     } else {
-      // Render a countdown
       return (
         <span>
           {hours}:{minutes}:{seconds}
@@ -38,9 +36,9 @@ const DefaultLayoutTrangthi = () => {
     return
   }
   return (
-    <section className='min-h-screen  flex items-stretch text-white'>
+    <section className='min-h-screen  flex items-stretch text-white '>
       <Helmet>
-        <title> Đề Thi Khảo Sát  </title>
+        <title> Đề Thi Khảo Sát </title>
         <meta name='description' />
       </Helmet>
       <div
@@ -49,19 +47,24 @@ const DefaultLayoutTrangthi = () => {
           backgroundImage: `url(${logoUrl})`
         }}
       ></div>
-      <div className='right-0 top-10  absolute w-[350px] items-center text-center bg-bodydark2 rounded-lg h-[80px]'>
-        <div className='pt-4 float-right pr-5 ' onClick={handelLogOut}>
-          <Tooltip placement='leftTop' title={'Đăng Xuất !'}>
-            <AiOutlineLogin className='text-[40px] hover:bg-meta-1' />
-          </Tooltip>
+      <div className='right-0 flex gap-2 justify-center top-10  absolute w-[350px] items-center text-center bg-bodydark2 rounded-lg h-[80px]'>
+        <div
+          className='pt-4 relative w-[50px] h-[50px]  bg-danger rounded-full shadow-md cursor-pointer'
+          onClick={handelLogOut}
+        >
+          <span className='absolute top-[11px] left-[12px]'>
+            <Tooltip placement='leftTop' title={'Đăng Xuất !'}>
+              <LuLogOut className='text-[30px]  hover:bg-warning ' />
+            </Tooltip>
+          </span>
         </div>
-        <div className='pt-5 float-right pr-2 '>
-          <p className='text-md font-medium pr-2'>
-            Xin Chào <span className='text-danger font-bold text-xl'>Vũ Thành Đô</span>{' '}
+        <div className='   '>
+          <p className='text-md font-medium'>
+            <span className='pr-2'>Xin Chào </span> <span className='text-danger font-bold text-xl'>Vũ Thành Đô</span>{' '}
           </p>
         </div>
-        <div className='pt-4 float-left pl-2 '>
-          <p className='text-md font-medium pr-2'>
+        <div className='cursor-pointer  pl-2 '>
+          <p className='text-md font-medium'>
             <Tooltip placement='leftTop' title={'Trang Cá Nhân !'}>
               <Popconfirm
                 title='Chuyển Qua Trang Cá Nhân !'
@@ -74,14 +77,14 @@ const DefaultLayoutTrangthi = () => {
                 okText='Yes'
                 cancelText='No'
               >
-                <RxAvatar className='text-[40px] hover:bg-meta-1' />
+                <RxAvatar className='text-[40px] hover:bg-warning' />
               </Popconfirm>
             </Tooltip>
           </p>
         </div>
       </div>
       {/*  */}
-      <section className='absolute py-16 top-[50%] w-[600px] left-[40%]'>
+      <section className='absolute py-16 top-[10%]  mx-auto w-full  '>
         <Outlet />
       </section>
     </section>

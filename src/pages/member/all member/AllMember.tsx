@@ -5,26 +5,33 @@ import { Button } from '~/components'
 import { useGetAllUserQuery } from '~/apis/user/user.api'
 const AllMember = () => {
   const navigate = useNavigate()
-  const confirm = (id: number | string) => {}
+  const confirm = (id: number | string) => {
+    console.log(id)
+  }
   const { data } = useGetAllUserQuery()
   console.log(data)
   const dataSource = data?.docs.map((item: any) => ({
     key: item._id,
-    name: item.username,
+    name: item.email,
     avatar: item.avatar,
     users: item.code,
     update: item.updatedAt,
     gender: item.gender,
     email: item.email,
-    department: item.Department,
+    department: item.Department
   }))
-
   const columns = [
     {
       title: 'Tên',
       dataIndex: 'name',
       key: 'name',
-      render: (text: string) => <a className='text-md font-bold'>{text}</a>
+      render: (text: string) => {
+        const name = text.split('@')
+        const userName = name[0].split('.')
+        const checkName = userName.pop()
+        console.log(checkName)
+        return <a className='text-md font-bold'>{userName}</a>
+      }
     },
     {
       title: 'Phòng Ban',
@@ -43,7 +50,7 @@ const AllMember = () => {
       title: 'code',
       dataIndex: 'users',
       key: 'users',
-      render: (text: string) => <a className='text-danger font-bold'>{text}</a>,
+      render: (text: string) => <a className='text-danger font-bold'>{text}</a>
     },
     {
       title: 'Ngày sửa',
@@ -82,7 +89,7 @@ const AllMember = () => {
             <Button styleClass='bg-danger '>Xóa</Button>
           </Popconfirm>
           <Button>
-            <Link to={`/admin/product/${id}/edit`}>Sửa</Link>
+            <Link to={`/admin/member/${id}/edit`}>Sửa</Link>
           </Button>
         </div>
       )

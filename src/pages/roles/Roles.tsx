@@ -5,12 +5,11 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useDeleteRoleMutation, useGetAllRolesQuery } from '~/apis/roles/roles.api'
 import { IRole, IRoleDocs } from '~/types/roles/roles.type'
 import { toastService } from '~/utils/toask/toaskMessage'
-import { useState } from 'react'
 type FieldType = {
   keyword?: string
 }
 const Roles = () => {
-  const [removeRoles, { isError, isLoading, isSuccess }] = useDeleteRoleMutation()
+  const [removeRoles, {  isLoading }] = useDeleteRoleMutation()
   const navigate = useNavigate()
   const confirm = (id: string) => {
     removeRoles(id)
@@ -82,6 +81,9 @@ const Roles = () => {
           <Button>
             <Link to={`/admin/roles/${_id}/edit`}>Sửa</Link>
           </Button>
+          <Button styleClass='bg-warning'>
+            <Link to={`/admin/roles/${_id}/memRole`}>Chi Tiết</Link>
+          </Button>
         </div>
       )
     }
@@ -95,7 +97,6 @@ const Roles = () => {
   return (
     <div>
       <Button onClick={() => navigate('/admin/roles/add')}>Thêm mới roles</Button>
-
       <div className='mt-10 '>
         <Form
           className='flex gap-5'
@@ -127,5 +128,4 @@ const Roles = () => {
     </div>
   )
 }
-
 export default Roles

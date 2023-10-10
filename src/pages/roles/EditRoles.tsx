@@ -7,7 +7,6 @@ import { useAddRoleMutation, useGetIdRolesQuery, useUpdateRoleMutation } from '~
 import { IRole } from '~/types/roles/roles.type'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-
 type FieldType = {
   name?: string
   status?: string

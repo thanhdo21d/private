@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 const UserApi = createApi({
   reducerPath: 'Users',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:8282/'
+    baseUrl: import.meta.env.VITE_API
   }),
   tagTypes: ['Users'],
   endpoints: (builder) => ({
@@ -15,7 +15,6 @@ const UserApi = createApi({
       query: (id: string) => `/users/${id}`,
       providesTags: ['Users']
     }),
-
     deleteUser: builder.mutation({
       query: (id: string) => ({
         url: `/users/${id}`,
@@ -23,7 +22,6 @@ const UserApi = createApi({
       }),
       invalidatesTags: ['Users']
     }),
-
     addUser: builder.mutation({
       query: (role: Pick<IRole, 'name'>) => ({
         url: '/users',

@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 const RoleApi = createApi({
   reducerPath: 'Role',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:8282/'
+    baseUrl: import.meta.env.VITE_API
   }),
   tagTypes: ['role'],
   endpoints: (builder) => ({

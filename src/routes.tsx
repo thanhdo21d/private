@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from 'react-router-dom'
+import { Navigate, Outlet, createBrowserRouter, useNavigate } from 'react-router-dom'
 import { Dashboard, NotFound } from './pages'
 import DefaultLayout from './layouts/DefaultLayout'
 import Roles from './pages/roles/Roles'
@@ -15,6 +15,35 @@ import DetailsResult from './pages/ket-qua-thi/details/DetailsResult'
 import HelloUser from './layouts/trangThi/components/default/HelloUser'
 import PopQuesion from './layouts/trangThi/components/Popup-thi/PopQuesion'
 import EditRoles from './pages/roles/EditRoles'
+import { useEffect, useState } from 'react'
+import { useAppSelector } from './store/root/hook'
+import { RootState } from '@reduxjs/toolkit/query'
+import { getCookie } from './utils/utils'
+import MemberInRole from './pages/roles/MemberInRole'
+import EditMember from './pages/member/edit member/EditMember'
+const CheckCookieUserLogin = () => {
+  const accessToken = useAppSelector((state: any) => console.log(state.accessToken))
+  console.log(accessToken)
+  const [checkLogin, setChecklogin] = useState<boolean>(true)
+  const navigate = useNavigate()
+  const isAuth = true
+  useEffect(() => {
+    if (!isAuth) {
+      navigate('/login')
+    }
+  }, [isAuth])
+  return isAuth ? <Outlet /> : <Navigate to='/login' />
+}
+const PrivateRoute = () => {
+  const navigate = useNavigate()
+  const isAuth = true
+  useEffect(() => {
+    if (!isAuth) {
+      navigate('/login')
+    }
+  }, [isAuth])
+  return isAuth ? <Outlet /> : <Navigate to='/login' />
+}
 export const routers = createBrowserRouter([
   {
     path: '*',
@@ -22,6 +51,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/',
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultLayoutTrangthi />,
@@ -39,6 +69,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/user-info',
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultUserInfo />,
@@ -54,6 +85,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/admin',
+    element: <PrivateRoute />,
     children: [
       {
         element: <DefaultLayout />,
@@ -62,8 +94,10 @@ export const routers = createBrowserRouter([
           { path: 'dashboard', element: <Dashboard /> },
           { path: 'roles', element: <Roles /> },
           { path: 'roles/:id/edit', element: <EditRoles /> },
+          { path: 'member/:id/edit', element: <EditMember /> },
           { path: 'all-member', element: <AllMember /> },
           { path: 'all-member/add', element: <AddMember /> },
+          { path: 'roles/:id/memRole', element: <MemberInRole /> },
           { path: 'roles/add', element: <EditRoles /> }
         ]
       }

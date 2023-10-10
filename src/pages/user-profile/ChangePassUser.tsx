@@ -23,7 +23,7 @@ const ChangePassUser = () => {
   }
 
   return (
-    <div className='mt-10 flex gap-5'>
+    <div className='mt-10 flex justify-around gap-5'>
       <div>
         <Steps
           direction='vertical'
@@ -45,7 +45,6 @@ const ChangePassUser = () => {
           ]}
         />
       </div>
-
       <Form
         name='basic'
         labelCol={{ span: 8 }}

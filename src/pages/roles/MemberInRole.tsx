@@ -1,49 +1,66 @@
+// import React from 'react'
+// import { useParams } from 'react-router'
+// import { useGetIdRolesQuery } from '~/apis/roles/roles.api'
+
+// const MemberInRole = () => {
+//   const { id } = useParams<{ id: string }>()
+//   const { data } = useGetIdRolesQuery(id || '')
+//   console.log(data)
+//   return <div>MemberInRole</div>
+// }
+
+// export default MemberInRole
 import { SearchOutlined } from '@ant-design/icons'
 import React, { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import type { InputRef } from 'antd'
-import { Button, Input, Pagination, Space, Table } from 'antd'
+import { Button, Input, Space, Table } from 'antd'
 import type { ColumnType, ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
-import { Link } from 'react-router-dom'
-import { Footer } from 'antd/es/layout/layout'
+import { useParams } from 'react-router'
+import { useGetIdRolesQuery } from '~/apis/roles/roles.api'
+
 interface DataType {
   key: string
   name: string
-  code: number
+  age: number
   address: string
 }
+
 type DataIndex = keyof DataType
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    code: 32,
-    address: '10/09/2023'
-  },
-  {
-    key: '2',
-    name: 'Joe Black',
-    code: 42,
-    address: '10/08/2022'
-  },
-  {
-    key: '3',
-    name: 'Jim Green',
-    code: 32,
-    address: '10/04/2021'
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    code: 32,
-    address: '10/01/2021'
-  }
-]
-const InfoResult: React.FC = () => {
+
+const MemberInRole: React.FC = () => {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
   const searchInput = useRef<InputRef>(null)
+  const { id } = useParams<{ id: string }>()
+  const { data } = useGetIdRolesQuery(id || '')
+  const dataTable: DataType[] = [
+    {
+      key: '1',
+      name: 'John Brown',
+      age: 32,
+      address: 'New York No. 1 Lake Park'
+    },
+    {
+      key: '2',
+      name: 'Joe Black',
+      age: 42,
+      address: 'London No. 1 Lake Park'
+    },
+    {
+      key: '3',
+      name: 'Jim Green',
+      age: 32,
+      address: 'Sydney No. 1 Lake Park'
+    },
+    {
+      key: '4',
+      name: 'Jim Red',
+      age: 32,
+      address: 'London No. 2 Lake Park'
+    }
+  ]
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
@@ -53,15 +70,16 @@ const InfoResult: React.FC = () => {
     setSearchText(selectedKeys[0])
     setSearchedColumn(dataIndex)
   }
+
   const handleReset = (clearFilters: () => void) => {
     clearFilters()
     setSearchText('')
   }
+
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
-          className='rounded-md'
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
@@ -76,7 +94,6 @@ const InfoResult: React.FC = () => {
             icon={<SearchOutlined />}
             size='small'
             style={{ width: 90 }}
-            className='bg-blue23'
           >
             Search
           </Button>
@@ -129,6 +146,7 @@ const InfoResult: React.FC = () => {
         text
       )
   })
+
   const columns: ColumnsType<DataType> = [
     {
       title: 'Name',
@@ -138,48 +156,23 @@ const InfoResult: React.FC = () => {
       ...getColumnSearchProps('name')
     },
     {
-      title: 'code',
-      dataIndex: 'code',
-      key: 'code',
+      title: 'Age',
+      dataIndex: 'age',
+      key: 'age',
       width: '20%',
-      ...getColumnSearchProps('code'),
-      render: (text: string) => <a className='text-md font-bold'>{text}</a>
+      ...getColumnSearchProps('age')
     },
     {
-      title: 'Ngày thi',
+      title: 'Address',
       dataIndex: 'address',
       key: 'address',
       ...getColumnSearchProps('address'),
       sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ['descend', 'ascend'],
-      render: (text: string) => <a className='text-md font-bold'>{text}</a>
-    },
-    {
-      title: 'Hành Động',
-      render: ({ key: id }: { key: number | string }) => (
-        <div className=''>
-          <Button className='bg-blue23 font-medium text-white text-md'>
-            <Link to={`/user-info/ket-qua-thi/${id}`}>Chi Tiết Bài Thi</Link>
-          </Button>
-        </div>
-      )
+      sortDirections: ['descend', 'ascend']
     }
   ]
-  return (
-    <div>
-      <div className='mt-10 flex gap-5'>
-        <Input className='h-[50px] w-[600px] rounded-md' placeholder='Nhập từ khóa tìm kiếm ....' />
-        <Button className='w-[150px] h-[50px] bg-graydark text-white text-md font-medium'>Tìm Kiếm</Button>
-      </div>
-      <hr className='mt-5' />
-      <div className='mt-2'>
-        <Table columns={columns} dataSource={data} pagination={false} />
-        <div className='mt-5 float-right'>
-          <Pagination defaultCurrent={1} total={50} />
-        </div>
-      </div>
-      <Footer style={{ textAlign: 'center' }}>Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.</Footer>
-    </div>
-  )
+
+  return <Table columns={columns} dataSource={dataTable} />
 }
-export default InfoResult
+
+export default MemberInRole

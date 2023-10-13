@@ -32,7 +32,6 @@ const UserApi = createApi({
     }),
     updateUser: builder.mutation<any, IRole>({
       query: (role) => {
-        console.log(role)
         return {
           url: `/users/${role._id}`,
           method: 'PUT',

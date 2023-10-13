@@ -1,17 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon } from '~/components'
 import { Menu, Tooltip } from 'antd'
-import { NavLink } from 'react-router-dom'
-import { items, itemsUser } from './components'
+import { Link, NavLink } from 'react-router-dom'
+import { getItem, items, itemsUser } from './components'
 import { AiFillHome } from 'react-icons/ai'
+import { AppContext } from '~/contexts/app.contexts'
+import { useGetAllRolesQuery } from '~/apis/roles/roles.api'
 interface SidebarProps {
   sidebarOpen: boolean
   setSidebarOpen: (arg: boolean) => void
   textUi: string
 }
 const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
+  const [checkMenu, setCheckMenu] = useState()
   const trigger = useRef<any>(null)
   const sidebar = useRef<any>(null)
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
@@ -43,7 +46,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
       document.querySelector('body')?.classList.remove('sidebar-expanded')
     }
   }, [sidebarExpanded])
-  const isAuth = true
+  const { profile, reset } = useContext(AppContext)
+  const { data } = useGetAllRolesQuery()
+
   return (
     <aside
       ref={sidebar}
@@ -79,13 +84,30 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         <nav className='px-3 mt-5'>
           <div className='select-none'>
             <h3 className='text-bodydark2 mb-4 ml-4 text-sm font-semibold select-none'>MENU</h3>
-            <Menu
-              theme='dark'
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
-              mode='inline'
-              items={isAuth ? items : itemsUser}
-            />
+            {/* {profile?.role.name !== 'Admin' ? (
+              <Menu
+                theme='dark'
+                defaultSelectedKeys={['1']}
+                defaultOpenKeys={['sub1']}
+                mode='inline'
+                items={itemsUser}
+              />
+            ) : ( */}
+            <div>
+              {data?.data?.map((item: any) => {
+                return (
+                  <div>
+                    <p> {item.menu == '1' && <Link to={`/admin`}>Dasbboard</Link>}</p>
+                    <p> {item.menu == '2' && <Link to={`/admin/de-kho`}>Cấp Độ Khó</Link>}</p>
+                    <p> {item.menu == '3' && <Link to={`/admin/all-member`}>Thành Viên</Link>}</p>
+                    <p> {item.menu == '4' && <Link to={`/admin/all-member/add`}>Thêm Thành Viên</Link>}</p>
+                    <p> {item.menu == '5' && <Link to={`/admin/roles`}>Vai Trò</Link>}</p>
+                    <p> {item.menu == '6' && <Link to={`/admin/de-kho`}>Thêm Đề Thi</Link>}</p>
+                  </div>
+                )
+              })}
+            </div>
+            {/* // )} */}
           </div>
         </nav>
       </div>

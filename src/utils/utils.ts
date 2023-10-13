@@ -1,4 +1,5 @@
 import axios, { AxiosError, HttpStatusCode } from 'axios'
+import Cookies from 'js-cookie'
 import { ErrorResponse } from '~/types/utils.type'
 export function formatNumber(number: number | string) {
   if (!number || number == 0) return 0 // hoac ''
@@ -37,4 +38,15 @@ export function getCookie(name: string) {
     if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length)
   }
   return null
+}
+export const setProfileToLS = (profile: any) => {
+  localStorage.setItem('profile', JSON.stringify(profile))
+}
+export const getProfileFromLS = () => {
+  const result = localStorage.getItem('profile')
+  return result ? JSON.parse(result) : null
+}
+export const removeProfileFromLS = () => {
+  localStorage.removeItem('profile')
+  Cookies.remove('token')
 }

@@ -1,9 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ArrowDown, ContactIcon, ProfileIcon, SettingIcon } from '~/components'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { AppContext } from '~/contexts/app.contexts'
+import { removeProfileFromLS } from '~/utils/utils'
 const DropdownUser = () => {
   const navigate = useNavigate()
+  const { profile, reset } = useContext(AppContext)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const trigger = useRef<any>(null)
   const dropdown = useRef<any>(null)
@@ -30,7 +33,7 @@ const DropdownUser = () => {
     <div className='relative'>
       <Link ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='flex items-center gap-4' to='#'>
         <span className='lg:block hidden text-right'>
-          <span className='dark:text-white block text-sm font-medium text-black'>Vũ Thành Đô</span>
+          <span className='dark:text-white block text-sm font-medium text-black'>{profile?.email}</span>
           <span className='block text-xs'>Admin</span>
         </span>
         <span className='w-12 h-12 rounded-full'>
@@ -81,7 +84,10 @@ const DropdownUser = () => {
           </li>
         </ul> */}
         <button
-          onClick={() => navigate('/login')}
+          onClick={() => {
+            removeProfileFromLS()
+            navigate('/login')
+          }}
           className='flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
         >
           <svg

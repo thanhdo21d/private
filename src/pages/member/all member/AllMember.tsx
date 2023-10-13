@@ -9,7 +9,6 @@ const AllMember = () => {
     console.log(id)
   }
   const { data } = useGetAllUserQuery()
-  console.log(data)
   const dataSource = data?.docs.map((item: any) => ({
     key: item._id,
     name: item.email,
@@ -18,6 +17,7 @@ const AllMember = () => {
     update: item.updatedAt,
     gender: item.gender,
     email: item.email,
+    role: item.role,
     department: item.Department
   }))
   const columns = [
@@ -29,15 +29,25 @@ const AllMember = () => {
         const name = text.split('@')
         const userName = name[0].split('.')
         const checkName = userName.pop()
-        console.log(checkName)
         return <a className='text-md font-bold'>{userName}</a>
+      }
+    },
+    {
+      title: 'Chức Vụ',
+      dataIndex: 'role',
+      key: 'role',
+      render: (text: { name: string }) => {
+        // const name = text.split('@')
+        // const userName = name[0].split('.')
+        // const checkName = userName.pop()
+        return <a className='text-md font-bold'>{text.name}</a>
       }
     },
     {
       title: 'Phòng Ban',
       dataIndex: 'department',
       key: 'department',
-      render: (text: string) => <a className='text-md font-bold'>{text}</a>
+      render: (text: string) => <a className='text-md pl-5 font-bold'>{text}</a>
     },
     {
       title: 'Ảnh',
@@ -69,7 +79,8 @@ const AllMember = () => {
     {
       title: 'Email',
       dataIndex: 'email',
-      key: 'email'
+      key: 'email',
+      render: (text: string) => <a className='text-danger font-bold'>{text}</a>
     },
     {
       title: 'Tác Vụ',

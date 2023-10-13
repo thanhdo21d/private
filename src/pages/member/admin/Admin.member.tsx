@@ -1,6 +1,7 @@
 import React from 'react'
 import { Checkbox, Form, Input, Upload } from 'antd'
 import { Button } from '~/components'
+import { UserOutlined } from '@ant-design/icons'
 
 const onFinish = (values: any) => {
   console.log('Success:', values)
@@ -36,7 +37,7 @@ const AddMember: React.FC = () => (
       name='username'
       rules={[{ required: true, message: 'Please input your username!' }]}
     >
-      <Input />
+      <Input size='large' prefix={<UserOutlined />} />
     </Form.Item>
 
     <Form.Item<FieldType>

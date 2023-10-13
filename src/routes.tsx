@@ -15,34 +15,33 @@ import DetailsResult from './pages/ket-qua-thi/details/DetailsResult'
 import HelloUser from './layouts/trangThi/components/default/HelloUser'
 import PopQuesion from './layouts/trangThi/components/Popup-thi/PopQuesion'
 import EditRoles from './pages/roles/EditRoles'
-import { useEffect, useState } from 'react'
-import { useAppSelector } from './store/root/hook'
-import { RootState } from '@reduxjs/toolkit/query'
-import { getCookie } from './utils/utils'
+import { useContext, useEffect, useState } from 'react'
 import MemberInRole from './pages/roles/MemberInRole'
 import EditMember from './pages/member/edit member/EditMember'
+import Cookies from 'js-cookie'
+import DsDethi from './pages/bo-de-thi/DsDethi'
+import { AppContext } from './contexts/app.contexts'
+import AcceptUserDipament from './pages/accept-phong-ban/AcceptUserDipament'
 const CheckCookieUserLogin = () => {
-  const accessToken = useAppSelector((state: any) => console.log(state.accessToken))
-  console.log(accessToken)
-  const [checkLogin, setChecklogin] = useState<boolean>(true)
+  const cookie = Cookies.get('token')
   const navigate = useNavigate()
-  const isAuth = true
   useEffect(() => {
-    if (!isAuth) {
+    if (!cookie) {
       navigate('/login')
     }
-  }, [isAuth])
-  return isAuth ? <Outlet /> : <Navigate to='/login' />
+  }, [cookie, navigate])
+  return cookie ? <Outlet /> : <Navigate to='/login' />
 }
 const PrivateRoute = () => {
+  const cookie = Cookies.get('token')
+  const { profile, reset } = useContext(AppContext)
   const navigate = useNavigate()
-  const isAuth = true
   useEffect(() => {
-    if (!isAuth) {
+    if (profile?.role.name != 'Admin') {
       navigate('/login')
     }
-  }, [isAuth])
-  return isAuth ? <Outlet /> : <Navigate to='/login' />
+  }, [profile, navigate])
+  return profile?.role.name === 'Admin' && cookie != 'undefined' ? <Outlet /> : <Navigate to='/login' />
 }
 export const routers = createBrowserRouter([
   {
@@ -57,7 +56,8 @@ export const routers = createBrowserRouter([
         element: <DefaultLayoutTrangthi />,
         children: [
           { index: true, element: <Navigate to='home' /> },
-          { path: 'home', element: <HelloUser /> },
+          // { path: 'home', element: <HelloUser /> },
+          { path: 'home', element: <AcceptUserDipament /> },
           { path: 'action-bai-thi', element: <PopQuesion /> }
         ]
       }
@@ -94,6 +94,7 @@ export const routers = createBrowserRouter([
           { path: 'dashboard', element: <Dashboard /> },
           { path: 'roles', element: <Roles /> },
           { path: 'roles/:id/edit', element: <EditRoles /> },
+          { path: 'de-kho', element: <DsDethi /> },
           { path: 'member/:id/edit', element: <EditMember /> },
           { path: 'all-member', element: <AllMember /> },
           { path: 'all-member/add', element: <AddMember /> },

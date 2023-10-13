@@ -7,7 +7,7 @@ const RoleApi = createApi({
   }),
   tagTypes: ['role'],
   endpoints: (builder) => ({
-    getAllRoles: builder.query<IRoleDocs, void>({
+    getAllRoles: builder.query<IRoleDocs[], void>({
       query: () => '/roles',
       providesTags: ['role']
     }),
@@ -35,7 +35,6 @@ const RoleApi = createApi({
 
     updateRole: builder.mutation<IRole, IRole>({
       query: (role) => {
-        console.log(role)
         return {
           url: `/role/${role._id}`,
           method: 'PUT',

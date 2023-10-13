@@ -2,10 +2,11 @@ import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons'
 import { CgProfile } from 'react-icons/cg'
 import type { MenuProps } from 'antd'
 import { NavLink } from 'react-router-dom'
+import { useGetAllRolesQuery } from '~/apis/roles/roles.api'
 type MenuItem = Required<MenuProps>['items'][number]
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
+export function getItem(
+  label?: React.ReactNode,
+  key?: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
   type?: 'group'
@@ -18,10 +19,11 @@ function getItem(
     type
   } as MenuItem
 }
+
 export const items: MenuProps['items'] = [
   getItem(<NavLink to={`/admin`}>Dasbboard</NavLink>, 'dashboard', <AppstoreOutlined />),
   getItem('Bộ Đề Thi', 'products', <AppstoreOutlined />, [
-    getItem(<NavLink to={`/manager/products`}>Cấp Độ Khó</NavLink>, 'product'),
+    getItem(<NavLink to={`/admin/de-kho`}>Cấp Độ Khó</NavLink>, 'kho'),
     getItem(<NavLink to={`/manager/toppings`}>Cấp Độ Trung Bình</NavLink>, 'Cấp Độ Trung Bình'),
     getItem(<NavLink to={`/manager/toppings`}>Cấp Độ Dễ</NavLink>, 'Cấp Độ Dễ')
   ]),
@@ -30,7 +32,7 @@ export const items: MenuProps['items'] = [
     getItem(<NavLink to={`/admin/all-member/add`}>Thêm Thành Viên</NavLink>, 'admin')
   ]),
   // SettingOutlined
-  getItem(<NavLink to={`/`}>Vai Trò</NavLink>, 'Vai Trò', <AppstoreOutlined />, [
+  getItem(<p>Vai Trò</p>, 'Vai Trò', <AppstoreOutlined />, [
     getItem(<NavLink to={`/admin/roles`}>Vai Trò</NavLink>, 'b')
   ])
 ]

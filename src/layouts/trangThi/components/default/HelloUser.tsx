@@ -1,12 +1,18 @@
 import { message } from 'antd'
+import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PiKeyReturnFill } from 'react-icons/pi'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '~/components'
+import { AppContext } from '~/contexts/app.contexts'
 const HelloUser = () => {
+  const { i18n } = useTranslation()
+  const { profile, reset } = useContext(AppContext)
+  const { t } = useTranslation(['header'])
   const navigate = useNavigate()
   const handelGoon = () => {
     navigate('/action-bai-thi')
-    message.success('chúc bạn may mắn')
+    message.success(t('product.happy_user'))
   }
   return (
     <div>
@@ -27,7 +33,7 @@ const HelloUser = () => {
             </div>
             <div className='mt-10 py-10 border-t border-blueGray-200 text-center'>
               <div className='text-center mt-12'>
-                <h3 className='text-4xl font-semibold leading-normal text-blueGray-700 mb-2'>Vũ Thành Đô</h3>
+                <h3 className='text-4xl font-semibold leading-normal text-blueGray-700 mb-2'>{profile?.email}</h3>
                 <div className='text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase'>
                   <span className='pt-2 mt-2'> Nội dung thi: Tự luận - Trắc Nghiệm - thời gian làm bài 120 phút</span>
                   <span className=' pl-3'>(random 70/30) </span>
@@ -40,7 +46,7 @@ const HelloUser = () => {
                     type='button'
                     onClick={handelGoon}
                   >
-                    Bắt Đầu Bài Thi
+                    {t('product.enter_bt')}
                     <PiKeyReturnFill />
                   </Button>
                 </div>

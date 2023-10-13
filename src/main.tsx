@@ -7,12 +7,15 @@ import React, { StrictMode } from 'react'
 import { Provider } from 'react-redux'
 import 'react-toastify/dist/ReactToastify.css'
 import { store } from './store/root/store.ts'
+import { AppProvider } from './contexts/app.contexts.tsx'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <HelmetProvider>
       <Provider store={store}>
         <ErrorBoundary>
-          <App />
+          <AppProvider>
+            <App />
+          </AppProvider>
         </ErrorBoundary>
       </Provider>
     </HelmetProvider>

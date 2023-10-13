@@ -2,6 +2,7 @@ import { IRole, IRoleDoc, IRoleDocs } from '~/types/roles/roles.type'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { responseUser } from '~/types/users/users.types'
 import { SigninForm } from '~/schemas/login.schemas'
+import { userLogin } from '~/types/users/userContext'
 const UserLoginApi = createApi({
   reducerPath: 'UsersLogin',
   baseQuery: fetchBaseQuery({
@@ -9,7 +10,7 @@ const UserLoginApi = createApi({
   }),
   tagTypes: ['UsersLogin'],
   endpoints: (builder) => ({
-    getAccessToken: builder.mutation<responseUser, SigninForm>({
+    getAccessToken: builder.mutation<userLogin, SigninForm>({
       query: ({ ...rest }) => ({
         url: 'sign-in',
         body: rest,

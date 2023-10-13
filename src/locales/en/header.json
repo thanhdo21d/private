@@ -1,0 +1,24 @@
+{
+  "product": {
+    "code_pass": "please enter your Code và password",
+    "name_login": "account",
+    "password": "password",
+    "forgot_password": "Forgot your password?",
+    "login": "SIGN IN",
+    "login_error": "Login Error",
+    "login_success": "Login success",
+    "enter_bt": "Start Test",
+    "happy_user": "good luck",
+    "hello_user": "Hello",
+    "logout": "Logout",
+    "user_info": "Personal page !",
+    "navigate_profile": "Switch to Personal Page!",
+    "confirm_navigate_profile": "Do You Want To Switch To Your Personal Page?",
+    "accept_user_helo": "Welcome to the test of online at Denso Viet Nam",
+    "all_questions":"all questions",
+    "check_qes_dl": "The question has been taken",
+    "check_qes_cl":" Unanswered question",
+    "total_time":"Total remaining time",
+    "submit_form":"Submit"
+  }
+}

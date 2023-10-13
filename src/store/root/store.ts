@@ -4,14 +4,22 @@ import { setupListeners } from '@reduxjs/toolkit/dist/query'
 import RoleApi from '~/apis/roles/roles.api'
 import UserApi from '~/apis/user/user.api'
 import UserLoginApi from '~/apis/auth/signin.api'
+import changeRoleApi from '~/apis/roles/changeRoleUser'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
     [UserApi.reducerPath]: UserApi.reducer,
     [UserLoginApi.reducerPath]: UserLoginApi.reducer,
+    [changeRoleApi.reducerPath]: changeRoleApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(RoleApi.middleware, UserApi.middleware, UserLoginApi.middleware, rtkQueryErrorLogger)
+    getDefaultMiddleware().concat(
+      RoleApi.middleware,
+      UserApi.middleware,
+      UserLoginApi.middleware,
+      changeRoleApi.middleware,
+      rtkQueryErrorLogger
+    )
 })
 setupListeners(store.dispatch)
 export type RootState = ReturnType<typeof store.getState>

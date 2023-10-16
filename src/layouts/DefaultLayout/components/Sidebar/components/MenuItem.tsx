@@ -24,8 +24,8 @@ export const items: MenuProps['items'] = [
   getItem(<NavLink to={`/admin`}>Dasbboard</NavLink>, 'dashboard', <AppstoreOutlined />),
   getItem('Bộ Đề Thi', 'products', <AppstoreOutlined />, [
     getItem(<NavLink to={`/admin/de-kho`}>Cấp Độ Khó</NavLink>, 'kho'),
-    getItem(<NavLink to={`/manager/toppings`}>Cấp Độ Trung Bình</NavLink>, 'Cấp Độ Trung Bình'),
-    getItem(<NavLink to={`/manager/toppings`}>Cấp Độ Dễ</NavLink>, 'Cấp Độ Dễ')
+    getItem(<NavLink to={`/admin/de-trung-binh`}>Cấp Độ Trung Bình</NavLink>, 'Cấp Độ Trung Bình'),
+    getItem(<NavLink to={`/admin/de-de`}>Cấp Độ Dễ</NavLink>, 'Cấp Độ Dễ')
   ]),
   getItem('Người dùng', 'users', <AppstoreOutlined />, [
     getItem(<NavLink to={`/admin/all-member`}>Thành Viên</NavLink>, 'Thành Viên'),
@@ -34,7 +34,8 @@ export const items: MenuProps['items'] = [
   // SettingOutlined
   getItem(<p>Vai Trò</p>, 'Vai Trò', <AppstoreOutlined />, [
     getItem(<NavLink to={`/admin/roles`}>Vai Trò</NavLink>, 'b')
-  ])
+  ]),
+  getItem(<NavLink to={`/admin/banner`}>banner</NavLink>, 'banner', <AppstoreOutlined />)
 ]
 export const itemsUser: MenuProps['items'] = [
   getItem('Thông Tin Cá Nhân', 'profilese', <CgProfile />, [

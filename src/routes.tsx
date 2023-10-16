@@ -12,16 +12,22 @@ import UserProfile from './pages/user-profile/UserProfile'
 import InfoResult from './pages/ket-qua-thi/InfoResult'
 import Achievements from './pages/thanh-tich/Achievements'
 import DetailsResult from './pages/ket-qua-thi/details/DetailsResult'
-import HelloUser from './layouts/trangThi/components/default/HelloUser'
 import PopQuesion from './layouts/trangThi/components/Popup-thi/PopQuesion'
 import EditRoles from './pages/roles/EditRoles'
 import { useContext, useEffect, useState } from 'react'
 import MemberInRole from './pages/roles/MemberInRole'
 import EditMember from './pages/member/edit member/EditMember'
 import Cookies from 'js-cookie'
-import DsDethi from './pages/bo-de-thi/DsDethi'
+import DsDethi from './pages/bo-de-thi/de-kho/DsDethi'
 import { AppContext } from './contexts/app.contexts'
 import AcceptUserDipament from './pages/accept-phong-ban/AcceptUserDipament'
+import AddBanner from './pages/banner/AddBanner'
+import EditBanner from './pages/banner/EditBanner'
+import DsDeThiEszy from './pages/bo-de-thi/de-de/DsDeThiEszy'
+import DsDeThiTB from './pages/bo-de-thi/De-trung-binh/DsDeThiTB'
+import DetailsDsKho from './pages/bo-de-thi/de-kho/DetailsDsKho'
+import TestRole from './pages/roles/TestRole'
+//const randomizedData = [...data].sort(() => Math.random() - 0.5);
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -85,7 +91,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <PrivateRoute />,
+    // element: <PrivateRoute />,
     children: [
       {
         element: <DefaultLayout />,
@@ -93,13 +99,19 @@ export const routers = createBrowserRouter([
           { index: true, element: <Navigate to='dashboard' /> },
           { path: 'dashboard', element: <Dashboard /> },
           { path: 'roles', element: <Roles /> },
+          { path: 'roles-test', element: <TestRole /> },
           { path: 'roles/:id/edit', element: <EditRoles /> },
           { path: 'de-kho', element: <DsDethi /> },
+          { path: 'de-kho/details', element: <DetailsDsKho /> },
+          { path: 'de-trung-binh', element: <DsDeThiTB /> },
+          { path: 'de-de', element: <DsDeThiEszy /> },
           { path: 'member/:id/edit', element: <EditMember /> },
           { path: 'all-member', element: <AllMember /> },
           { path: 'all-member/add', element: <AddMember /> },
           { path: 'roles/:id/memRole', element: <MemberInRole /> },
-          { path: 'roles/add', element: <EditRoles /> }
+          { path: 'roles/add', element: <EditRoles /> },
+          { path: 'banner', element: <AddBanner /> },
+          { path: 'banner/:id/edit', element: <EditBanner /> }
         ]
       }
     ]

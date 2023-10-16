@@ -5,11 +5,14 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useDeleteRoleMutation, useGetAllRolesQuery } from '~/apis/roles/roles.api'
 import { IRole, IRoleDocs } from '~/types/roles/roles.type'
 import { toastService } from '~/utils/toask/toaskMessage'
+import { useEffect, useState } from 'react'
 type FieldType = {
   keyword?: string
 }
 const Roles = () => {
-  const [removeRoles, {  isLoading }] = useDeleteRoleMutation()
+  const [removeRoles, { isLoading }] = useDeleteRoleMutation()
+  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchInput, setSearchInput] = useState('')
   const navigate = useNavigate()
   const confirm = (id: string) => {
     removeRoles(id)
@@ -18,7 +21,12 @@ const Roles = () => {
       .catch(() => toastService.error('Xóa thất bại'))
   }
   const { data, isFetching } = useGetAllRolesQuery()
-  const dataSource = data?.data.map((item: IRole) => ({
+  useEffect(() => {
+    if (data) {
+      setSearchResults(data)
+    }
+  }, [data, searchResults])
+  const dataSource = searchResults?.data?.map((item: IRole) => ({
     key: item._id,
     name: item.name,
     status: item.status,
@@ -56,7 +64,7 @@ const Roles = () => {
       key: 'update',
       render: (text: string) => {
         const date = text.split('T')[0]
-        return <a className='text-md font-normal'>{date}</a>
+        return <a className='text-md font-medium'>{date}</a>
       }
     },
     {
@@ -110,7 +118,7 @@ const Roles = () => {
           autoComplete='off'
         >
           <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your keyword!' }]}>
-            <Input className='h-[50px] w-[600px]' placeholder='Tìm Kiếm Theo Roles ....' />
+            <Input  className='h-[50px] w-[600px]' placeholder='Tìm Kiếm Theo Roles ....' />
           </Form.Item>
           <Button type='submit' styleClass='w-[150px] h-[50px] bg-graydark'>
             Tìm Kiếm

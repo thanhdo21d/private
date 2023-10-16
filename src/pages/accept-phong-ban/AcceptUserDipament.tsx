@@ -20,15 +20,15 @@ const AcceptUserDipament = () => {
   return (
     <div>
       <div>
-        <div className=' mx-auto px-4 w-[1000px] '>
-          <div className='relative  min-w-0 break-words h-[400px] bg-white w-full  shadow-xl rounded-lg '>
+        <div className=' mx-auto mt-20 px-4 w-[1000px] '>
+          <div className='relative  min-w-0 break-words h-[400px] bg-white opacity-90 w-full  shadow-xl rounded-lg '>
             <div className='flex flex-wrap pt-3 justify-center'>
               <motion.p
                 variants={fadeIn('down', 0.25)}
                 initial='hidden'
                 whileInView={'show'}
                 viewport={{ once: false, amount: 0.7 }}
-                className='text-primary text-xl font-bold'
+                className='text-blue23 text-xl font-bold'
               >
                 {t('product.accept_user_helo')}
               </motion.p>
@@ -39,22 +39,62 @@ const AcceptUserDipament = () => {
                 <p className='my-1'> {profile?.email} </p>
               </div>
               <div className='mt-5 py-10 border-t border-blueGray-200 text-center'>
-                <div>
-                  <Radio.Group defaultValue='a' buttonStyle='solid' style={{ marginTop: 16 }}>
-                    <Radio.Button value='a'>Hangzhou</Radio.Button>
-                    <Radio.Button value='b'>Shanghai</Radio.Button>
-                    <Radio.Button value='c'>Beijing</Radio.Button>
-                    <Radio.Button value='d'>Chengdu</Radio.Button>
-                    <Radio.Button value='e'>Hangzhou</Radio.Button>
-                    <Radio.Button value='f'>Shanghai</Radio.Button>
-                    <Radio.Button value='g'>Beijing</Radio.Button>
-                    <Radio.Button value='h'>Chengdu</Radio.Button>
+                <div className='flex justify-center'>
+                  <Radio.Group className='flex gap-5' defaultValue='a' buttonStyle='solid' style={{ marginTop: 16 }}>
+                    <Radio.Button
+                      className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
+                      value='a'
+                    >
+                      Hangzhou
+                    </Radio.Button>
+                    <Radio.Button
+                      className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
+                      value='b'
+                    >
+                      Shanghai
+                    </Radio.Button>
+                    <Radio.Button
+                      className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
+                      value='c'
+                    >
+                      Beijing
+                    </Radio.Button>
+                    <Radio.Button
+                      className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
+                      value='d'
+                    >
+                      Chengdu
+                    </Radio.Button>
+                    <Radio.Button
+                      className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
+                      value='e'
+                    >
+                      Hangzhou
+                    </Radio.Button>
+                    <Radio.Button
+                      className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
+                      value='f'
+                    >
+                      Shanghai
+                    </Radio.Button>
+                    <Radio.Button
+                      className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
+                      value='g'
+                    >
+                      Beijing
+                    </Radio.Button>
+                    <Radio.Button
+                      className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
+                      value='h'
+                    >
+                      Chengdu
+                    </Radio.Button>
                   </Radio.Group>
                 </div>
                 <div className='w-full absolute  bottom-5 '>
                   <div className=''>
                     <Button
-                      styleClass='bg-success flex m-auto  w-[80%] active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none mb-1 ease-linear transition-all duration-150'
+                      styleClass='bg-success flex m-auto hover:bg-danger   w-[80%] active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none mb-1 ease-linear transition-all duration-150'
                       type='button'
                       onClick={handelGoon}
                     >

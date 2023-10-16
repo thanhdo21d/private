@@ -1,4 +1,4 @@
-import { Empty, Popconfirm } from 'antd'
+import { Empty, Popconfirm, Skeleton } from 'antd'
 import React, { useContext } from 'react'
 import logoUrl from '../../assets/images/logo/1111111111111.jpg'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -11,7 +11,9 @@ import i18n from '~/i18n/i18n'
 import Cookies from 'js-cookie'
 import { AppContext } from '~/contexts/app.contexts'
 import { removeProfileFromLS } from '~/utils/utils'
+import { useGetIdBannersQuery } from '~/apis/banner/banner.api'
 const DefaultLayoutTrangthi = () => {
+  const { data: dataBannerID, isFetching } = useGetIdBannersQuery('652ccbbabef876631483308b')
   const { profile, reset } = useContext(AppContext)
   const { t } = useTranslation(['header'])
   const navigate = useNavigate()
@@ -44,7 +46,7 @@ const DefaultLayoutTrangthi = () => {
         className='lg:flex w-full z-0 hidden bg-login bg-no-repeat bg-cover relative items-center'
         style={{
           // backgroundImage: `url(${logoUrl})`
-          backgroundImage: `url(https://img.meta.com.vn/Data/image/2021/09/30/background-la-gi-anh-background-dep-3.jpg)`
+          backgroundImage: `url(${dataBannerID?.data.url || logoUrl})`
         }}
       ></div>
       <div className='absolute bg-black opacity-60 inset-0 z-0'></div>
@@ -81,16 +83,17 @@ const DefaultLayoutTrangthi = () => {
             <span className='text-danger font-bold text-xl'>{profile?.email}</span>{' '}
           </p>
         </div>
-        <div className='cursor-pointer  pl-2 '>
-          <p className='text-md font-medium'>
+        <div className='cursor-pointer   pl-2 '>
+          <p className='text-md font-medium '>
             <Tooltip placement='leftTop' title={t('product.navigate_profile')}>
               <Popconfirm
                 title={t('product.user_info')}
                 description={t('product.confirm_navigate_profile')}
                 onConfirm={confirm}
+                className=''
                 onCancel={cancel}
                 okButtonProps={{
-                  style: { backgroundColor: 'blue' }
+                  style: { backgroundColor: 'blue' , marginRight : "20px"}
                 }}
                 okText='Yes'
                 cancelText='No'
@@ -109,25 +112,3 @@ const DefaultLayoutTrangthi = () => {
   )
 }
 export default DefaultLayoutTrangthi
-{
-  /*  */
-}
-{
-  /* <div className='left-5 bottom-10 z-5 absolute w-[250px] items-center text-center bg-secondary rounded-lg h-[110px]'>
-        <div className='pt-2 float-right pr-5 ' onClick={handelLogOut}>
-          <Tooltip placement='leftTop' title={'Thời Gian Còn Lại !'}></Tooltip>
-        </div>
-        <div className='pt-6 float-left pl-2 '>
-          <p className='text-md font-medium pl-2'>
-            <span className='text-primary font-bold text-xl'>Tổng thời gian còn lại</span>{' '}
-            <Countdown date={Date.now() + 60000} renderer={renderer} />,
-          </p>
-        </div>
-      </div>
-      <div className='left-[45%] bottom-10 z-5 absolute w-[120px] items-center text-center bg-warning rounded-lg h-[70px]'>
-        <div className='pt-4 text-center ' onClick={handelLogOut}>
-          <Tooltip placement='leftTop' title={'Thời Gian Còn Lại !'}></Tooltip>
-          <span className='text-meta-1 font-bold text-2xl'>1/100</span>
-        </div>
-      </div> */
-}

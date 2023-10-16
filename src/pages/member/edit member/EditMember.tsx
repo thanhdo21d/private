@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Checkbox, Form, Input, Select, Skeleton } from 'antd'
+import { Form, Input, Select, Skeleton } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { Button } from '~/components'
 import { useParams } from 'react-router'
 import { useGetIdUserQuery } from '~/apis/user/user.api'
 import { useGetAllRolesQuery, useUpdateRoleMutation } from '~/apis/roles/roles.api'
 import { useUpdateRoleUserMutation } from '~/apis/roles/changeRoleUser'
-
 type FieldType = {
   username?: string
   roles?: string
@@ -19,6 +18,7 @@ const EditMember: React.FC = () => {
     isSuccess: isSuccessGEtROle
   } = useGetIdUserQuery(id as string)
   const { data: dataRoles } = useGetAllRolesQuery()
+  console.log(dataRoles, 'role day nay')
   const [updateRoleUser, { isSuccess }] = useUpdateRoleUserMutation()
   const [idRoleUser, setIdRoleUser] = useState<string>('')
   console.log(dataMember, 'data users')
@@ -35,6 +35,7 @@ const EditMember: React.FC = () => {
   }, [id, dataMember, form])
   const onFinish = (values: any) => {
     // updateRoleUser({ ...values, id, idRoleUser })
+    console.log(values)
   }
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
@@ -63,6 +64,7 @@ const EditMember: React.FC = () => {
           <Form.Item<FieldType> name='roles' label='Roles'>
             <Select>
               {dataRoles?.data?.map((dataROle: any, index: number) => {
+                console.log(dataROle,"ok role")
                 return (
                   <Select.Option key={index} value={`${dataROle.name}`}>
                     {dataROle.name}

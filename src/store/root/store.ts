@@ -5,12 +5,14 @@ import RoleApi from '~/apis/roles/roles.api'
 import UserApi from '~/apis/user/user.api'
 import UserLoginApi from '~/apis/auth/signin.api'
 import changeRoleApi from '~/apis/roles/changeRoleUser'
+import BannerApi from '~/apis/banner/banner.api'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
     [UserApi.reducerPath]: UserApi.reducer,
     [UserLoginApi.reducerPath]: UserLoginApi.reducer,
-    [changeRoleApi.reducerPath]: changeRoleApi.reducer
+    [changeRoleApi.reducerPath]: changeRoleApi.reducer,
+    [BannerApi.reducerPath]: BannerApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -18,6 +20,7 @@ export const store = configureStore({
       UserApi.middleware,
       UserLoginApi.middleware,
       changeRoleApi.middleware,
+      BannerApi.middleware,
       rtkQueryErrorLogger
     )
 })

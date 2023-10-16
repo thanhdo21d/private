@@ -61,7 +61,6 @@ const RandumQuesion = () => {
             submit <TiTick />
           </Button>
         </div>
-
         <div className='text-md flex items-center font-bold text-black'>hoặc ấn ENTER</div>
       </div>
     </div>

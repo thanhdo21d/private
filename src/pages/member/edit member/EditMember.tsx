@@ -1,41 +1,45 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Form, Input, Select, Skeleton } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { Button } from '~/components'
 import { useParams } from 'react-router'
 import { useGetIdUserQuery } from '~/apis/user/user.api'
-import { useGetAllRolesQuery, useUpdateRoleMutation } from '~/apis/roles/roles.api'
+import { useGetAllRolesQuery } from '~/apis/roles/roles.api'
 import { useUpdateRoleUserMutation } from '~/apis/roles/changeRoleUser'
+import { toastService } from '~/utils/toask/toaskMessage'
+import { useNavigate } from 'react-router-dom'
 type FieldType = {
   username?: string
   roles?: string
 }
 const EditMember: React.FC = () => {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const {
     data: dataMember,
     isFetching: isGetrolesLoading,
     isSuccess: isSuccessGEtROle
   } = useGetIdUserQuery(id as string)
-  const { data: dataRoles } = useGetAllRolesQuery()
-  console.log(dataRoles, 'role day nay')
-  const [updateRoleUser, { isSuccess }] = useUpdateRoleUserMutation()
-  const [idRoleUser, setIdRoleUser] = useState<string>('')
-  console.log(dataMember, 'data users')
+  const { data: dataRoles } = useGetAllRolesQuery({
+    sort: '',
+    page: 1
+  })
+  const [updateRoleUser, { isError }] = useUpdateRoleUserMutation()
   const [form] = Form.useForm()
-  console.log(isSuccessGEtROle)
   useEffect(() => {
-    if (dataMember) {
-      setIdRoleUser(dataMember?.user?.role?._id)
-    }
     form.setFieldsValue({
       username: dataMember?.user.email,
       roles: dataMember?.user.role.name
     })
   }, [id, dataMember, form])
   const onFinish = (values: any) => {
-    // updateRoleUser({ ...values, id, idRoleUser })
-    console.log(values)
+    updateRoleUser({ ...values, idUser: id as string, idRole: values.roles as string })
+      .unwrap()
+      .then(() => toastService.success('Role updated successfully'))
+      .then(() => navigate('/admin/all-member'))
+    if (isError) {
+      toastService.error('Error updating role')
+    }
   }
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
@@ -63,10 +67,9 @@ const EditMember: React.FC = () => {
           </Form.Item>
           <Form.Item<FieldType> name='roles' label='Roles'>
             <Select>
-              {dataRoles?.data?.map((dataROle: any, index: number) => {
-                console.log(dataROle,"ok role")
+              {dataRoles?.data?.map((dataROle: any) => {
                 return (
-                  <Select.Option key={index} value={`${dataROle.name}`}>
+                  <Select.Option key={dataROle?._id} value={`${dataROle._id}`}>
                     {dataROle.name}
                   </Select.Option>
                 )

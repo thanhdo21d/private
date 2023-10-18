@@ -19,6 +19,11 @@
     "check_qes_dl": "The question has been taken",
     "check_qes_cl":" Unanswered question",
     "total_time":"Total remaining time",
-    "submit_form":"Submit"
+    "submit_form":"Submit",
+    "edit_banner" : "Edit image banner",
+    "update_banner": "Update image",
+    "active_role": "Active",
+    "active_role_no": "Inactive"
+
   }
 }

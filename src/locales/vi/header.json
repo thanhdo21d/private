@@ -19,6 +19,10 @@
     "check_qes_dl": "Câu hỏi đã làm",
     "check_qes_cl": " Câu hỏi chưa làm",
     "total_time": "Tổng thời gian còn lại",
-    "submit_form": " Nộp Bài"
+    "submit_form": " Nộp Bài",
+    "edit_banner": "Sửa ảnh banner",
+    "update_banner": "Cập nhập ảnh",
+    "active_role": "Hoạt động",
+    "active_role_no": "Không Hoạt động"
   }
 }

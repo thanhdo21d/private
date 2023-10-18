@@ -3,7 +3,6 @@ import { Dashboard, NotFound } from './pages'
 import DefaultLayout from './layouts/DefaultLayout'
 import Roles from './pages/roles/Roles'
 import AllMember from './pages/member/all member/AllMember'
-import AdminMember from './pages/member/admin/Admin.member'
 import AddMember from './pages/member/admin/Admin.member'
 import DefaultLayoutTrangthi from './layouts/trangThi/defaultLayoutTrangthi'
 import Signin from './pages/login/signin/Signin'
@@ -26,7 +25,6 @@ import EditBanner from './pages/banner/EditBanner'
 import DsDeThiEszy from './pages/bo-de-thi/de-de/DsDeThiEszy'
 import DsDeThiTB from './pages/bo-de-thi/De-trung-binh/DsDeThiTB'
 import DetailsDsKho from './pages/bo-de-thi/de-kho/DetailsDsKho'
-import TestRole from './pages/roles/TestRole'
 //const randomizedData = [...data].sort(() => Math.random() - 0.5);
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
@@ -99,7 +97,6 @@ export const routers = createBrowserRouter([
           { index: true, element: <Navigate to='dashboard' /> },
           { path: 'dashboard', element: <Dashboard /> },
           { path: 'roles', element: <Roles /> },
-          { path: 'roles-test', element: <TestRole /> },
           { path: 'roles/:id/edit', element: <EditRoles /> },
           { path: 'de-kho', element: <DsDethi /> },
           { path: 'de-kho/details', element: <DetailsDsKho /> },

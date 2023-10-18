@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppContext } from '~/contexts/app.contexts'
 import { removeProfileFromLS } from '~/utils/utils'
+import imgLogo from '../../../../../../assets/images/logo/Ava_1__DXCB.jpg'
 const DropdownUser = () => {
   const navigate = useNavigate()
   const { profile, reset } = useContext(AppContext)
@@ -37,11 +38,7 @@ const DropdownUser = () => {
           <span className='block text-xs'>Admin</span>
         </span>
         <span className='w-12 h-12 rounded-full'>
-          <img
-            src={`https://1.bp.blogspot.com/-6wptfQdSYb4/XVABmPVTAkI/AAAAAAAAQ5Q/xS0VuLwlPg8G8T2vPVQgohiUFP1DeS9GgCLcBGAs/s1600/hinh-nen-anime-girl-de-thuong-full-hd-cuc-dep-cho-dien-thoai-6.jpg`}
-            className='object-cover w-full h-full rounded-full'
-            alt='User'
-          />
+          <img src={` ${imgLogo}`} className='object-cover w-full h-full rounded-full' alt='User' />
         </span>
         <ArrowDown />
       </Link>

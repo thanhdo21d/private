@@ -1,18 +1,24 @@
-import { Form, Input, Pagination, Popconfirm, Skeleton, Table } from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
+import { Form, Input, Popconfirm, Skeleton, Table, Tooltip } from 'antd'
+import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '~/components'
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { useDeleteRoleMutation, useGetAllRolesQuery } from '~/apis/roles/roles.api'
+import { AiOutlineLoading3Quarters, AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai'
+import { useDeleteRoleMutation, useGetAllRolesQuery, useSearchRoleApiGETQuery } from '~/apis/roles/roles.api'
 import { IRole, IRoleDocs } from '~/types/roles/roles.type'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { useEffect, useState } from 'react'
+import { Footer } from 'antd/es/layout/layout'
+import Pagination from './Pagination'
 type FieldType = {
   keyword?: string
 }
 const Roles = () => {
   const [removeRoles, { isLoading }] = useDeleteRoleMutation()
+  const [queryParameters] = useSearchParams()
+  const dataSearchQuery: string | null = queryParameters.get('content')
+  const dataSortQuery: string | null = queryParameters.get('sort')
+  const dataPageQuery: string | null = queryParameters.get('page')
+  const { data: dataGetRole } = useSearchRoleApiGETQuery(dataSearchQuery)
   const [searchResults, setSearchResults] = useState<any[]>([])
-  const [searchInput, setSearchInput] = useState('')
   const navigate = useNavigate()
   const confirm = (id: string) => {
     removeRoles(id)
@@ -20,19 +26,45 @@ const Roles = () => {
       .then(() => toastService.success('Xóa thành công'))
       .catch(() => toastService.error('Xóa thất bại'))
   }
-  const { data, isFetching } = useGetAllRolesQuery()
+  const { data, isFetching } = useGetAllRolesQuery({
+    sort: dataSortQuery === 'updateAt' ? dataSortQuery : '',
+    page: dataPageQuery || 1
+  })
+  console.log(data)
   useEffect(() => {
     if (data) {
       setSearchResults(data)
     }
-  }, [data, searchResults])
-  const dataSource = searchResults?.data?.map((item: IRole) => ({
-    key: item._id,
-    name: item.name,
-    status: item.status,
-    users: item.users,
-    update: item.updatedAt
-  }))
+    if (dataGetRole?.data.length != 0) {
+      setSearchResults(dataGetRole)
+    }
+  }, [data, searchResults, dataGetRole])
+  const onFinish = ({ keyword }: any) => {
+    const keywordSpace = keyword.trim()
+    navigate({
+      search: createSearchParams({
+        content: keywordSpace
+      }).toString()
+    })
+    if (dataGetRole) setSearchResults(dataGetRole)
+  }
+  const onFinishFailed = (errorInfo: any) => {
+    navigate({
+      search: createSearchParams({
+        content: ''
+        //?sort=updateAt
+      }).toString()
+    })
+  }
+  const dataSource = searchResults?.data?.map((item: IRole) => {
+    return {
+      key: item._id,
+      name: item.name,
+      status: item.status,
+      users: item.users,
+      update: item.updatedAt
+    }
+  })
   const columns = [
     {
       title: 'Tiêu Đề',
@@ -54,23 +86,55 @@ const Roles = () => {
       dataIndex: 'status',
       key: 'status',
       render: (text: string) => {
+        console.log(text)
         const color = text == 'active' ? 'text-success' : 'text-danger'
         return <a className={`text-[18px] ${color} font-bold pl-3`}>{text}</a>
       }
     },
     {
-      title: 'Ngày sửa',
+      title: (
+        <p
+          onClick={() => {
+            if (dataSortQuery == null || dataSortQuery == '') {
+              navigate({
+                search: createSearchParams({
+                  sort: 'updateAt'
+                }).toString()
+              })
+            } else {
+              navigate({
+                search: createSearchParams({
+                  sort: ''
+                }).toString()
+              })
+            }
+          }}
+          className='text-danger flex gap-2 items-center text-center justify-center font-semibold text-md cursor-pointer'
+        >
+          <span>
+            {' '}
+            <Tooltip title='Sắp xếp theo ngày sửa'>Ngày sửa</Tooltip>{' '}
+          </span>{' '}
+          <span>
+            {dataSortQuery == null || dataSortQuery == '' ? (
+              <AiOutlineSortAscending className='text-2xl' />
+            ) : (
+              <AiOutlineSortDescending className='text-2xl' />
+            )}
+          </span>
+        </p>
+      ),
       dataIndex: 'update',
       key: 'update',
       render: (text: string) => {
         const date = text.split('T')[0]
-        return <a className='text-md font-medium'>{date}</a>
+        return <a className='text-md flex text-center justify-center font-medium'>{date}</a>
       }
     },
     {
-      title: 'Tác vụ',
+      title: <p className='flex gap-2 items-center text-center justify-center font-bold text-md '>Tác vụ</p>,
       render: ({ key: _id }: { key: string }) => (
-        <div className='flex space-x-2'>
+        <div className='flex justify-center space-x-2'>
           <Popconfirm
             title='Delete the task'
             description='Are you sure to delete this task?'
@@ -96,12 +160,6 @@ const Roles = () => {
       )
     }
   ]
-  const onFinish = (values: string) => {
-    console.log(values)
-  }
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo)
-  }
   return (
     <div>
       <Button onClick={() => navigate('/admin/roles/add')}>Thêm mới roles</Button>
@@ -118,21 +176,24 @@ const Roles = () => {
           autoComplete='off'
         >
           <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your keyword!' }]}>
-            <Input  className='h-[50px] w-[600px]' placeholder='Tìm Kiếm Theo Roles ....' />
+            <Input className='h-[50px] w-[600px]' placeholder='Tìm Kiếm Theo Roles ....' />
           </Form.Item>
-          <Button type='submit' styleClass='w-[150px] h-[50px] bg-graydark'>
+          <Button type='submit' id='keycode13' styleClass='w-[150px] h-[50px] bg-graydark'>
             Tìm Kiếm
           </Button>
         </Form>
       </div>
-      <hr className='mt-5' />
       <div className='mt-2'>
         {isFetching ? <Skeleton /> : <Table dataSource={dataSource} pagination={false} columns={columns} />}
-        <div className='mt-5 float-right'>
-          <Pagination defaultCurrent={1} total={50} />
-        </div>
+        <Footer className='mt-5 flex justify-between'>
+          <div className='text-md font-semibold text-center'>
+            Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+          </div>
+          <div>
+            <Pagination pageSize={data?.totalPages} queryConfig={dataPageQuery} />
+          </div>
+        </Footer>
       </div>
-      <div className='absolute bottom-0 text-center'>Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.</div>
     </div>
   )
 }

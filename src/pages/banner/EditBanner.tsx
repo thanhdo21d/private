@@ -8,6 +8,7 @@ import { useGetIdBannersQuery, useUpdateBannerMutation } from '~/apis/banner/ban
 import { Button } from '~/components'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 type FieldType = {
   url?: string
 }
@@ -29,6 +30,7 @@ const beforeUpload = (file: RcFile) => {
 }
 const EditBanner = () => {
   const [loading, setLoading] = useState(false)
+  const {t} = useTranslation(['header'])
   const [imageUrl, setImageUrl] = useState<string>()
   const [form] = Form.useForm()
   const navigate = useNavigate()
@@ -109,8 +111,7 @@ const EditBanner = () => {
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type='submit'>
-                {' '}
-                {isUpdateLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'update Images'}
+                {isUpdateLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : t('product.update_banner')}
               </Button>
             </Form.Item>
           </Form>

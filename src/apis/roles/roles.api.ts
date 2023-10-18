@@ -7,8 +7,29 @@ const RoleApi = createApi({
   }),
   tagTypes: ['role'],
   endpoints: (builder) => ({
-    getAllRoles: builder.query<IRoleDocs[], void>({
-      query: () => '/roles',
+    searchRoleApiGET: builder.query<any, any>({
+      query: (content) => {
+        return {
+          url: '/search/role',
+          method: 'GET',
+          params: {
+            content: content
+          }
+        }
+      },
+      providesTags: ['role']
+    }),
+    getAllRoles: builder.query<IRoleDocs[], { sort: string; page: string | number }>({
+      query: ({ sort, page }) => {
+        return {
+          url: '/roles',
+          method: 'GET',
+          params: {
+            sort: sort,
+            page: page || 1
+          }
+        }
+      },
       providesTags: ['role']
     }),
     getIdRoles: builder.query<IRoleDoc, string>({
@@ -32,7 +53,6 @@ const RoleApi = createApi({
       }),
       invalidatesTags: ['role']
     }),
-
     updateRole: builder.mutation<IRole, IRole>({
       query: (role) => {
         return {
@@ -50,6 +70,7 @@ export const {
   useDeleteRoleMutation,
   useAddRoleMutation,
   useUpdateRoleMutation,
-  useGetIdRolesQuery
+  useGetIdRolesQuery,
+  useSearchRoleApiGETQuery
 } = RoleApi
 export default RoleApi

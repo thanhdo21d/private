@@ -1,11 +1,13 @@
 import { Pagination, Popconfirm, Skeleton, Table } from 'antd'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useDeleteBannerMutation, useGetAllBannersQuery } from '~/apis/banner/banner.api'
 import { Button } from '~/components'
 import { toastService } from '~/utils/toask/toaskMessage'
 const AddBanner = () => {
   const { data, isFetching } = useGetAllBannersQuery()
+  const { t } = useTranslation(['header'])
   const [removeBanner] = useDeleteBannerMutation()
   const confirm = (id: string) => {
     removeBanner(id)
@@ -61,7 +63,7 @@ const AddBanner = () => {
             {/* <Button styleClass='bg-danger '>Xóa</Button> */}
           </Popconfirm>
           <Button>
-            <Link to={`/admin/banner/${id}/edit`}>Sửa ảnh banner</Link>
+            <Link to={`/admin/banner/${id}/edit`}>{t('product.edit_banner')}</Link>
           </Button>
         </div>
       )

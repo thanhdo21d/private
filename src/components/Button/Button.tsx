@@ -3,6 +3,7 @@ import clsxm from '~/utils/clsxm'
 
 interface ButtonProps {
   styleClass?: string
+  id?: string
   children?: React.ReactNode
   onClick?: () => void
   disabled?: boolean
@@ -15,6 +16,7 @@ interface ButtonProps {
 }
 
 const Button = ({
+  id,
   styleClass,
   children,
   onClick,
@@ -34,6 +36,7 @@ const Button = ({
   if (href) {
     return (
       <Link
+        id={id}
         to={href}
         className={clsxm(
           `flex items-center justify-center gap-2.5 rounded-md py-3 px-6 bg-primary text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10`,

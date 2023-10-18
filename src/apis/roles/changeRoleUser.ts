@@ -8,11 +8,13 @@ const changeRoleApi = createApi({
   }),
   tagTypes: ['UpdateRole'],
   endpoints: (builder) => ({
-    updateRoleUser: builder.mutation<any, any>({
-      query: (id) => {
+    updateRoleUser: builder.mutation<any, { idUser: string; idRole: string }>({
+      query: ({ idUser, idRole }) => {
+        console.log(idUser, idRole)
         return {
-          url: `/changeRoleUser/${id}/{${id}}`,
-          method: 'PUT'
+          url: `/changeRoleUser/${idUser}/${idRole}`,
+          method: 'PUT',
+          body: ''
         }
       },
       invalidatesTags: ['UpdateRole']

@@ -19,7 +19,6 @@ export function getItem(
     type
   } as MenuItem
 }
-
 export const items: MenuProps['items'] = [
   getItem(<NavLink to={`/admin`}>Dasbboard</NavLink>, 'dashboard', <AppstoreOutlined />),
   getItem('Bộ Đề Thi', 'products', <AppstoreOutlined />, [

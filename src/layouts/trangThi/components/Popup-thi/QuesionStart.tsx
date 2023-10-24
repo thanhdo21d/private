@@ -1,6 +1,6 @@
 import { Menu, Pagination } from 'antd'
 import { Footer, Header } from 'antd/es/layout/layout'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Countdown from 'react-countdown'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -8,10 +8,18 @@ import { Button } from '~/components'
 import { toastService } from '~/utils/toask/toaskMessage'
 import RandumQuesion from './RandumQuesion'
 import PopupSuccess from './PopupSuccess.tsx/PopupSuccess'
+import Confetti from 'react-confetti'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const navigate = useNavigate()
+  const [height, setHeight] = useState<any>(null)
+  const [width, setWidth] = useState<any>(null)
+  const confetiRef: any = useRef(null)
   const { t } = useTranslation(['header'])
+  useEffect(() => {
+    setHeight((confetiRef.current = '2000px'))
+    setWidth((confetiRef.current = '1200px'))
+  }, [])
   const handelSubmit = () => {
     const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
     if (confirm) {
@@ -19,7 +27,7 @@ const QuesionStart = () => {
       toastService.success('Xin chúc mừng, bạn hoàn thành câu hỏi này nhanh thứ mấy trong số những ng tham gia')
       setTimeout(() => {
         navigate('/')
-      }, 5000)
+      }, 10000)
     }
   }
 
@@ -56,6 +64,13 @@ const QuesionStart = () => {
 
         <div className='px-6 gird mt-10 h-[10000px] grid-cols-5 flex gap-3 '>
           {showPop ? <PopupSuccess /> : <RandumQuesion />}
+          {showPop ? (
+            <div className='confettie-wrap absolute inset-0' ref={confetiRef}>
+              <Confetti numberOfPieces={150} width={width} height={height} />
+            </div>
+          ) : (
+            ''
+          )}
         </div>
         <Footer
           style={{

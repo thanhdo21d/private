@@ -15,6 +15,7 @@ const Breadcrumb = ({ pageName, children }: BreadcrumbProps) => {
           <li className='text-primary'>{pageName}</li>
         </ol>
       </nav>
+      <div></div>
       <>{children ? children : <div className=''></div>}</>
     </div>
   )

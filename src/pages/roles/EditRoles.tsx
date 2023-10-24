@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form, Input, Radio, Skeleton } from 'antd'
 import { Button } from '~/components'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -9,6 +9,9 @@ import { toastService } from '~/utils/toask/toaskMessage'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Header } from 'antd/es/layout/layout'
 import { useTranslation } from 'react-i18next'
+import { useAddTaskRoleMutation, useGetAllTaskRoleQuery, useRemoveTaskRoleMutation } from '~/apis/task/task.api'
+import { ItaskRole } from '~/types/task/task.type'
+import { MdOutlineAddCircleOutline } from 'react-icons/md'
 type FieldType = {
   name?: string
   status?: string
@@ -18,12 +21,14 @@ const EditRoles: React.FC = () => {
   const [form] = Form.useForm()
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const { data: taskRoleData, isFetching: taskRoleDataFetching } = useGetAllTaskRoleQuery()
   const { data: roleData, error, isFetching: isGetRoleLoading } = useGetIdRolesQuery(id as string)
+  const [addTaskRole] = useAddTaskRoleMutation()
+  const [selectedOption, setSelectedOption] = useState('')
   const [updateRoles, { isLoading: isUpdateLoading }] = useUpdateRoleMutation()
   const [addRoles, { isLoading: isAddLoading }] = useAddRoleMutation()
-  console.log(roleData?.data?.name)
+  const [removeLoad, { isLoading: isRemoveLoading }] = useRemoveTaskRoleMutation()
   useEffect(() => {
-    // đồng bộ dữ liệu từ API fill vào form
     if (roleData) {
       form.setFieldsValue({
         name: roleData?.data?.name,
@@ -32,16 +37,28 @@ const EditRoles: React.FC = () => {
     }
   }, [roleData, form, id])
   const onFinish = (values: IRole) => {
-    console.log(values)
     if (id) {
+      // truong hop update
       updateRoles({ ...values, _id: id })
         .unwrap()
         .then(() => {
+          if (selectedOption.split('_')[0] !== 'reject') {
+            addTaskRole({
+              id: id as string,
+              body: [selectedOption.split('_')[1]]
+            })
+          } else {
+            removeLoad({
+              id: id as string,
+              body: [selectedOption.split('_')[1]]
+            })
+          }
           toastService.success('Roles updated successfully')
           navigate('/admin/roles')
         })
         .catch(() => toastService.error('Error updating roles'))
     } else {
+      // truong hop them moi
       addRoles(values)
         .unwrap()
         .then(() => {
@@ -55,9 +72,13 @@ const EditRoles: React.FC = () => {
     console.log('Failed:', errorInfo)
   }
   const textButton = id ? 'Sửa Roles' : 'Thêm Roles'
+  const handleOptionChange = (event: any) => {
+    setSelectedOption(event.target.value)
+    console.log(event.target.value.split('_'))
+  }
   return (
     <>
-      <Button styleClass='bg-strokedark font-bold' onClick={() => navigate('/admin/roles')}>
+      <Button styleClass='bg-strokedark font-bold hover:bg-warning' onClick={() => navigate('/admin/roles')}>
         Quay Lại{' '}
         <span>
           {' '}
@@ -84,7 +105,7 @@ const EditRoles: React.FC = () => {
               className='w-full'
               rules={[{ required: true, message: 'Please input your Roles!' }]}
             >
-              <Input className='w-full' />
+              <Input className='w-full rounded-md border border-bodydark' placeholder='vui lòng nhập tên roles .....' />
             </Form.Item>
             <p className='font-semibold text-xl mb-3'>Trạng Thái</p>
             <Form.Item<FieldType> name='status' rules={[{ required: true, message: 'Please checked  !' }]}>
@@ -98,10 +119,70 @@ const EditRoles: React.FC = () => {
                 </Radio>
               </Radio.Group>
             </Form.Item>
-
             <div>
               <div className='w-full h-[65px] flex items-center bg-graydark'>
                 <p className='text-2xl font-medium text-white text-left pl-5'>Phân quyền</p>
+              </div>
+              <div>
+                {taskRoleDataFetching ? (
+                  <div>
+                    {' '}
+                    <Skeleton /> <Skeleton /> <Skeleton /> <Skeleton />
+                  </div>
+                ) : (
+                  <div className='grid grid-cols-4 gap-5 mt-5'>
+                    {taskRoleData?.data.map(({ _id, task }: { _id: string; task: string }) => {
+                      const checkData = roleData?.data.tasks.some((data: any) => data._id.includes(_id))
+                      return (
+                        <div
+                          className='w-full border border-secondary	 rounded-md shadow-xl text-xl font-medium '
+                          key={_id}
+                        >
+                          <p onClick={() => console.log(_id)} className='pl-4 flex  gap-2 items-center'>
+                            <span>
+                              <MdOutlineAddCircleOutline />
+                            </span>
+                            <span>{task}</span>{' '}
+                          </p>
+                          <div className='ml-5 mt-1 '>
+                            <input
+                              type='radio'
+                              id={`inputAllow_${_id}`}
+                              name='selection'
+                              value={`allow_${_id}`}
+                              checked={selectedOption === `allow_${_id}`}
+                              onChange={handleOptionChange}
+                              className={`cursor-pointer ${checkData === true ? 'bg-success' : ''}`}
+                            />
+                            <label
+                              className='pl-5 cursor-pointer text-success !text-xl font-semibold'
+                              htmlFor={`inputAllow_${_id}`}
+                            >
+                              Cho Phép
+                            </label>
+                          </div>
+                          <div className='ml-5 mt-1 mb-1 '>
+                            <input
+                              type='radio'
+                              id={`inputReject_${_id}`}
+                              name='selection'
+                              value={`reject_${_id}`}
+                              checked={selectedOption === `reject_${_id}`}
+                              onChange={handleOptionChange}
+                              className='cursor-pointer'
+                            />
+                            <label
+                              className='pl-5 text-danger !text-xl cursor-pointer font-semibold'
+                              htmlFor={`inputReject_${_id}`}
+                            >
+                              Từ Chối
+                            </label>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
             </div>
             <Form.Item className='mt-10' wrapperCol={{ offset: 8, span: 16 }}>

@@ -15,7 +15,7 @@ const RandumQuesion = () => {
       </div>
 
       <div className='flex justify-center mx-auto !mt-10'>
-        <div className='grid-cols-1	mx-auto  gap-5 grid'>
+        <div className='grid-cols-1 cursor-pointer	mx-auto  gap-5 grid'>
           <div
             className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
         overflow-h-scroll min-h-[50px] transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1

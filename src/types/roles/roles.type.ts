@@ -21,5 +21,6 @@ export interface IRoleDoc {
     status: string
     updatedAt: number
     users: string[]
+    tasks: string[]
   }
 }

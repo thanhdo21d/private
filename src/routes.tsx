@@ -17,14 +17,18 @@ import { useContext, useEffect, useState } from 'react'
 import MemberInRole from './pages/roles/MemberInRole'
 import EditMember from './pages/member/edit member/EditMember'
 import Cookies from 'js-cookie'
-import DsDethi from './pages/bo-de-thi/de-kho/DsDethi'
+import DsDethi from './pages/bo-de-thi/level_easy/DsDethi'
 import { AppContext } from './contexts/app.contexts'
 import AcceptUserDipament from './pages/accept-phong-ban/AcceptUserDipament'
 import AddBanner from './pages/banner/AddBanner'
 import EditBanner from './pages/banner/EditBanner'
-import DsDeThiEszy from './pages/bo-de-thi/de-de/DsDeThiEszy'
-import DsDeThiTB from './pages/bo-de-thi/De-trung-binh/DsDeThiTB'
-import DetailsDsKho from './pages/bo-de-thi/de-kho/DetailsDsKho'
+import DsDeThiEszy from './pages/bo-de-thi/level_hard/DsDeThiHard'
+import DsDeThiTB from './pages/bo-de-thi/level_normal/DsDeThiTB'
+import DetailsDsEasy from './pages/bo-de-thi/level_easy/DetailsDsEasy'
+import FormData from './pages/bo-de-thi/dataDetails/FormData'
+import DsCHDetailsEasy from './pages/bo-de-thi/level_easy/DsCHDetailsEasy'
+import DsCHDetailsHard from './pages/bo-de-thi/level_hard/DsCHDetailsHard'
+import DsCHDetailsNormal from './pages/bo-de-thi/level_normal/DsCHDetailsNormal'
 //const randomizedData = [...data].sort(() => Math.random() - 0.5);
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
@@ -41,11 +45,11 @@ const PrivateRoute = () => {
   const { profile, reset } = useContext(AppContext)
   const navigate = useNavigate()
   useEffect(() => {
-    if (profile?.role.name != 'Admin') {
+    if (profile?.role.name === '') {
       navigate('/login')
     }
   }, [profile, navigate])
-  return profile?.role.name === 'Admin' && cookie != 'undefined' ? <Outlet /> : <Navigate to='/login' />
+  return profile?.role.name === '' && cookie != 'undefined' ? <Outlet /> : <Navigate to='/login' />
 }
 export const routers = createBrowserRouter([
   {
@@ -60,7 +64,6 @@ export const routers = createBrowserRouter([
         element: <DefaultLayoutTrangthi />,
         children: [
           { index: true, element: <Navigate to='home' /> },
-          // { path: 'home', element: <HelloUser /> },
           { path: 'home', element: <AcceptUserDipament /> },
           { path: 'action-bai-thi', element: <PopQuesion /> }
         ]
@@ -89,7 +92,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/admin',
-    // element: <PrivateRoute />,
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultLayout />,
@@ -97,9 +100,19 @@ export const routers = createBrowserRouter([
           { index: true, element: <Navigate to='dashboard' /> },
           { path: 'dashboard', element: <Dashboard /> },
           { path: 'roles', element: <Roles /> },
-          { path: 'roles/:id/edit', element: <EditRoles /> },
+          { path: 'roles/edit/:id', element: <EditRoles /> },
           { path: 'de-kho', element: <DsDethi /> },
-          { path: 'de-kho/details', element: <DetailsDsKho /> },
+          {
+            path: 'details/dethi/:id',
+            element: <FormData />,
+            children: [
+              { index: true, element: <Navigate to='easy' /> },
+              { path: 'easy', element: <DsCHDetailsEasy /> },
+              { path: 'normal', element: <DsCHDetailsNormal /> },
+              { path: 'hard', element: <DsCHDetailsHard /> }
+            ]
+          },
+          { path: 'level_easy/details', element: <DetailsDsEasy /> },
           { path: 'de-trung-binh', element: <DsDeThiTB /> },
           { path: 'de-de', element: <DsDeThiEszy /> },
           { path: 'member/:id/edit', element: <EditMember /> },

@@ -1,5 +1,5 @@
 {
-  "name": "datn-admin",
+  "name": "duan-thi",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -34,6 +34,7 @@
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
+    "react-confetti": "^6.1.0",
     "react-countdown": "^2.3.5",
     "react-dom": "^18.2.0",
     "react-helmet-async": "^1.3.0",

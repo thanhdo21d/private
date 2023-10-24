@@ -126,6 +126,7 @@ const Signin = () => {
               }}
             >
               <div className='absolute bg-black opacity-60 inset-0 z-0' />
+              
             </div>
             <div className='w-full py-6 z-20'>
               <button

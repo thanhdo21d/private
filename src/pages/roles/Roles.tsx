@@ -127,8 +127,15 @@ const Roles = () => {
       dataIndex: 'update',
       key: 'update',
       render: (text: string) => {
+        const check = text.split('T')
+        const checkTime = check[1].split('.')
         const date = text.split('T')[0]
-        return <a className='text-md flex text-center justify-center font-medium'>{date}</a>
+
+        return (
+          <p className='text-md flex text-center items-center gap-5 justify-center font-medium'>
+            <span className='font-bold'>{date}</span> <span>{checkTime[0]}</span>
+          </p>
+        )
       }
     },
     {
@@ -150,8 +157,8 @@ const Roles = () => {
               {isLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'Xóa'}
             </Button>
           </Popconfirm>
-          <Button>
-            <Link to={`/admin/roles/${_id}/edit`}>Sửa</Link>
+          <Button onClick={() => navigate(`/admin/roles/edit/${_id}`)}>
+            <Link to={`/admin/roles/edit/${_id}`}>Sửa</Link>
           </Button>
           <Button styleClass='bg-warning'>
             <Link to={`/admin/roles/${_id}/memRole`}>Chi Tiết</Link>

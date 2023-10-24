@@ -6,13 +6,17 @@ import UserApi from '~/apis/user/user.api'
 import UserLoginApi from '~/apis/auth/signin.api'
 import changeRoleApi from '~/apis/roles/changeRoleUser'
 import BannerApi from '~/apis/banner/banner.api'
+import TaskRoleApi from '~/apis/task/task.api'
+import DepartmentAPI from '~/apis/department/department'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
     [UserApi.reducerPath]: UserApi.reducer,
     [UserLoginApi.reducerPath]: UserLoginApi.reducer,
     [changeRoleApi.reducerPath]: changeRoleApi.reducer,
-    [BannerApi.reducerPath]: BannerApi.reducer
+    [BannerApi.reducerPath]: BannerApi.reducer,
+    [TaskRoleApi.reducerPath]: TaskRoleApi.reducer,
+    [DepartmentAPI.reducerPath]: DepartmentAPI.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -21,6 +25,8 @@ export const store = configureStore({
       UserLoginApi.middleware,
       changeRoleApi.middleware,
       BannerApi.middleware,
+      TaskRoleApi.middleware,
+      DepartmentAPI.middleware,
       rtkQueryErrorLogger
     )
 })

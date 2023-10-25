@@ -102,16 +102,8 @@ export const routers = createBrowserRouter([
           { path: 'roles', element: <Roles /> },
           { path: 'roles/edit/:id', element: <EditRoles /> },
           { path: 'de-kho', element: <DsDethi /> },
-          {
-            path: 'details/dethi/:id',
-            element: <FormData />,
-            children: [
-              { index: true, element: <Navigate to='easy' /> },
-              { path: 'easy', element: <DsCHDetailsEasy /> },
-              { path: 'normal', element: <DsCHDetailsNormal /> },
-              { path: 'hard', element: <DsCHDetailsHard /> }
-            ]
-          },
+          { path: 'details/dethi/:id', element: <FormData /> },
+          { path: 'details/dethi/edit/:id', element: <FormData /> },
           { path: 'level_easy/details', element: <DetailsDsEasy /> },
           { path: 'de-trung-binh', element: <DsDeThiTB /> },
           { path: 'de-de', element: <DsDeThiEszy /> },

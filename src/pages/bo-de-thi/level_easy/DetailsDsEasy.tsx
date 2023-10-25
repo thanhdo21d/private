@@ -1,6 +1,12 @@
 import { useState } from 'react'
 import axios from 'axios'
+import { useLocation, useParams } from 'react-router-dom'
 const DetailsDsEasy = () => {
+  const { pathname } = useLocation()
+  console.log(pathname)
+  const { id } = useParams()
+  console.log(id)
+
   const [file, setFile] = useState<any>(null)
   const handleFileChange = (event: any) => {
     setFile(event.target.files[0])
@@ -9,8 +15,9 @@ const DetailsDsEasy = () => {
     event.preventDefault()
     const formData = new FormData()
     formData.append('file', file)
+    //653737ca55a6e8a91d4d660a
     try {
-      const response = await axios.post('http://localhost:8282/upload', formData, {
+      const response = await axios.post(`http://localhost:8282/upload/653737ca55a6e8a91d4d660a`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

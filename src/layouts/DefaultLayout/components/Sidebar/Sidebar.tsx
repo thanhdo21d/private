@@ -56,18 +56,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
       .then((res: any) => res.json())
       .then((data: any) => {
         setDataTask(data)
-        const demo = data.user.role.tasks.some(
-          ({ _id, task, path, role }: { _id: string; task: string; path: string; role: string }) => {
-            const lastSlashIndex = pathname.lastIndexOf('/')
-            if (pathname.includes('edit')) {
-              const modifiedUrl = pathname.substring(0, lastSlashIndex)
-            } else {
-              console.log('url')
-            }
-            path.includes(pathname)
-            console.log(pathname)
-          }
-        )
+        // const demo = data.user.role.tasks.some(
+        //   ({ _id, task, path, role }: { _id: string; task: string; path: string; role: string }) => {
+        //     const lastSlashIndex = pathname.lastIndexOf('/')
+        //     if (pathname.includes('edit')) {
+        //       const modifiedUrl = pathname.substring(0, lastSlashIndex)
+        //     } else {
+
+        //     }
+        //     path.includes(pathname)
+        //   }
+        // )
         if (checkMenu == false) {
           // navigate('*')
         }

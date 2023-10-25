@@ -8,6 +8,7 @@ import { toastService } from '~/utils/toask/toaskMessage'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useAppDispatch } from '~/store/root/hook'
 import { setAccessToken } from '~/store/slice/getCookies.slice'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useGetAccessTokenMutation } from '~/apis/auth/signin.api'
 import { setCookie, setProfileToLS } from '~/utils/utils'
 import { useTranslation } from 'react-i18next'
@@ -17,7 +18,7 @@ import img2 from '../../../assets/images/logo/dmvn-logo.png'
 import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
 import Cookies from 'js-cookie'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { AppContext } from '~/contexts/app.contexts'
 import { userLogin } from '~/types/users/userContext'
 import { useGetAllBannersQuery, useGetIdBannersQuery } from '~/apis/banner/banner.api'
@@ -25,6 +26,7 @@ import { Skeleton } from 'antd'
 const Signin = () => {
   const { i18n } = useTranslation()
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const [showPassword, setShowPassword] = useState<boolean>(false)
   const { data: dataBannerID, isFetching } = useGetIdBannersQuery('652c9174be0b746b392bc8fb')
   const { t } = useTranslation(['header'])
   const currentLanguage = locals[i18n.language as keyof typeof locals]
@@ -126,7 +128,6 @@ const Signin = () => {
               }}
             >
               <div className='absolute bg-black opacity-60 inset-0 z-0' />
-              
             </div>
             <div className='w-full py-6 z-20'>
               <button
@@ -169,7 +170,7 @@ const Signin = () => {
                   />
                   <p className='text-danger float-left font-medium text-md'>{errors.email && errors.email.message}</p>
                 </div>
-                <div className='pb-4 pt-4'>
+                <div className='pb-4 pt-4 relative'>
                   <label className='float-left pb-3' htmlFor='password'>
                     {t('product.password')}
                   </label>
@@ -179,11 +180,17 @@ const Signin = () => {
                     whileInView={'show'}
                     viewport={{ once: false, amount: 0.7 }}
                     className='block w-full p-4 cursor-pointer text-lg rounded-sm bg-black'
-                    type='password'
+                    type={showPassword ? 'password' : 'text'}
                     id='password'
                     placeholder='Password'
                     {...register('password')}
                   />
+                  <p
+                    className='absolute right-5 bottom-[35px] cursor-pointer'
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FaEye className='text-2xl' /> : <FaEyeSlash className='text-2xl' />}
+                  </p>
                   <p className='text-danger float-left font-medium text-md'>
                     {errors.password && errors.password.message}
                   </p>

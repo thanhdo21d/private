@@ -18,7 +18,7 @@ const DepartmentAPI = createApi({
       providesTags: ['Department']
     }),
     getIdDepartment: builder.query<any, string>({
-      query: (id: string) => `/role/${id}`,
+      query: (id: string) => `/department/query/${id}`,
       providesTags: ['Department']
     })
   })

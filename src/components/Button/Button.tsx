@@ -13,10 +13,12 @@ interface ButtonProps {
   size?: 'sm' | 'md' | 'lg'
   variant?: 'primary' | 'secondary' | 'danger' | 'warning' | 'success'
   href?: string
+  ref?: any
 }
 
 const Button = ({
   id,
+  ref,
   styleClass,
   children,
   onClick,
@@ -38,6 +40,7 @@ const Button = ({
       <Link
         id={id}
         to={href}
+        ref={ref}
         className={clsxm(
           `flex items-center justify-center gap-2.5 rounded-md py-3 px-6 bg-primary text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10`,
           { 'pointer-events-none opacity-50 bg-opacity-90': disabled },

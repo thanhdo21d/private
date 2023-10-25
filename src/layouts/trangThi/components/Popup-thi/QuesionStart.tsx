@@ -149,7 +149,7 @@ const QuesionStart = () => {
             <div className='text-md flex  items-center font-bold text-black'>hoặc ấn ENTER</div>
           </div>
           <div className='absolute bottom-2 mx-auto flex justify-center'>
-            <Pagination pageSize={5} />
+            <Pagination pageSize={100} />
           </div>
         </Footer>
       </div>

@@ -29,6 +29,7 @@ import FormData from './pages/bo-de-thi/dataDetails/FormData'
 import DsCHDetailsEasy from './pages/bo-de-thi/level_easy/DsCHDetailsEasy'
 import DsCHDetailsHard from './pages/bo-de-thi/level_hard/DsCHDetailsHard'
 import DsCHDetailsNormal from './pages/bo-de-thi/level_normal/DsCHDetailsNormal'
+import EditExams from './pages/bo-de-thi/editExams/EditExams'
 //const randomizedData = [...data].sort(() => Math.random() - 0.5);
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
@@ -103,7 +104,7 @@ export const routers = createBrowserRouter([
           { path: 'roles/edit/:id', element: <EditRoles /> },
           { path: 'de-kho', element: <DsDethi /> },
           { path: 'details/dethi/:id', element: <FormData /> },
-          { path: 'details/dethi/edit/:id', element: <FormData /> },
+          { path: 'details/dethi/edit/:id', element: <EditExams /> },
           { path: 'level_easy/details', element: <DetailsDsEasy /> },
           { path: 'de-trung-binh', element: <DsDeThiTB /> },
           { path: 'de-de', element: <DsDeThiEszy /> },

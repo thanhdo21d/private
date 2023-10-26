@@ -15,5 +15,11 @@ export default defineConfig({
     alias: {
       '~': path.resolve(__dirname, './src')
     }
-  }
+  },
+  build: {
+    target: "esnext", // Đối tượng JavaScript mục tiêu (browserslist)
+    outDir: "dist", // Thư mục đầu ra của build
+    assetsDir: "assets", // Thư mục chứa các tài sản (hình ảnh, font chữ, ...)
+    sourcemap: true, // Tạo sourcemap cho mã đầu ra
+  },
 })

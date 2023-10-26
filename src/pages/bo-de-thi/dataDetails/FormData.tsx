@@ -1,50 +1,59 @@
-import {
-  Badge,
-  Descriptions,
-  DescriptionsProps,
-  Dropdown,
-  Form,
-  Input,
-  MenuProps,
-  Popconfirm,
-  Select,
-  Skeleton,
-  Space,
-  Table,
-  Tooltip
-} from 'antd'
+import { Badge, Descriptions, DescriptionsProps, Form, Input, Popconfirm, Select, Skeleton, Table, Tooltip } from 'antd'
 import { SelectCommonPlacement } from 'antd/es/_util/motion'
 import { Footer } from 'antd/es/layout/layout'
 import { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useGetIdDepartmentQuery } from '~/apis/department/department'
+import { Link, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import {
+  useGetExamsDepartmentQuery,
+  useGetIdDepartmentQuery,
+  useRemoveExamsDepartmentMutation
+} from '~/apis/department/department'
 import { Button } from '~/components'
 import Pagination from '~/pages/roles/Pagination'
 import { DownOutlined } from '@ant-design/icons'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { PiKeyReturnThin } from 'react-icons/pi'
+import logoBacktop from '../../../assets/images/logo/top.png'
 type FieldType = {
   keyword?: string
 }
 const FormData = () => {
-  const { pathname } = useLocation()
   const { id } = useParams()
   const [placement, SetPlacement] = useState<SelectCommonPlacement>('topLeft')
+  const [queryParameters] = useSearchParams()
+  const dataExamsQuery: string | null = queryParameters.get('exams')
+  const dataPageQuery: string | null = queryParameters.get('page')
   const { data, isFetching, isLoading } = useGetIdDepartmentQuery(id as string)
-  console.log(data)
+  const { data: dataExams, isLoading: isLoadingExam } = useGetExamsDepartmentQuery({
+    id: id,
+    exams: dataExamsQuery || 'easy',
+    page: 1,
+    limit: 30
+  })
+  const [
+    removeExamsDepartment,
+    { isLoading: isRemoveLoading, isSuccess: isRemoveSuccess, isError: isRemoveExamsError }
+  ] = useRemoveExamsDepartmentMutation()
   const navigate = useNavigate()
   useEffect(() => {
     const button: any = document.getElementById('buttonmodal')
     const closebutton: any = document.getElementById('closebutton')
     const modal: any = document.getElementById('modal')
   })
-  const confirm = () => {
-    toastService.success('Click on Yes')
+  const confirm = (idExams: string) => {
+    removeExamsDepartment({
+      id: id,
+      body: [idExams],
+      exmas: dataExamsQuery
+    })
+      .unwrap()
+      .then(() => toastService.success('Delete success'))
+    if (isRemoveExamsError) toastService.error('errror')
   }
   const cancel = () => {
     toastService.error('Click on No')
   }
-  const dataSource = data?.data?.easy.map((items: any, index: number) => ({
+  const dataSource = dataExams?.data?.map((items: any, index: number) => ({
     key: items._id,
     index: index + 1,
     question: items.question,
@@ -89,7 +98,7 @@ const FormData = () => {
     },
     {
       title: (
-        <p className='text-md font-bold flex justify-center'>
+        <div className='text-md font-bold flex justify-center'>
           <Select
             defaultValue='Options'
             style={{ width: 130 }}
@@ -97,19 +106,19 @@ const FormData = () => {
             options={[
               {
                 value: 'Options',
-                label: 'Options '
+                label: <p>Options</p>
               },
               {
                 value: 'NingBo',
-                label: 'lý thuyết'
+                label: <p>lý thuyết</p>
               },
               {
                 value: 'WenZhou',
-                label: 'thực hành'
+                label: <p onClick={() => alert('ok')}>thực hành</p>
               }
             ]}
           />
-        </p>
+        </div>
       ),
       dataIndex: 'option',
       key: 'option',
@@ -137,7 +146,7 @@ const FormData = () => {
               okButtonProps={{
                 style: { backgroundColor: 'blue', marginRight: '20px' }
               }}
-              onConfirm={confirm}
+              onConfirm={() => confirm(id)}
               onCancel={cancel}
               okText='Yes'
               cancelText='No'
@@ -325,14 +334,31 @@ const FormData = () => {
                     id='headlessui-menu-items-117'
                     role='menu'
                   >
-                    <div className='px-4 py-3 hover:bg-warning cursor-pointer '>
+                    <div
+                      onClick={() =>
+                        navigate({
+                          search: createSearchParams({
+                            exams: 'easy'
+                          }).toString()
+                        })
+                      }
+                      className='px-4 py-3 hover:bg-warning cursor-pointer '
+                    >
                       <p className='text-sm  hover:text-white hover:font-medium font-medium leading-5 text-gray-900 truncate'>
                         Danh Sách Câu Hỏi Dễ
                       </p>
                     </div>
-                    <div className='py-1 hover:bg-warning cursor-pointer'>
+                    <div
+                      onClick={() =>
+                        navigate({
+                          search: createSearchParams({
+                            exams: 'normal'
+                          }).toString()
+                        })
+                      }
+                      className='py-1 hover:bg-warning cursor-pointer'
+                    >
                       <a
-                        href='javascript:void(0)'
                         tabIndex={0}
                         className='text-gray-700 hover:text-white hover:font-medium flex justify-between w-full px-4 py-2 text-sm leading-5 text-left'
                         role='menuitem'
@@ -340,9 +366,17 @@ const FormData = () => {
                         Danh Sách Câu Hỏi Trung Bình
                       </a>
                     </div>
-                    <div className='py-1 hover:bg-warning cursor-pointer'>
+                    <div
+                      onClick={() =>
+                        navigate({
+                          search: createSearchParams({
+                            exams: 'hard'
+                          }).toString()
+                        })
+                      }
+                      className='py-1 hover:bg-warning cursor-pointer'
+                    >
                       <a
-                        href='javascript:void(0)'
                         tabIndex={3}
                         className='text-gray-700 flex hover:text-white hover:font-medium justify-between w-full px-4 py-2 text-sm leading-5 text-left'
                         role='menuitem'
@@ -356,9 +390,7 @@ const FormData = () => {
             </div>
           </div>
           <div
-            className={` ${
-              pathname === '/admin/details' ? 'bg-body' : ' bg-white'
-            }  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide bg-[#001529]  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
+            className={` bg-white  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
           >
             <Tooltip title='Trở Về'>
               <Link className='text-base font-medium text-black  flex items-center gap-4' to='/admin/de-kho'>
@@ -373,7 +405,16 @@ const FormData = () => {
       </div>
       {/*  */}
       <div>
-        {isLoading || isFetching ? (
+        <Tooltip title='back to top'>
+          <img
+            className='w-[50px] fixed bottom-10 right-5 cursor-pointer p-1 hover:bg-secondary'
+            src={`${logoBacktop}`}
+          />
+        </Tooltip>
+      </div>
+      {/*  */}
+      <div>
+        {isLoading || isFetching || isLoadingExam ? (
           <div>
             <Skeleton />
             <Skeleton />
@@ -384,6 +425,7 @@ const FormData = () => {
         ) : (
           <Table dataSource={dataSource} columns={columns} pagination={false} />
         )}
+
         <div>
           <div
             id='modal'

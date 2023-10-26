@@ -14,7 +14,7 @@ import { setCookie, setProfileToLS } from '~/utils/utils'
 import { useTranslation } from 'react-i18next'
 import { locals } from '~/i18n/i18n'
 import img from '../../../assets/images/logo/1111111111111.jpg'
-import img2 from '../../../assets/images/logo/dmvn-logo.png'
+import { TypeAnimation } from 'react-type-animation'
 import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
 import Cookies from 'js-cookie'
@@ -26,7 +26,7 @@ import { Skeleton } from 'antd'
 const Signin = () => {
   const { i18n } = useTranslation()
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
-  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showPassword, setShowPassword] = useState<boolean>(true)
   const { data: dataBannerID, isFetching } = useGetIdBannersQuery('652c9174be0b746b392bc8fb')
   const { t } = useTranslation(['header'])
   const currentLanguage = locals[i18n.language as keyof typeof locals]
@@ -101,7 +101,9 @@ const Signin = () => {
                 viewport={{ once: false, amount: 0.7 }}
                 className='text-5xl font-bold text-left tracking-wide'
               >
-                Hệ Thống Thi Denso Vietnam
+                <span className='text-orange-200'>
+                  <TypeAnimation sequence={['Hệ Thống Thi Denso Vietnam', 1000, '']} speed={50} repeat={Infinity} />
+                </span>
               </motion.h1>
               <motion.p
                 variants={fadeIn('up', 0.25)}

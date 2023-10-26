@@ -47,6 +47,17 @@ const DepartmentAPI = createApi({
         }
       },
       invalidatesTags: ['Department']
+    }),
+    getDetailsExams: builder.query<any, any>({
+      query: ({ idDepartment, idExams, exams }: { idDepartment: string; idExams: string; exams: string }) => {
+        return {
+          url: `/examsDetails/${idDepartment}/${idExams}`,
+          params: {
+            exams: exams
+          }
+        }
+      },
+      providesTags: ['Department']
     })
   })
 })
@@ -54,6 +65,7 @@ export const {
   useGetAllDepartmentQuery,
   useGetIdDepartmentQuery,
   useGetExamsDepartmentQuery,
-  useRemoveExamsDepartmentMutation
+  useRemoveExamsDepartmentMutation,
+  useGetDetailsExamsQuery
 } = DepartmentAPI
 export default DepartmentAPI

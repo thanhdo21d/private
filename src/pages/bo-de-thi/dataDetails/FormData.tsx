@@ -4,6 +4,7 @@ import { Footer } from 'antd/es/layout/layout'
 import { useEffect, useState } from 'react'
 import { Link, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import {
+  useGetDetailsExamsQuery,
   useGetExamsDepartmentQuery,
   useGetIdDepartmentQuery,
   useRemoveExamsDepartmentMutation
@@ -14,6 +15,7 @@ import { DownOutlined } from '@ant-design/icons'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { PiKeyReturnThin } from 'react-icons/pi'
 import logoBacktop from '../../../assets/images/logo/top.png'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 type FieldType = {
   keyword?: string
 }
@@ -22,6 +24,7 @@ const FormData = () => {
   const [placement, SetPlacement] = useState<SelectCommonPlacement>('topLeft')
   const [queryParameters] = useSearchParams()
   const dataExamsQuery: string | null = queryParameters.get('exams')
+  const dataExamsQueryID: string | null = queryParameters.get('idExams')
   const dataPageQuery: string | null = queryParameters.get('page')
   const { data, isFetching, isLoading } = useGetIdDepartmentQuery(id as string)
   const { data: dataExams, isLoading: isLoadingExam } = useGetExamsDepartmentQuery({
@@ -30,6 +33,12 @@ const FormData = () => {
     page: 1,
     limit: 30
   })
+  const { data: getDetailsExams } = useGetDetailsExamsQuery({
+    idDepartment: id,
+    idExams: dataExamsQueryID,
+    exams: dataExamsQuery || 'easy'
+  })
+  console.log(getDetailsExams)
   const [
     removeExamsDepartment,
     { isLoading: isRemoveLoading, isSuccess: isRemoveSuccess, isError: isRemoveExamsError }
@@ -52,6 +61,14 @@ const FormData = () => {
   }
   const cancel = () => {
     toastService.error('Click on No')
+  }
+  const handelGetDetailsExams = (idExams: string) => {
+    navigate({
+      search: createSearchParams({
+        idExams: idExams
+      }).toString()
+    })
+    modal.classList.add('scale-100')
   }
   const dataSource = dataExams?.data?.map((items: any, index: number) => ({
     key: items._id,
@@ -132,14 +149,19 @@ const FormData = () => {
         return (
           <div className='flex items-center justify-center gap-3'>
             <Button
-              onClick={() => modal.classList.add('scale-100')}
+              onClick={() => handelGetDetailsExams(id)}
               id='buttonmodal'
-              styleClass='focus:outline-none hover:bg-warning text-white bg-opacity-75 rounded-lg ring-4 ring-indigo-300'
+              styleClass='focus:outline-none !p-2 w-[70px]  bg-success hover:bg-warning text-white '
               type='button'
             >
-              Chit Tiết
+              Chi Tiết
             </Button>
-            <Button onClick={() => navigate(`/admin/details/dethi/edit/${id}`)}>Edit</Button>
+            <Button
+              styleClass='p-2 w-[70px] focus:outline-none hover:bg-warning'
+              onClick={() => navigate(`/admin/details/dethi/edit/${id}`)}
+            >
+              Edit
+            </Button>
             <Popconfirm
               title='Delete the task'
               description='Are you sure to delete this task?'
@@ -151,7 +173,9 @@ const FormData = () => {
               okText='Yes'
               cancelText='No'
             >
-              <Button>Delete</Button>
+              <Button styleClass='p-2 w-[70px] focus:outline-none hover:bg-danger'>
+                {isRemoveLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'Delete'}
+              </Button>
             </Popconfirm>
           </div>
         )
@@ -168,89 +192,43 @@ const FormData = () => {
     {
       key: '2',
       label: <p className='font-bold text-md'>category question</p>,
-      children: 'IS/App',
+      children: <p>{getDetailsExams?.dataDepartments?.category_question}</p>,
       span: 3
     },
     {
       key: '3',
       label: <p className='font-bold text-md'>Câu hỏi</p>,
-      children: 'hãy cho biết hành động sau',
+      children: <p>{getDetailsExams?.dataDepartments?.question}</p>,
       span: 2
     },
     {
       key: '4',
       label: 'Ảnh Câu Hỏi',
-      children: (
-        <img
-          className='w-[80px]'
-          src='https://png.pngtree.com/thumb_back/fw800/background/20230527/pngtree-an-anime-girl-in-a-beautiful-pose-with-beautiful-flowers-image_2698613.jpg'
-        />
-      )
+      children: <img className='w-[80px]' src={`http://localhost:8282/${getDetailsExams?.dataDepartments?.image[0]}`} />
     },
     {
       key: '5',
       label: <p className='font-bold text-md'>Đáp án</p>,
       children: (
         <div className=''>
-          <div className='w-full h-fit border shadow-xl rounded-md   border-danger'>
-            <p className='flex gap-2 items-center ml-5 mt-2'>
-              <span className='bg-danger flex justify-center items-center w-[30px] h-[30px] rounded-full text-white font-bold'>
-                A
+          {getDetailsExams?.dataDepartments?.choose?.map((item: any, index: number) => (
+            <div className='w-full h-fit border my-2 shadow-xl rounded-md   border-danger'>
+              <p className='flex gap-2 items-center ml-5 mt-2'>
+                <span className='bg-danger flex justify-center items-center w-[30px] h-[30px] rounded-full text-white font-bold'>
+                  {index === 0 && <a>A</a>}
+                  {index === 1 && <a>B</a>}
+                  {index === 2 && <a>C</a>}
+                  {index === 3 && <a>D</a>}
+                </span>
+                <span> : {item.q}</span>
+              </p>
+              <span>
+                <img className='w-[80px] ml-5 mt-2 mb-2' src={`http://localhost:8282/${item.img}`} />
               </span>
-              <span> : chịu</span>
-            </p>
-            <span>
-              <img
-                className='w-[80px] ml-5 mt-2 mb-2'
-                src='https://png.pngtree.com/thumb_back/fw800/background/20230527/pngtree-an-anime-girl-in-a-beautiful-pose-with-beautiful-flowers-image_2698613.jpg'
-              />
-            </span>
-          </div>
+            </div>
+          ))}
+
           {/*  */}
-          <div className='w-full h-fit border shadow-xl my-3 rounded-md   border-danger'>
-            <p className='flex gap-2 items-center ml-5 mt-2'>
-              <span className='bg-danger flex justify-center items-center w-[30px] h-[30px] rounded-full text-white font-bold'>
-                B
-              </span>
-              <span> : chịu</span>
-            </p>
-            <span>
-              <img
-                className='w-[80px] ml-5 mt-2 mb-2'
-                src='https://png.pngtree.com/thumb_back/fw800/background/20230527/pngtree-an-anime-girl-in-a-beautiful-pose-with-beautiful-flowers-image_2698613.jpg'
-              />
-            </span>
-          </div>
-          {/*  */}
-          <div className='w-full h-fit border shadow-xl rounded-md   border-danger'>
-            <p className='flex gap-2 items-center ml-5 mt-2'>
-              <span className='bg-danger flex justify-center items-center w-[30px] h-[30px] rounded-full text-white font-bold'>
-                C
-              </span>
-              <span> : chịu</span>
-            </p>
-            <span>
-              <img
-                className='w-[80px] ml-5 mt-2 mb-2'
-                src='https://png.pngtree.com/thumb_back/fw800/background/20230527/pngtree-an-anime-girl-in-a-beautiful-pose-with-beautiful-flowers-image_2698613.jpg'
-              />
-            </span>
-          </div>
-          {/*  */}
-          <div className='w-full h-fit border shadow-xl rounded-md mt-3   border-danger'>
-            <p className='flex gap-2 items-center ml-5 mt-2'>
-              <span className='bg-danger flex justify-center items-center w-[30px] h-[30px] rounded-full text-white font-bold'>
-                D
-              </span>
-              <span> : chịu</span>
-            </p>
-            <span>
-              <img
-                className='w-[80px] ml-5 mt-2 mb-2'
-                src='https://png.pngtree.com/thumb_back/fw800/background/20230527/pngtree-an-anime-girl-in-a-beautiful-pose-with-beautiful-flowers-image_2698613.jpg'
-              />
-            </span>
-          </div>
         </div>
       ),
       span: 3
@@ -258,19 +236,19 @@ const FormData = () => {
     {
       key: '6',
       label: <p className='font-bold text-md'>đáp án đúng</p>,
-      children: <Badge status='processing' text='A' />,
+      children: <Badge status='processing' text={getDetailsExams?.dataDepartments?.answer} />,
       span: 3
     },
     {
       key: '7',
       label: <p className='font-bold text-md'>điểm số</p>,
-      children: '1',
+      children: <p>{getDetailsExams?.dataDepartments?.point}</p>,
       span: 3
     },
     {
       key: '8',
       label: <p className='font-bold text-md'>loại câu hỏi</p>,
-      children: 'Lý Thuyết',
+      children: <p>{getDetailsExams?.dataDepartments?.option}</p>,
       span: 3
     }
   ]

@@ -10,8 +10,14 @@ import Confetti from 'react-confetti'
 import Pagination from '~/pages/roles/Pagination'
 import { AiOutlineEnter } from 'react-icons/ai'
 import { TiTick } from 'react-icons/ti'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import { Form } from 'antd'
+import { container, formats } from '~/utils/quill'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
+  const [Question, setQuestion] = useState<boolean>(false)
+
   const navigate = useNavigate()
   const [height, setHeight] = useState<any>(null)
   const [width, setWidth] = useState<any>(null)
@@ -21,6 +27,7 @@ const QuesionStart = () => {
     setHeight((confetiRef.current = '2000px'))
     setWidth((confetiRef.current = '1200px'))
   }, [])
+  const reactQuillRef = useRef<ReactQuill>(null)
   const handelSubmit = () => {
     const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
     if (confirm) {
@@ -31,7 +38,9 @@ const QuesionStart = () => {
       }, 10000)
     }
   }
-
+  const handleProcedureContentChange = (content: string) => {
+    console.log(content)
+  }
   return (
     <div className=' mx-auto px-4  '>
       <div className=' min-w-0 h-[800px] overflow-y-scroll break-words   bg-white  shadow-xl rounded-lg relative'>
@@ -46,11 +55,14 @@ const QuesionStart = () => {
             // backgroundColor : "azure"
           }}
         >
-          <div className='flex w-[100%]  justify-between '>
+          <div className='flex w-[100%] items-center  justify-between '>
             <div>
               <p className='text-xl  py-2 pl-5 font-bold text-white text-center items-center'>
                 {t('product.total_time')} : <Countdown date={Date.now() + 10000000} />
               </p>
+            </div>
+            <div>
+              <h2 className='text-xl font-bold text-white'>Đề Thi Chính Thức Phòng IS </h2>
             </div>
             <div className='justify-end'>
               <Button
@@ -76,43 +88,71 @@ const QuesionStart = () => {
                 Quis sint quo eum tempore veritatis iusto minima quas laboriosam temporibus iure! Quam mollitia sapiente
                 eligendi quia? Dolore nisi cum sit nihil.
               </div>
-
-              <div className='flex justify-center mx-auto !mt-10'>
-                <div className='grid-cols-1 cursor-pointer	mx-auto  gap-5 grid'>
-                  <div
-                    className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
+              {Question ? (
+                <div className='flex justify-center mx-auto !mt-10'>
+                  <div className='grid-cols-1 cursor-pointer	mx-auto  gap-5 grid'>
+                    <div
+                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
         overflow-h-scroll min-h-[50px] transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
          hover:scale-80 hover:bg-indigo-500 duration-300 gap-2'
-                  >
-                    <span className='font-bold text-xl pl-5 text-black'>A </span> :{' '}
-                    <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
-                  </div>
-                  <div
-                    className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
+                    >
+                      <span className='font-bold text-xl pl-5 text-black'>A </span> :{' '}
+                      <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
+                    </div>
+                    <div
+                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
         overflow-h-scroll min-h-[50px] transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
          hover:scale-80 hover:bg-indigo-500 duration-300 gap-2'
-                  >
-                    <span className='font-bold text-xl pl-5 text-black'>B </span> :{' '}
-                    <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
-                  </div>
-                  <div
-                    className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
+                    >
+                      <span className='font-bold text-xl pl-5 text-black'>B </span> :{' '}
+                      <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
+                    </div>
+                    <div
+                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
         overflow-h-scroll min-h-[50px] transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
          hover:scale-80 hover:bg-indigo-500 duration-300 gap-2'
-                  >
-                    <span className='font-bold text-xl pl-5 text-black'>C </span> :{' '}
-                    <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
-                  </div>
-                  <div
-                    className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
+                    >
+                      <span className='font-bold text-xl pl-5 text-black'>C </span> :{' '}
+                      <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
+                    </div>
+                    <div
+                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
         overflow-h-scroll min-h-[50px] transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
          hover:scale-80 hover:bg-indigo-500 duration-300 gap-2'
-                  >
-                    <span className='font-bold text-xl pl-5 text-black'>D </span> :{' '}
-                    <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
+                    >
+                      <span className='font-bold text-xl pl-5 text-black'>D </span> :{' '}
+                      <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className='mt-15'>
+                  <p className='text-xl font-bold text-black mb-2'>Vui Lòng Nhập câu trả lời!</p>
+                  <Form.Item
+                    className='dark:text-white mb-17'
+                    name='description'
+                    rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+                  >
+                    <ReactQuill
+                      className='h-[300px]  scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'
+                      ref={reactQuillRef}
+                      theme='snow'
+                      placeholder='Vui Lòng Nhập câu trả lời!...........'
+                      modules={{
+                        toolbar: {
+                          container: container
+                        },
+                        clipboard: {
+                          matchVisual: false
+                        }
+                      }}
+                      formats={formats}
+                      value={''}
+                      onChange={handleProcedureContentChange}
+                    />
+                  </Form.Item>
+                </div>
+              )}
             </div>
           )}
           {showPop ? (
@@ -139,7 +179,10 @@ const QuesionStart = () => {
               Quay Lại <AiOutlineEnter size={22} />
             </div>
             <div>
-              <Button styleClass='cursor-pointer btn-grad w-[200px] h-[50px] !flex items-center gap-2'>
+              <Button
+                onClick={() => setQuestion(!Question)}
+                styleClass='cursor-pointer btn-grad w-[200px] h-[50px] !flex items-center gap-2'
+              >
                 <span> submit</span>
                 <span>
                   <TiTick className='text-success text-xl font-bold' />

@@ -25,7 +25,7 @@ import { useGetAllBannersQuery, useGetIdBannersQuery } from '~/apis/banner/banne
 import { Skeleton } from 'antd'
 const Signin = () => {
   const { i18n } = useTranslation()
-  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile, profile } = useContext(AppContext)
   const [showPassword, setShowPassword] = useState<boolean>(true)
   const { data: dataBannerID, isFetching } = useGetIdBannersQuery('652c9174be0b746b392bc8fb')
   const { t } = useTranslation(['header'])

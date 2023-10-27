@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon } from '~/components'
 import { Menu, Tooltip } from 'antd'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { items, itemsUser } from './components'
+import { items, itemsUser, settingsSystem } from './components'
 import { AiFillHome } from 'react-icons/ai'
 import { AppContext } from '~/contexts/app.contexts'
 import { useGetAllRolesQuery } from '~/apis/roles/roles.api'
@@ -13,8 +13,9 @@ interface SidebarProps {
   sidebarOpen: boolean
   setSidebarOpen: (arg: boolean) => void
   textUi: string
+  checkInfo?: boolean
 }
-const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProps) => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const [dataTask, setDataTask] = useState<any[]>([])
@@ -107,36 +108,52 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         <nav className='px-3 mt-5'>
           <div className='select-none'>
             <h3 className='text-bodydark2 mb-4 ml-4 text-sm font-semibold select-none'>MENU</h3>
-            <Menu theme='dark' defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={items} />
-            <div className='grid grid-rows-1 items-center 	gap-y-5'>
-              {dataTask &&
-                dataTask?.user?.role?.tasks
-                  ?.filter((taskDb: any) => !taskDb.task.includes('sửa') && !taskDb.task.includes('Thêm'))
-                  .map(({ path, task, _id }: { path: string; task: string; _id: string }) => {
-                    return (
-                      <div key={_id}>
-                        <div
-                          className={`hover:bg-strokedark rounded-md flex h-[35px] ${
-                            pathname === path ? 'bg-danger' : ''
-                          }`}
-                        >
-                          <Link className='flex ml-5 gap-3 items-center' to={`${task === 'home' ? '/' : path}`}>
-                            <span className='animate-spin'>
-                              <FcInfo className='text-2xl' />
-                            </span>
-                            <span
-                              className={`font-satoshi text-bodydark2 ${
-                                pathname === path ? 'text-white font-bold' : ''
-                              } `}
-                            >
-                              {task}
-                            </span>
-                          </Link>{' '}
+            {checkInfo ? (
+              <Menu
+                theme='dark'
+                defaultSelectedKeys={['1']}
+                defaultOpenKeys={['sub1']}
+                mode='inline'
+                items={itemsUser}
+              />
+            ) : (
+              <div className='grid grid-rows-1 items-center 	gap-y-5'>
+                {dataTask &&
+                  dataTask?.user?.role?.tasks
+                    ?.filter((taskDb: any) => !taskDb.task.includes('sửa') && !taskDb.task.includes('Thêm'))
+                    .map(({ path, task, _id }: { path: string; task: string; _id: string }) => {
+                      return (
+                        <div key={_id}>
+                          <div
+                            className={`hover:bg-strokedark rounded-md flex h-[35px] ${
+                              pathname === path ? 'bg-danger' : ''
+                            }`}
+                          >
+                            <Link className='flex ml-5 gap-3 items-center' to={`${task === 'home' ? '/' : path}`}>
+                              <span className='animate-spin'>
+                                <FcInfo className='text-2xl' />
+                              </span>
+                              <span
+                                className={`font-satoshi text-bodydark2 ${
+                                  pathname === path ? 'text-white font-bold' : ''
+                                } `}
+                              >
+                                {task}
+                              </span>
+                            </Link>{' '}
+                          </div>
                         </div>
-                      </div>
-                    )
-                  })}
-            </div>
+                      )
+                    })}
+                <Menu
+                  theme='dark'
+                  defaultSelectedKeys={['1']}
+                  defaultOpenKeys={['sub1']}
+                  mode='inline'
+                  items={settingsSystem}
+                />
+              </div>
+            )}
           </div>
         </nav>
       </div>

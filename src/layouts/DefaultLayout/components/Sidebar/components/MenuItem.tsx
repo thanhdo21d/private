@@ -2,7 +2,8 @@ import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons'
 import { CgProfile } from 'react-icons/cg'
 import type { MenuProps } from 'antd'
 import { NavLink } from 'react-router-dom'
-import { useGetAllRolesQuery } from '~/apis/roles/roles.api'
+import { UserOutlined, BarChartOutlined, ShoppingOutlined } from '@ant-design/icons'
+import { FaUserEdit, FaUserFriends, FaClipboardList, FaRegNewspaper, FaImages } from 'react-icons/fa'
 type MenuItem = Required<MenuProps>['items'][number]
 export function getItem(
   label?: React.ReactNode,
@@ -47,4 +48,11 @@ export const itemsUser: MenuProps['items'] = [
     getItem(<NavLink to={`/user-info/thanh-tich`}>Thành Tích</NavLink>, 'Thành Tích')
   ])
   // SettingOutlined
+]
+export const settingsSystem: MenuProps['items'] = [
+  getItem('Người dùng', 'uses', <UserOutlined />, [
+    getItem(<NavLink to={`/manager/customers`}>Khách hàng</NavLink>, 'customers', <FaUserFriends />),
+    getItem(<NavLink to={`/manager/staffs`}>Nhân viên</NavLink>, 'staffs', <FaUserEdit />)
+  ]),
+  getItem(<NavLink to={`/settings`}>Cài đặt</NavLink>, 'settings', <SettingOutlined />)
 ]

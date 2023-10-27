@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { AppContext } from '~/contexts/app.contexts'
 import { Radio } from 'antd'
-
+import logoAction from '../../assets/hello.png'
+import { TypeAnimation } from 'react-type-animation'
 const AcceptUserDipament = () => {
   const { t } = useTranslation(['header'])
   const { profile } = useContext(AppContext)
@@ -18,7 +19,7 @@ const AcceptUserDipament = () => {
     toastService.success(t('product.happy_user'))
   }
   return (
-    <div>
+    <div className='relative'>
       <div>
         <div className=' mx-auto mt-20 px-4 w-[1000px] '>
           <div className='relative  min-w-0 break-words h-[400px] bg-white opacity-90 w-full  shadow-xl rounded-lg '>
@@ -108,6 +109,23 @@ const AcceptUserDipament = () => {
           </div>
         </div>
       </div>
+      {profile?.role.name !== 'Staff' && (
+        <div className='absolute right-15 -bottom-[20rem] flex '>
+          <div className='w-[300px] h-[99px] shadow-xl rounded-md bg-white'>
+            <p className='text-black font-medium text-left pl-5 pt-3'>
+              <TypeAnimation sequence={['Quay Về Trang Quản Trị', 1000, '']} speed={50} repeat={Infinity} />
+            </p>
+            <div>
+              <Button onClick={() => navigate('/admin')} styleClass='h-[30px] rounded-sm ml-5 mt-5 hover:bg-warning'>
+                Trở Về
+              </Button>
+            </div>
+          </div>
+          <div>
+            <img className='w-[220px]' src={`${logoAction}`} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

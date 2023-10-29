@@ -6,7 +6,7 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000
+    port: 3100
   },
   css: {
     devSourcemap: true
@@ -17,9 +17,9 @@ export default defineConfig({
     }
   },
   build: {
-    target: "esnext", // Đối tượng JavaScript mục tiêu (browserslist)
-    outDir: "dist", // Thư mục đầu ra của build
-    assetsDir: "assets", // Thư mục chứa các tài sản (hình ảnh, font chữ, ...)
-    sourcemap: true, // Tạo sourcemap cho mã đầu ra
-  },
+    target: 'esnext', // Đối tượng JavaScript mục tiêu (browserslist)
+    outDir: 'dist', // Thư mục đầu ra của build
+    assetsDir: 'assets', // Thư mục chứa các tài sản (hình ảnh, font chữ, ...)
+    sourcemap: true // Tạo sourcemap cho mã đầu ra
+  }
 })

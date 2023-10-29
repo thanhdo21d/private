@@ -1,7 +1,16 @@
 const Loader = () => {
   return (
-    <div className='flex items-center justify-center h-screen bg-white'>
-      <div className='animate-spin border-primary border-t-transparent w-16 h-16 border-4 border-solid rounded-full'></div>
+    <div className='flex items-center justify-center h-screen bg-black'>
+      <div>
+        <div className='cube'>
+          <div className='face front' />
+          <div className='face back' />
+          <div className='face right' />
+          <div className='face left' />
+          <div className='face top' />
+          <div className='face bottom' />
+        </div>
+      </div>
     </div>
   )
 }

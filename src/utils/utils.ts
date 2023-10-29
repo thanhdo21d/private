@@ -50,3 +50,4 @@ export const removeProfileFromLS = () => {
   localStorage.removeItem('profile')
   Cookies.remove('token')
 }
+export const pause = (timer: number) => new Promise((resolve) => setTimeout(resolve, timer))

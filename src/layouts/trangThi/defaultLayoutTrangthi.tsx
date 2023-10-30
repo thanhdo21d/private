@@ -65,7 +65,7 @@ const DefaultLayoutTrangthi = () => {
         </button>
       </div>
 
-      <div className='right-4 flex gap-2 justify-center top-5  absolute w-[500px] items-center text-center bg-bodydark2 rounded-lg h-[80px]'>
+      <div className='right-4 flex gap-2 justify-center top-5  absolute w-[500px] items-center text-center bg-black bg-opacity-50 rounded-lg h-[80px]'>
         <div
           className='pt-4 relative w-[50px] h-[50px]  bg-danger rounded-full shadow-md cursor-pointer'
           onClick={handelLogOut}
@@ -93,7 +93,7 @@ const DefaultLayoutTrangthi = () => {
                 className=''
                 onCancel={cancel}
                 okButtonProps={{
-                  style: { backgroundColor: 'blue' , marginRight : "20px"}
+                  style: { backgroundColor: 'blue', marginRight: '20px' }
                 }}
                 okText='Yes'
                 cancelText='No'

@@ -41,18 +41,18 @@ const DepartmentAPI = createApi({
           method: 'DELETE',
           body: { idExams: body },
           params: {
-            dynamicLevelExams: exmas
+            dynamicLevelExams: exmas || 'easy'
           }
         }
       },
       invalidatesTags: ['Department']
     }),
     getDetailsExams: builder.query<any, any>({
-      query: ({ idDepartment, idExams, exams }: { idDepartment: string; idExams: string; exams: string }) => {
+      query: ({ idDepartment, exams }: { idDepartment: string; exams: string }) => {
         return {
-          url: `/examsDetails/${idDepartment}/${idExams}`,
+          url: `/examsDetails/${idDepartment}`,
           params: {
-            exams: exams
+            exams: exams || 'easy'
           }
         }
       },

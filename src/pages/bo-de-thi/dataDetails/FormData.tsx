@@ -24,7 +24,7 @@ const FormData = () => {
   const { id } = useParams()
   const [placement, SetPlacement] = useState<SelectCommonPlacement>('topLeft')
   const [queryParameters] = useSearchParams()
-  const dataExamsQuery: string | null = queryParameters.get('exams')
+  const dataExamsQuery: any = queryParameters.get('exams')
   const dataExamsQueryID: string | null = queryParameters.get('idExams')
   const dataPageQuery: string | null = queryParameters.get('page')
   const { data, isFetching, isLoading } = useGetIdDepartmentQuery(id as string)
@@ -34,23 +34,15 @@ const FormData = () => {
     page: 1,
     limit: 30
   })
-  console.log(dataExams)
   const { data: getDetailsExams } = useGetDetailsExamsQuery({
-    idDepartment: id,
-    idExams: dataExamsQueryID,
+    idDepartment: dataExamsQueryID,
     exams: dataExamsQuery || 'easy'
   })
-  console.log(getDetailsExams)
   const [
     removeExamsDepartment,
     { isLoading: isRemoveLoading, isSuccess: isRemoveSuccess, isError: isRemoveExamsError }
   ] = useRemoveExamsDepartmentMutation()
   const navigate = useNavigate()
-  useEffect(() => {
-    const button: any = document.getElementById('buttonmodal')
-    const closebutton: any = document.getElementById('closebutton')
-    const modal: any = document.getElementById('modal')
-  })
   const confirm = (idExams: string) => {
     removeExamsDepartment({
       id: id,
@@ -66,11 +58,11 @@ const FormData = () => {
   }
   const handelGetDetailsExams = (idExams: string) => {
     navigate({
+      pathname: `/admin/details-exams/${idExams}`,
       search: createSearchParams({
-        idExams: idExams
+        exams: dataExamsQuery || 'easy'
       }).toString()
     })
-    modal.classList.add('scale-100')
   }
   const dataSource = dataExams?.data?.map((items: any, index: number) => ({
     key: items._id,
@@ -182,76 +174,6 @@ const FormData = () => {
           </div>
         )
       }
-    }
-  ]
-  const items: DescriptionsProps['items'] = [
-    {
-      key: '1',
-      label: <p className='font-bold text-md'>Category</p>,
-      children: <p>{data?.data?.name}</p>,
-      span: 3
-    },
-    {
-      key: '2',
-      label: <p className='font-bold text-md'>category question</p>,
-      children: <p>{getDetailsExams?.dataDepartments?.category_question}</p>,
-      span: 3
-    },
-    {
-      key: '3',
-      label: <p className='font-bold text-md'>Câu hỏi</p>,
-      children: <p>{getDetailsExams?.dataDepartments?.question}</p>,
-      span: 2
-    },
-    {
-      key: '4',
-      label: 'Ảnh Câu Hỏi',
-      children: <img className='w-[80px]' src={`${url}${getDetailsExams?.dataDepartments?.image[0]}`} />
-    },
-    {
-      key: '5',
-      label: <p className='font-bold text-md'>Đáp án</p>,
-      children: (
-        <div className=''>
-          {getDetailsExams?.dataDepartments?.choose?.map((item: any, index: number) => (
-            <div className='w-full h-fit border my-2 shadow-xl rounded-md   border-danger'>
-              <p className='flex gap-2 items-center ml-5 mt-2'>
-                <span className='bg-danger flex justify-center items-center w-[30px] h-[30px] rounded-full text-white font-bold'>
-                  {index === 0 && <a>A</a>}
-                  {index === 1 && <a>B</a>}
-                  {index === 2 && <a>C</a>}
-                  {index === 3 && <a>D</a>}
-                </span>
-                <span> : {item.q}</span>
-              </p>
-              <span>
-                <img className='w-[80px] ml-5 mt-2 mb-2' src={`${url}${item.img}`} />
-              </span>
-            </div>
-          ))}
-
-          {/*  */}
-        </div>
-      ),
-      span: 3
-    },
-    {
-      key: '6',
-      label: <p className='font-bold text-md'>đáp án đúng</p>,
-      children: <Badge status='processing' text={getDetailsExams?.dataDepartments?.answer} />,
-      span: 3
-    },
-    {
-      key: '7',
-      label: <p className='font-bold text-md'>điểm số</p>,
-      children: <p>{getDetailsExams?.dataDepartments?.point}</p>,
-      span: 3
-    },
-    {
-      key: '8',
-      label: <p className='font-bold text-md'>loại câu hỏi</p>,
-      children: <p>{getDetailsExams?.dataDepartments?.option}</p>,
-      span: 3
     }
   ]
   return (
@@ -405,72 +327,6 @@ const FormData = () => {
         ) : (
           <Table dataSource={dataSource} columns={columns} pagination={false} />
         )}
-
-        <div>
-          <div
-            id='modal'
-            className='fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-boxdark z-50 bg-opacity-50 transform scale-0 transition-transform duration-300'
-          >
-            <div className='bg-white w-1/2 h-[80%] overflow-y-scroll p-12 rounded-sm shadow-sm f'>
-              <div className='flex items-center justify-between'>
-                <div>
-                  <button
-                    onClick={() => modal.classList.remove('scale-100')}
-                    id='closebutton'
-                    type='button'
-                    className='focus:outline-none'
-                  >
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      className='h-8 w-8 hover:scale-50 text-danger font-bold'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      stroke='currentColor'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className=''>
-                  <p className='text-2xl font-medium text-black'>Chi Tiết Câu Hỏi</p>
-                </div>
-                <div>
-                  <button
-                    onClick={() => modal.classList.remove('scale-100')}
-                    id='closebutton'
-                    type='button'
-                    className='focus:outline-none'
-                  >
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      className='h-8 w-8  hover:scale-50 text-danger font-bold'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      stroke='currentColor'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <div className='border-t border-black my-2 pt-4 '>
-                <Descriptions title='Chi Tiết Câu Hỏi' bordered items={items} />
-              </div>
-            </div>
-          </div>
-        </div>
-
         <Footer className='mt-5 flex justify-between'>
           <div className='text-md font-semibold text-center'>
             Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.

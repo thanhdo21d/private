@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import axios from 'axios'
 const DetailsDsHard = () => {
+  const url = import.meta.env.VITE_API
   const [file, setFile] = useState<any>(null)
   const handleFileChange = (event: any) => {
     setFile(event.target.files[0])
@@ -10,7 +11,7 @@ const DetailsDsHard = () => {
     const formData = new FormData()
     formData.append('file', file)
     try {
-      const response = await axios.post('http://localhost:8282/upload', formData, {
+      const response = await axios.post(`${url}upload/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

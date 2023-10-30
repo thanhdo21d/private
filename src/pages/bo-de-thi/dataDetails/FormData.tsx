@@ -20,6 +20,7 @@ type FieldType = {
   keyword?: string
 }
 const FormData = () => {
+  const url = import.meta.env.VITE_API
   const { id } = useParams()
   const [placement, SetPlacement] = useState<SelectCommonPlacement>('topLeft')
   const [queryParameters] = useSearchParams()
@@ -33,6 +34,7 @@ const FormData = () => {
     page: 1,
     limit: 30
   })
+  console.log(dataExams)
   const { data: getDetailsExams } = useGetDetailsExamsQuery({
     idDepartment: id,
     idExams: dataExamsQueryID,
@@ -110,7 +112,7 @@ const FormData = () => {
       dataIndex: 'image',
       key: 'image',
       render: (img: string) => {
-        return <img className='w-[50px]' crossOrigin='anonymous' src={`http://localhost:8282/${img}`} />
+        return <img className='w-[50px]' crossOrigin='anonymous' src={`${url}${img}`} />
       }
     },
     {
@@ -204,7 +206,7 @@ const FormData = () => {
     {
       key: '4',
       label: 'Ảnh Câu Hỏi',
-      children: <img className='w-[80px]' src={`http://localhost:8282/${getDetailsExams?.dataDepartments?.image[0]}`} />
+      children: <img className='w-[80px]' src={`${url}${getDetailsExams?.dataDepartments?.image[0]}`} />
     },
     {
       key: '5',
@@ -223,7 +225,7 @@ const FormData = () => {
                 <span> : {item.q}</span>
               </p>
               <span>
-                <img className='w-[80px] ml-5 mt-2 mb-2' src={`http://localhost:8282/${item.img}`} />
+                <img className='w-[80px] ml-5 mt-2 mb-2' src={`${url}${item.img}`} />
               </span>
             </div>
           ))}
@@ -420,7 +422,7 @@ const FormData = () => {
                   >
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
-                      className='h-8 w-8 animate-spin hover:scale-50 text-danger font-bold'
+                      className='h-8 w-8 hover:scale-50 text-danger font-bold'
                       fill='none'
                       viewBox='0 0 24 24'
                       stroke='currentColor'
@@ -446,7 +448,7 @@ const FormData = () => {
                   >
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
-                      className='h-8 w-8 animate-spin hover:scale-50 text-danger font-bold'
+                      className='h-8 w-8  hover:scale-50 text-danger font-bold'
                       fill='none'
                       viewBox='0 0 24 24'
                       stroke='currentColor'

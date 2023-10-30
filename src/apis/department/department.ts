@@ -1,4 +1,3 @@
-//http://localhost:8282/department/queryAllimport { IRole, IRoleDoc, IRoleDocs } from '~/types/roles/roles.type'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { IDepartmentTypeDocs } from '~/types/department/department.type'
 const DepartmentAPI = createApi({

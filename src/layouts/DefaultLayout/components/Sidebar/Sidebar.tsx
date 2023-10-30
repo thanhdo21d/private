@@ -16,6 +16,7 @@ interface SidebarProps {
   checkInfo?: boolean
 }
 const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProps) => {
+  const url = import.meta.env.VITE_API
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const [dataTask, setDataTask] = useState<any[]>([])
@@ -53,7 +54,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
   }, [sidebarExpanded])
   const { profile } = useContext(AppContext)
   useEffect(() => {
-    fetch(`http://localhost:8282/users/${profile?._id}`)
+    fetch(`${url}users/${profile?._id}`)
       .then((res: any) => res.json())
       .then((data: any) => {
         setDataTask(data)
@@ -130,7 +131,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
                             }`}
                           >
                             <Link className='flex ml-5 gap-3 items-center' to={`${task === 'home' ? '/' : path}`}>
-                              <span className='animate-spin'>
+                              <span className=''>
                                 <FcInfo className='text-2xl' />
                               </span>
                               <span

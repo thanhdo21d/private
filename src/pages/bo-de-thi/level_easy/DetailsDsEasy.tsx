@@ -2,6 +2,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { useLocation, useParams } from 'react-router-dom'
 const DetailsDsEasy = () => {
+  const url = import.meta.env.VITE_API
   const { pathname } = useLocation()
   console.log(pathname)
   const { id } = useParams()
@@ -17,7 +18,7 @@ const DetailsDsEasy = () => {
     formData.append('file', file)
     //653737ca55a6e8a91d4d660a
     try {
-      const response = await axios.post(`http://localhost:8282/upload/653737ca55a6e8a91d4d660a`, formData, {
+      const response = await axios.post(`${url}upload/653737ca55a6e8a91d4d660a`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

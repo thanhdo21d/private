@@ -41,13 +41,23 @@ const DsDethi = () => {
                         </div>
                         <p className='text-gray-600 text-center'>Bộ Đề Thi {data?.name}.</p>
                       </div>
-                      <div className='space-y-4 mt-5 justify-center flex'>
-                        <button
-                          onClick={() => navigate(`/admin/details/dethi/${data?._id}`)}
-                          className='p-3 bg-danger rounded-full text-white w-[70%] font-semibold'
-                        >
-                          xem Đề Thi
-                        </button>
+                      <div className='mt-5 mx-auto grid gap-y-4 '>
+                        <div className='flex justify-center'>
+                          <button
+                            onClick={() => navigate(`/admin/details/dethi/${data?._id}`)}
+                            className='p-3 bg-strokedark  text-white w-[90%] rounded-md font-semibold'
+                          >
+                            xem Đề Thi
+                          </button>
+                        </div>
+                        <div className='flex justify-center'>
+                          <button
+                            onClick={() => navigate(`/admin/level_easy/details`)}
+                            className='p-3 bg-warning  text-white w-[90%] rounded-md font-semibold'
+                          >
+                            Thêm Đề Thi
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

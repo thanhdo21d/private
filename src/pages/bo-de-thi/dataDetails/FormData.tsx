@@ -15,7 +15,8 @@ import { DownOutlined } from '@ant-design/icons'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { PiKeyReturnThin } from 'react-icons/pi'
 import logoBacktop from '../../../assets/images/logo/top.png'
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { AiFillEdit, AiOutlineLoading3Quarters } from 'react-icons/ai'
+import DeleteIcon from '~/components/Icons/DeleteIcon'
 type FieldType = {
   keyword?: string
 }
@@ -151,10 +152,13 @@ const FormData = () => {
               Chi Tiết
             </Button>
             <Button
-              styleClass='p-2 w-[70px] focus:outline-none hover:bg-warning'
+              styleClass='p-2 w-[80px] flex items-center focus:outline-none hover:bg-warning'
               onClick={() => navigate(`/admin/details/dethi/edit/${id}`)}
             >
-              Edit
+              <span>
+                <AiFillEdit />
+              </span>
+              <span>Edit</span>
             </Button>
             <Popconfirm
               title='Delete the task'
@@ -167,8 +171,11 @@ const FormData = () => {
               okText='Yes'
               cancelText='No'
             >
-              <Button styleClass='p-2 w-[70px] focus:outline-none hover:bg-danger'>
-                {isRemoveLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'Delete'}
+              <Button styleClass='p-2 w-[80px] flex items-center focus:outline-none hover:bg-danger'>
+                <span>
+                  <DeleteIcon />
+                </span>
+                <span>{isRemoveLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'Delete'}</span>
               </Button>
             </Popconfirm>
           </div>

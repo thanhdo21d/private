@@ -1,13 +1,15 @@
 import { Pagination, Popconfirm, Skeleton, Table } from 'antd'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { AiFillEdit } from 'react-icons/ai'
+import { Link, useNavigate } from 'react-router-dom'
 import { useDeleteBannerMutation, useGetAllBannersQuery } from '~/apis/banner/banner.api'
 import { Button } from '~/components'
 import { toastService } from '~/utils/toask/toaskMessage'
 const AddBanner = () => {
   const { data, isFetching } = useGetAllBannersQuery()
   const { t } = useTranslation(['header'])
+  const navigate = useNavigate()
   const [removeBanner] = useDeleteBannerMutation()
   const confirm = (id: string) => {
     removeBanner(id)
@@ -62,8 +64,11 @@ const AddBanner = () => {
           >
             {/* <Button styleClass='bg-danger '>Xóa</Button> */}
           </Popconfirm>
-          <Button>
-            <Link to={`/admin/banner/${id}/edit`}>{t('product.edit_banner')}</Link>
+          <Button styleClass='flex items-center ' onClick={() => navigate(`/admin/banner/${id}/edit`)}>
+            <span>
+              <AiFillEdit />
+            </span>
+            <span>{t('product.edit_banner')}</span>
           </Button>
         </div>
       )

@@ -1,13 +1,15 @@
 import { Form, Input, Popconfirm, Skeleton, Table, Tooltip } from 'antd'
 import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '~/components'
-import { AiOutlineLoading3Quarters, AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai'
+import { AiFillEdit, AiOutlineLoading3Quarters, AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai'
 import { useDeleteRoleMutation, useGetAllRolesQuery, useSearchRoleApiGETQuery } from '~/apis/roles/roles.api'
 import { IRole, IRoleDocs } from '~/types/roles/roles.type'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { useEffect, useState } from 'react'
 import { Footer } from 'antd/es/layout/layout'
 import Pagination from './Pagination'
+import DeleteIcon from '~/components/Icons/DeleteIcon'
+import { FcViewDetails } from 'react-icons/fc'
 type FieldType = {
   keyword?: string
 }
@@ -153,14 +155,26 @@ const Roles = () => {
             cancelText='No'
             placement='rightBottom'
           >
-            <Button styleClass='bg-danger '>
-              {isLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'Xóa'}
+            <Button styleClass='bg-danger flex items-center w-[100px]'>
+              <span>
+                <DeleteIcon />
+              </span>
+              <span> {isLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'Xóa'}</span>
             </Button>
           </Popconfirm>
-          <Button onClick={() => navigate(`/admin/roles/edit/${_id}`)}>
+          <Button styleClass='flex items-center w-[100px]' onClick={() => navigate(`/admin/roles/edit/${_id}`)}>
+            <span>
+              <AiFillEdit />
+            </span>
             <Link to={`/admin/roles/edit/${_id}`}>Sửa</Link>
           </Button>
-          <Button styleClass='bg-warning'>
+          <Button
+            onClick={() => navigate(`/admin/roles/${_id}/memRole`)}
+            styleClass='bg-warning flex items-center w-[120px] !px-0'
+          >
+            <span>
+              <FcViewDetails />
+            </span>
             <Link to={`/admin/roles/${_id}/memRole`}>Chi Tiết</Link>
           </Button>
         </div>

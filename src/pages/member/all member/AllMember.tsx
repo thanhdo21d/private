@@ -1,8 +1,10 @@
 import React from 'react'
 import { Input, Pagination, Popconfirm, Table } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '~/components'
+import { Button, EmailIcon } from '~/components'
 import { useGetAllUserQuery } from '~/apis/user/user.api'
+import DeleteIcon from '~/components/Icons/DeleteIcon'
+import { AiFillEdit } from 'react-icons/ai'
 const AllMember = () => {
   const navigate = useNavigate()
   const confirm = (id: number | string) => {
@@ -77,13 +79,13 @@ const AllMember = () => {
       key: 'gender'
     },
     {
-      title: 'Email',
+      title:  <p className='flex justify-center'>Email</p>,
       dataIndex: 'email',
       key: 'email',
       render: (text: string) => <a className='text-danger font-bold'>{text}</a>
     },
     {
-      title: 'Tác Vụ',
+      title: <p className='flex justify-center'>Tác Vụ</p>,
       render: ({ key: id }: { key: number | string }) => (
         <div className='flex space-x-2'>
           <Popconfirm
@@ -97,10 +99,24 @@ const AllMember = () => {
             cancelText='No'
             placement='rightBottom'
           >
-            <Button styleClass='bg-danger '>Xóa</Button>
+            <Button styleClass='bg-danger flex items-center w-fit w-[100px]'>
+              <span>
+                <DeleteIcon />
+              </span>
+              <span className='font-medium'>Xóa</span>
+            </Button>
           </Popconfirm>
-          <Button>
-            <Link to={`/admin/member/${id}/edit`}>Sửa</Link>
+          <Button styleClass='flex items-center w-[100px]' onClick={() => navigate(`/admin/member/${id}/edit`)}>
+            <span>
+              <AiFillEdit />
+            </span>
+            <span>Sửa</span>
+          </Button>
+          <Button styleClass='flex items-center w-[100px]'>
+            <span>
+              <EmailIcon />
+            </span>
+            <span>Mailer</span>
           </Button>
         </div>
       )

@@ -10,7 +10,9 @@ import { AppContext } from '~/contexts/app.contexts'
 import { Radio } from 'antd'
 import logoAction from '../../assets/hello.png'
 import { TypeAnimation } from 'react-type-animation'
+import Spreadsheet from 'react-spreadsheet'
 const AcceptUserDipament = () => {
+ 
   const [checkConcept, setCheckConcept] = useState<boolean>(false)
   const { t } = useTranslation(['header'])
   const { profile } = useContext(AppContext)

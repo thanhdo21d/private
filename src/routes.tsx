@@ -31,6 +31,7 @@ import DsCHDetailsHard from './pages/bo-de-thi/level_hard/DsCHDetailsHard'
 import DsCHDetailsNormal from './pages/bo-de-thi/level_normal/DsCHDetailsNormal'
 import EditExams from './pages/bo-de-thi/editExams/EditExams'
 import DetailsExams from './pages/bo-de-thi/dataDetails/DetailsExams'
+import DemoExcel from './layouts/trangThi/components/Popup-thi/DemoExcel'
 //const randomizedData = [...data].sort(() => Math.random() - 0.5);
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
@@ -67,6 +68,7 @@ export const routers = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to='home' /> },
           { path: 'home', element: <AcceptUserDipament /> },
+          { path: 'excel', element: <DemoExcel /> },
           { path: 'action-bai-thi', element: <PopQuesion /> }
         ]
       }

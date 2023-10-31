@@ -14,6 +14,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { Form } from 'antd'
 import { container, formats } from '~/utils/quill'
+import Spreadsheet from 'react-spreadsheet'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<boolean>(false)
@@ -156,9 +157,11 @@ const QuesionStart = () => {
             </div>
           )}
           {showPop ? (
-            <div className='confettie-wrap absolute inset-0' ref={confetiRef}>
-              <Confetti numberOfPieces={150} width={width} height={height} />
-            </div>
+            <>
+              <div className='confettie-wrap absolute inset-0' ref={confetiRef}>
+                <Confetti numberOfPieces={150} width={width} height={height} />
+              </div>
+            </>
           ) : (
             ''
           )}

@@ -42,7 +42,7 @@ const Signin = () => {
   const onSubmit = async (data: SigninForm) => {
     try {
       loginApi(data).then(({ data }: any) => {
-        console.log(data, 'ok')
+        console.log(data.dataUser, 'ok')
         if (data !== 'undefined') {
           setProfile(data.dataUser)
           setProfileToLS(data.dataUser)
@@ -165,12 +165,14 @@ const Signin = () => {
                     whileInView={'show'}
                     viewport={{ once: false, amount: 0.7 }}
                     type='text'
-                    id='email'
-                    {...register('email')}
-                    placeholder='email'
+                    id='employeeCode'
+                    {...register('employeeCode')}
+                    placeholder='employeeCode'
                     className='block w-full p-4 text-lg rounded-sm cursor-pointer bg-black'
                   />
-                  <p className='text-danger float-left font-medium text-md'>{errors.email && errors.email.message}</p>
+                  <p className='text-danger float-left font-medium text-md'>
+                    {errors.employeeCode && errors.employeeCode.message}
+                  </p>
                 </div>
                 <div className='pb-4 pt-4 relative'>
                   <label className='float-left pb-3' htmlFor='password'>

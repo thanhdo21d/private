@@ -8,6 +8,7 @@ export interface IuserContext {
     name: string
     status: string
     updatedAt: string
+    adminDepartMent: any
   }
   transcript: []
   updatedAt: string

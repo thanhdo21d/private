@@ -9,7 +9,7 @@ import AddMember from './pages/member/admin/Admin.member'
 import DefaultLayoutTrangthi from './layouts/trangThi/defaultLayoutTrangthi'
 const Signin = lazy(() => import('./pages/login/signin/Signin'))
 import DefaultUserInfo from './layouts/user-info/DefaultUserInfo'
-import UserProfile from './pages/user-profile/UserProfile'
+const UserProfile = lazy(() => import('./pages/user-profile/UserProfile'))
 import InfoResult from './pages/ket-qua-thi/InfoResult'
 import Achievements from './pages/thanh-tich/Achievements'
 import DetailsResult from './pages/ket-qua-thi/details/DetailsResult'
@@ -27,9 +27,6 @@ import DsDeThiEszy from './pages/bo-de-thi/level_hard/DsDeThiHard'
 import DsDeThiTB from './pages/bo-de-thi/level_normal/DsDeThiTB'
 import DetailsDsEasy from './pages/bo-de-thi/level_easy/DetailsDsEasy'
 import FormData from './pages/bo-de-thi/dataDetails/FormData'
-import DsCHDetailsEasy from './pages/bo-de-thi/level_easy/DsCHDetailsEasy'
-import DsCHDetailsHard from './pages/bo-de-thi/level_hard/DsCHDetailsHard'
-import DsCHDetailsNormal from './pages/bo-de-thi/level_normal/DsCHDetailsNormal'
 import EditExams from './pages/bo-de-thi/editExams/EditExams'
 import DetailsExams from './pages/bo-de-thi/dataDetails/DetailsExams'
 import DemoExcel from './layouts/trangThi/components/Popup-thi/DemoExcel'
@@ -95,7 +92,14 @@ export const routers = createBrowserRouter([
         element: <DefaultUserInfo />,
         children: [
           { index: true, element: <Navigate to='profile' /> },
-          { path: 'profile', element: <UserProfile /> },
+          {
+            path: 'profile',
+            element: (
+              <Suspense>
+                <UserProfile />
+              </Suspense>
+            )
+          },
           { path: 'ket-qua-thi', element: <InfoResult /> },
           { path: 'ket-qua-thi/:id', element: <DetailsResult /> },
           { path: 'thanh-tich', element: <Achievements /> }

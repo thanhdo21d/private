@@ -242,7 +242,7 @@ const AcceptUserDipament = () => {
                       {dataDepartment?.data.map((items: IDepartmentType) => {
                         console.log(items)
                         return (
-                          <div>
+                          <div key={items._id}>
                             <Radio.Button
                               className='w-[200px]  hover:bg-warning hover:text-white font-medium hover:scale-95 rounded-none'
                               value='a'

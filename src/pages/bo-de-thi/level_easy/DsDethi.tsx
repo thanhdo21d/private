@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGetAllDepartmentQuery } from '~/apis/department/department'
 import { Button } from '~/components'
+import { AppContext } from '~/contexts/app.contexts'
 import { IDepartmentType, IDepartmentTypeDocs } from '~/types/department/department.type'
 
 const DsDethi = () => {
   const navigate = useNavigate()
   const { data: dataDepartment } = useGetAllDepartmentQuery()
+  const { profile, reset } = useContext(AppContext)
+  console.log(profile)
   console.log(dataDepartment)
   return (
     <div>

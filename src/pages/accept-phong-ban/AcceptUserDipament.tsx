@@ -10,7 +10,6 @@ import { AppContext } from '~/contexts/app.contexts'
 import { Radio } from 'antd'
 import logoAction from '../../assets/hello.png'
 import { TypeAnimation } from 'react-type-animation'
-import Spreadsheet from 'react-spreadsheet'
 import { useGetAllDepartmentQuery } from '~/apis/department/department'
 import { IDepartmentType } from '~/types/department/department.type'
 const AcceptUserDipament = () => {

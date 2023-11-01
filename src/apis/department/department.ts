@@ -57,6 +57,18 @@ const DepartmentAPI = createApi({
         }
       },
       providesTags: ['Department']
+    }),
+    dropDbExams: builder.mutation<void, any>({
+      query: ({ idDepartment, examsLevel }: { idDepartment: string; examsLevel: string }) => {
+        return {
+          url: `/ExamsRoutes/dropdb/${idDepartment}`,
+          method: 'POST',
+          params: {
+            queryExamsLevelCheck: examsLevel
+          }
+        }
+      },
+      invalidatesTags: ['Department']
     })
   })
 })
@@ -65,6 +77,7 @@ export const {
   useGetIdDepartmentQuery,
   useGetExamsDepartmentQuery,
   useRemoveExamsDepartmentMutation,
-  useGetDetailsExamsQuery
+  useGetDetailsExamsQuery,
+  useDropDbExamsMutation
 } = DepartmentAPI
 export default DepartmentAPI

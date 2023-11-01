@@ -4,6 +4,7 @@ import { Footer } from 'antd/es/layout/layout'
 import { useEffect, useState } from 'react'
 import { Link, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import {
+  useDropDbExamsMutation,
   useGetDetailsExamsQuery,
   useGetExamsDepartmentQuery,
   useGetIdDepartmentQuery,
@@ -64,6 +65,15 @@ const FormData = () => {
         exams: dataExamsQuery || 'easy'
       }).toString()
     })
+  }
+  const [handelDropExasm] = useDropDbExamsMutation()
+  const handelDropDbExmams = () => {
+    handelDropExasm({
+      idDepartment: id,
+      examsLevel: dataExamsQuery as string
+    })
+      .unwrap()
+      .then(() => toastService.success('Drop db successfully deleted'))
   }
   const dataSource = dataExams?.data?.map((items: any, index: number) => ({
     key: items._id,
@@ -304,6 +314,7 @@ const FormData = () => {
             <Popconfirm
               title='Delete the task'
               description='Xóa tất cả sẽ không thể khôi phục , bạn đã chắc ?'
+              onConfirm={handelDropDbExmams}
               okButtonProps={{
                 style: { backgroundColor: 'blue', marginRight: '20px' }
               }}
@@ -311,7 +322,7 @@ const FormData = () => {
               cancelText='No'
             >
               <Tooltip title='Trở Về'>
-                <p className='text-base font-medium text-black  flex items-center gap-4' >
+                <p className='text-base font-medium text-black  flex items-center gap-4'>
                   <span>
                     <DeleteIcon />
                   </span>

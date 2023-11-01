@@ -14,7 +14,7 @@ const DemoExcel = () => {
             height: 700
           }}
           defaultProps={{
-            sheets: "data"
+            sheets: 'data'
           }}
         />
       </div>

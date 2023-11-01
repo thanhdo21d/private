@@ -111,4 +111,4 @@ const DefaultLayoutTrangthi = () => {
     </section>
   )
 }
-export default DefaultLayoutTrangthi
+export default React.memo(DefaultLayoutTrangthi)

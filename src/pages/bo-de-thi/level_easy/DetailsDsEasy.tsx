@@ -1,13 +1,17 @@
 import { useState } from 'react'
 import axios from 'axios'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useParams, useSearchParams } from 'react-router-dom'
+import { Breadcrumb } from '~/components'
+import { Tabs } from 'antd'
+import { itemsDataBeardCrumb } from './data'
+import { toastService } from '~/utils/toask/toaskMessage'
 const DetailsDsEasy = () => {
   const url = import.meta.env.VITE_API
   const { pathname } = useLocation()
   console.log(pathname)
   const { id } = useParams()
-  console.log(id)
-
+  const [queryParameters] = useSearchParams()
+  const dataExamsQuery: any = queryParameters.get('exams')
   const [file, setFile] = useState<any>(null)
   const handleFileChange = (event: any) => {
     setFile(event.target.files[0])
@@ -16,20 +20,26 @@ const DetailsDsEasy = () => {
     event.preventDefault()
     const formData = new FormData()
     formData.append('file', file)
-    //653737ca55a6e8a91d4d660a
     try {
-      const response = await axios.post(`${url}upload/653737ca55a6e8a91d4d660a`, formData, {
+      const response = await axios.post(`${url}upload/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
+        },
+        params: {
+          examsLevel: dataExamsQuery
         }
       })
       console.log(response.data)
+      toastService.success(' uploading file successfully')
     } catch (error) {
       console.error(error)
+      toastService.error('Error uploading file')
     }
   }
   return (
     <>
+      <Breadcrumb pageName='Thêm Đề Thi'></Breadcrumb>
+      <Tabs defaultActiveKey='1' items={itemsDataBeardCrumb} className='text-white' />
       <div
         className='relative min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-gray-500 bg-no-repeat bg-cover '
         style={{

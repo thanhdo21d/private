@@ -1,11 +1,13 @@
 import { Navigate, Outlet, createBrowserRouter, useNavigate } from 'react-router-dom'
-import { Dashboard, NotFound } from './pages'
+import { Suspense, lazy, useContext, useEffect, useState } from 'react'
+import { Dashboard } from './pages'
+const NotFound = lazy(() => import('./pages').then((module) => ({ default: module.NotFound })))
 import DefaultLayout from './layouts/DefaultLayout'
 import Roles from './pages/roles/Roles'
 import AllMember from './pages/member/all member/AllMember'
 import AddMember from './pages/member/admin/Admin.member'
 import DefaultLayoutTrangthi from './layouts/trangThi/defaultLayoutTrangthi'
-import Signin from './pages/login/signin/Signin'
+const Signin = lazy(() => import('./pages/login/signin/Signin'))
 import DefaultUserInfo from './layouts/user-info/DefaultUserInfo'
 import UserProfile from './pages/user-profile/UserProfile'
 import InfoResult from './pages/ket-qua-thi/InfoResult'
@@ -13,7 +15,6 @@ import Achievements from './pages/thanh-tich/Achievements'
 import DetailsResult from './pages/ket-qua-thi/details/DetailsResult'
 import PopQuesion from './layouts/trangThi/components/Popup-thi/PopQuesion'
 import EditRoles from './pages/roles/EditRoles'
-import { useContext, useEffect, useState } from 'react'
 import MemberInRole from './pages/roles/MemberInRole'
 import EditMember from './pages/member/edit member/EditMember'
 import Cookies from 'js-cookie'
@@ -57,7 +58,11 @@ const PrivateRoute = () => {
 export const routers = createBrowserRouter([
   {
     path: '*',
-    element: <NotFound />
+    element: (
+      <Suspense>
+        <NotFound />
+      </Suspense>
+    )
   },
   {
     path: '/',
@@ -76,7 +81,11 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Signin />
+    element: (
+      <Suspense>
+        <Signin />
+      </Suspense>
+    )
   },
   {
     path: '/user-info',
@@ -108,7 +117,7 @@ export const routers = createBrowserRouter([
           { path: 'de-kho', element: <DsDethi /> },
           { path: 'details/dethi/:id', element: <FormData /> },
           { path: 'details/dethi/edit/:id', element: <EditExams /> },
-          { path: 'level_easy/details', element: <DetailsDsEasy /> },
+          { path: 'level_easy/details/:id', element: <DetailsDsEasy /> },
           { path: 'details-exams/:id', element: <DetailsExams /> },
           { path: 'de-trung-binh', element: <DsDeThiTB /> },
           { path: 'de-de', element: <DsDeThiEszy /> },

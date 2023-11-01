@@ -1,3 +1,4 @@
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const PopupSuccess = () => {
@@ -48,4 +49,4 @@ const PopupSuccess = () => {
     </div>
   )
 }
-export default PopupSuccess
+export default React.memo(PopupSuccess)

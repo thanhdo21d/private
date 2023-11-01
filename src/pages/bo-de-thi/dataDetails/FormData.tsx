@@ -105,7 +105,7 @@ const FormData = () => {
       dataIndex: 'image',
       key: 'image',
       render: (img: string) => {
-        return <img className='w-[50px]' crossOrigin='anonymous' src={`${url}${img}`} />
+        return <img className='w-[50px]' loading='lazy' crossOrigin='anonymous' src={`${url}${img}`} />
       }
     },
     {
@@ -196,7 +196,7 @@ const FormData = () => {
       <div className='flex items-center justify-between'>
         <div className=''>
           <Form
-            className='flex gap-5'
+            className='flex gap-5  justify-center'
             name='basic'
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
@@ -205,9 +205,9 @@ const FormData = () => {
             autoComplete='off'
           >
             <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your keyword!' }]}>
-              <Input className='h-[50px] w-[600px]' placeholder='Tìm Kiếm Theo đề thi ....' />
+              <Input className='h-[40px] w-[600px]' placeholder='Tìm Kiếm Theo đề thi ....' />
             </Form.Item>
-            <Button type='submit' id='keycode13' styleClass='w-[150px] h-[50px] bg-graydark hover:bg-success'>
+            <Button type='submit' id='keycode13' styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'>
               Tìm Kiếm
             </Button>
           </Form>
@@ -215,7 +215,7 @@ const FormData = () => {
         <div className='flex items-center justify-end gap-10 '>
           <div className='z-50'>
             <div className='flex items-center justify-center '>
-              <div className=' relative inline-block text-left dropdown'>
+              <div className=' h-[40px] relative inline-block text-left dropdown'>
                 <span className='rounded-md shadow-sm'>
                   <button
                     className='inline-flex justify-between hover:bg-warning hover:text-white  w-[200px] px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800'
@@ -299,7 +299,30 @@ const FormData = () => {
             </div>
           </div>
           <div
-            className={` bg-white  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
+            className={` bg-danger cursor-pointer h-[40px] flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
+          >
+            <Popconfirm
+              title='Delete the task'
+              description='Xóa tất cả sẽ không thể khôi phục , bạn đã chắc ?'
+              okButtonProps={{
+                style: { backgroundColor: 'blue', marginRight: '20px' }
+              }}
+              okText='Yes'
+              cancelText='No'
+            >
+              <Tooltip title='Trở Về'>
+                <p className='text-base font-medium text-black  flex items-center gap-4' >
+                  <span>
+                    <DeleteIcon />
+                  </span>
+                  <span className='text-white '> Xóa Tất Cả</span>
+                </p>
+              </Tooltip>
+            </Popconfirm>
+          </div>
+          {/*  */}
+          <div
+            className={` bg-white h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
           >
             <Tooltip title='Trở Về'>
               <Link className='text-base font-medium text-black  flex items-center gap-4' to='/admin/de-kho'>

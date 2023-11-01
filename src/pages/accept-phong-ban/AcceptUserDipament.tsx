@@ -11,9 +11,11 @@ import { Radio } from 'antd'
 import logoAction from '../../assets/hello.png'
 import { TypeAnimation } from 'react-type-animation'
 import Spreadsheet from 'react-spreadsheet'
+import { useGetAllDepartmentQuery } from '~/apis/department/department'
+import { IDepartmentType } from '~/types/department/department.type'
 const AcceptUserDipament = () => {
- 
   const [checkConcept, setCheckConcept] = useState<boolean>(false)
+  const { data: dataDepartment, isLoading, isFetching } = useGetAllDepartmentQuery()
   const { t } = useTranslation(['header'])
   const { profile } = useContext(AppContext)
   const navigate = useNavigate()
@@ -232,55 +234,25 @@ const AcceptUserDipament = () => {
 
                 <div className='mt-5 py-10 border-t border-blueGray-200 text-center'>
                   <div className='flex justify-center'>
-                    <Radio.Group className='flex gap-5' defaultValue='a' buttonStyle='solid' style={{ marginTop: 16 }}>
-                      <Radio.Button
-                        className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
-                        value='a'
-                      >
-                        Hangzhou
-                      </Radio.Button>
-                      <Radio.Button
-                        className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
-                        value='b'
-                      >
-                        Shanghai
-                      </Radio.Button>
-                      <Radio.Button
-                        className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
-                        value='c'
-                      >
-                        Beijing
-                      </Radio.Button>
-                      <Radio.Button
-                        className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
-                        value='d'
-                      >
-                        Chengdu
-                      </Radio.Button>
-                      <Radio.Button
-                        className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
-                        value='e'
-                      >
-                        Hangzhou
-                      </Radio.Button>
-                      <Radio.Button
-                        className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
-                        value='f'
-                      >
-                        Shanghai
-                      </Radio.Button>
-                      <Radio.Button
-                        className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
-                        value='g'
-                      >
-                        Beijing
-                      </Radio.Button>
-                      <Radio.Button
-                        className='w-[100px]  hover:bg-warning hover:text-white font-medium hover:scale-75 rounded-none'
-                        value='h'
-                      >
-                        Chengdu
-                      </Radio.Button>
+                    <Radio.Group
+                      className='grid grid-cols-4 gap-5 items-center'
+                      defaultValue='a'
+                      buttonStyle='solid'
+                      style={{ marginTop: 16 }}
+                    >
+                      {dataDepartment?.data.map((items: IDepartmentType) => {
+                        console.log(items)
+                        return (
+                          <div>
+                            <Radio.Button
+                              className='w-[200px]  hover:bg-warning hover:text-white font-medium hover:scale-95 rounded-none'
+                              value='a'
+                            >
+                              {items.name}
+                            </Radio.Button>
+                          </div>
+                        )
+                      })}
                     </Radio.Group>
                   </div>
                   <div className='w-full absolute  bottom-5 '>

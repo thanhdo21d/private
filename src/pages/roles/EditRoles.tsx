@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { useAddTaskRoleMutation, useGetAllTaskRoleQuery, useRemoveTaskRoleMutation } from '~/apis/task/task.api'
 import { ItaskRole } from '~/types/task/task.type'
 import { MdOutlineAddCircleOutline } from 'react-icons/md'
+import { useGetAllDepartmentQuery } from '~/apis/department/department'
 type FieldType = {
   name?: string
   status?: string
@@ -28,6 +29,7 @@ const EditRoles: React.FC = () => {
   const [updateRoles, { isLoading: isUpdateLoading }] = useUpdateRoleMutation()
   const [addRoles, { isLoading: isAddLoading }] = useAddRoleMutation()
   const [removeLoad, { isLoading: isRemoveLoading }] = useRemoveTaskRoleMutation()
+  const { data: dataDepartment, isLoading, isFetching } = useGetAllDepartmentQuery()
   useEffect(() => {
     if (roleData) {
       form.setFieldsValue({
@@ -185,9 +187,76 @@ const EditRoles: React.FC = () => {
                 )}
               </div>
             </div>
+            {/* other admin  */}
+
+            <div>
+              <div className='w-full h-[65px] flex items-center bg-graydark mt-5'>
+                <p className='text-2xl font-medium text-white text-left pl-5'>Phân quyền other admin</p>
+              </div>
+              <div>
+                {taskRoleDataFetching ? (
+                  <div>
+                    {' '}
+                    <Skeleton /> <Skeleton /> <Skeleton /> <Skeleton />
+                  </div>
+                ) : (
+                  <div className='grid grid-cols-4 gap-5 mt-5'>
+                    {dataDepartment?.data.map(({ _id, name }: { _id: string; name: string }) => {
+                      
+                      return (
+                        <div
+                          className='w-full border border-secondary	 rounded-md shadow-xl text-xl font-medium '
+                          key={_id}
+                        >
+                          <p onClick={() => console.log(_id)} className='pl-4 flex  gap-2 items-center'>
+                            <span>
+                              <MdOutlineAddCircleOutline />
+                            </span>
+                            <span>{name}</span>{' '}
+                          </p>
+                          <div className='ml-5 mt-1 '>
+                            <input
+                              type='radio'
+                              id={`inputAllow_${_id}`}
+                              name='selection'
+                              value={`allow_${_id}`}
+                              checked={selectedOption === `allow_${_id}`}
+                              onChange={handleOptionChange}
+                              // className={`cursor-pointer ${checkData === true ? 'bg-success' : ''}`}
+                            />
+                            <label
+                              className='pl-5 cursor-pointer text-success !text-xl font-semibold'
+                              htmlFor={`inputAllow_${_id}`}
+                            >
+                              Cho Phép
+                            </label>
+                          </div>
+                          <div className='ml-5 mt-1 mb-1 '>
+                            <input
+                              type='radio'
+                              id={`inputReject_${_id}`}
+                              name='selection'
+                              value={`reject_${_id}`}
+                              checked={selectedOption === `reject_${_id}`}
+                              onChange={handleOptionChange}
+                              className='cursor-pointer'
+                            />
+                            <label
+                              className='pl-5 text-danger !text-xl cursor-pointer font-semibold'
+                              htmlFor={`inputReject_${_id}`}
+                            >
+                              Từ Chối
+                            </label>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
             <Form.Item className='mt-10' wrapperCol={{ offset: 8, span: 16 }}>
               <Button type='submit'>
-                {' '}
                 {isUpdateLoading || isAddLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : textButton}
               </Button>
             </Form.Item>

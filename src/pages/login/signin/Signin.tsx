@@ -44,8 +44,9 @@ const Signin = () => {
       loginApi(data).then(({ data }: any) => {
         console.log(data.dataUser, 'ok')
         if (data !== 'undefined') {
-          setProfile(data.dataUser)
-          setProfileToLS(data.dataUser)
+          console.log(data.checkDb,"dbrr")
+          setProfile(data.checkDb)
+          setProfileToLS(data.checkDb)
           Cookies.set('token', data.accessToken, { expires: 1 })
         }
       })

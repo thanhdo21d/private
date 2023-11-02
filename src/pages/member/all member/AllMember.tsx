@@ -11,6 +11,7 @@ const AllMember = () => {
     console.log(id)
   }
   const { data } = useGetAllUserQuery()
+  console.log(data)
   const dataSource = data?.docs.map((item: any) => ({
     key: item._id,
     name: item.email,
@@ -79,7 +80,7 @@ const AllMember = () => {
       key: 'gender'
     },
     {
-      title:  <p className='flex justify-center'>Email</p>,
+      title: <p className='flex justify-center'>Email</p>,
       dataIndex: 'email',
       key: 'email',
       render: (text: string) => <a className='text-danger font-bold'>{text}</a>

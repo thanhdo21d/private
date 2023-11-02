@@ -4,7 +4,6 @@ import { useGetAllDepartmentQuery } from '~/apis/department/department'
 import { Button } from '~/components'
 import { AppContext } from '~/contexts/app.contexts'
 import { IDepartmentType, IDepartmentTypeDocs } from '~/types/department/department.type'
-
 const DsDethi = () => {
   const navigate = useNavigate()
   const { data: dataDepartment } = useGetAllDepartmentQuery()
@@ -14,7 +13,7 @@ const DsDethi = () => {
   return (
     <div>
       <div className='grid grid-cols-3 gap-5'>
-        {dataDepartment?.data.map((data: IDepartmentType) => {
+        {profile.role.adminDepartMent.map((data: IDepartmentType) => {
           console.log(data)
           return (
             <div key={data?._id}>
@@ -74,5 +73,4 @@ const DsDethi = () => {
     </div>
   )
 }
-
 export default DsDethi

@@ -2,19 +2,24 @@ import React from 'react'
 import { Input, Pagination, Popconfirm, Table } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, EmailIcon } from '~/components'
-import { useGetAllUserQuery } from '~/apis/user/user.api'
+import { useDeleteUserMutation, useGetAllUserQuery } from '~/apis/user/user.api'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
 import { AiFillEdit } from 'react-icons/ai'
+import { toastService } from '~/utils/toask/toaskMessage'
 const AllMember = () => {
   const navigate = useNavigate()
-  const confirm = (id: number | string) => {
-    console.log(id)
+  const [removeMember, { isLoading }] = useDeleteUserMutation()
+  const confirm = (id: string) => {
+    removeMember(id)
+      .unwrap()
+      .then(() => toastService.success('remove member successfully'))
+      .catch(() => toastService.error('error removing member'))
   }
   const { data } = useGetAllUserQuery()
   console.log(data)
   const dataSource = data?.docs.map((item: any) => ({
     key: item._id,
-    name: item.email,
+    name: item.username,
     avatar: item.avatar,
     users: item.code,
     update: item.updatedAt,
@@ -29,10 +34,7 @@ const AllMember = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text: string) => {
-        const name = text.split('@')
-        const userName = name[0].split('.')
-        const checkName = userName.pop()
-        return <a className='text-md font-bold'>{userName}</a>
+        return <a className='text-md font-bold'>{text}</a>
       }
     },
     {
@@ -75,11 +77,6 @@ const AllMember = () => {
       }
     },
     {
-      title: 'giới tính',
-      dataIndex: 'gender',
-      key: 'gender'
-    },
-    {
       title: <p className='flex justify-center'>Email</p>,
       dataIndex: 'email',
       key: 'email',
@@ -87,7 +84,7 @@ const AllMember = () => {
     },
     {
       title: <p className='flex justify-center'>Tác Vụ</p>,
-      render: ({ key: id }: { key: number | string }) => (
+      render: ({ key: id }: { key: string }) => (
         <div className='flex space-x-2'>
           <Popconfirm
             title='Delete the task'
@@ -104,7 +101,7 @@ const AllMember = () => {
               <span>
                 <DeleteIcon />
               </span>
-              <span className='font-medium'>Xóa</span>
+              <span className='font-medium'> Xóa</span>
             </Button>
           </Popconfirm>
           <Button styleClass='flex items-center w-[100px]' onClick={() => navigate(`/admin/member/${id}/edit`)}>

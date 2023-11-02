@@ -30,6 +30,8 @@ import FormData from './pages/bo-de-thi/dataDetails/FormData'
 import EditExams from './pages/bo-de-thi/editExams/EditExams'
 import DetailsExams from './pages/bo-de-thi/dataDetails/DetailsExams'
 import DemoExcel from './layouts/trangThi/components/Popup-thi/DemoExcel'
+import MenuIten from './utils/Demol'
+import ChoosExam from './pages/accept-phong-ban/ChoosExam'
 //const randomizedData = [...data].sort(() => Math.random() - 0.5);
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
@@ -62,6 +64,15 @@ export const routers = createBrowserRouter([
     )
   },
   {
+    path: '/demo',
+    element: (
+      <Suspense>
+        <MenuIten />
+      </Suspense>
+    ),
+    children: []
+  },
+  {
     path: '/',
     element: <CheckCookieUserLogin />,
     children: [
@@ -71,7 +82,8 @@ export const routers = createBrowserRouter([
           { index: true, element: <Navigate to='home' /> },
           { path: 'home', element: <AcceptUserDipament /> },
           { path: 'excel', element: <DemoExcel /> },
-          { path: 'action-bai-thi', element: <PopQuesion /> }
+          { path: 'action-bai-thi', element: <PopQuesion /> },
+          { path: 'ChoosExam', element: <ChoosExam /> }
         ]
       }
     ]

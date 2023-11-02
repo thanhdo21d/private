@@ -153,6 +153,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
                   mode='inline'
                   items={settingsSystem}
                 />
+                
               </div>
             )}
           </div>

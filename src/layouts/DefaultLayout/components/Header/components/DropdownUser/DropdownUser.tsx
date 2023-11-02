@@ -35,7 +35,10 @@ const DropdownUser = () => {
       <Link ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='flex items-center gap-4' to='#'>
         <span className='lg:block hidden text-right'>
           <span className='dark:text-white block text-sm font-medium text-black'>{profile?.email}</span>
-          <span className='block text-xl font-bold'>{profile?.role.name}</span>
+          <span className='flex items-center gap-2 float-right'>
+            <span className='block text-xl font-medium'>{profile?.role.name}</span>
+            <span className='block text-xl font-bold text-danger'>{profile?.code}</span>
+          </span>
         </span>
         <span className='w-12 h-12 rounded-full'>
           <img src={` ${imgLogo}`} className='object-cover w-full h-full rounded-full' alt='User' />

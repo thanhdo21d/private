@@ -4,6 +4,8 @@ export interface IuserContext {
   avatar: string
   createdAt: string
   email: string
+  username : string
+  code : string
   role: {
     name: string
     status: string
@@ -13,7 +15,6 @@ export interface IuserContext {
   transcript: []
   updatedAt: string
 }
-
 export interface userLogin {
   message?: string
   accessToken?: string

@@ -1,45 +1,58 @@
 import React from 'react'
+import { MdDone, MdOutlineError } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
-
+import { GrClose } from 'react-icons/gr'
+import logoFInish from '../../../../../assets/finish-line.png'
+import doneExams from '../../../../../assets/check.png'
+import errorExams from '../../../../../assets/close.png'
 const PopupSuccess = () => {
   const navigate = useNavigate()
   return (
     <div>
       <div className='fixed z-50 left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10'>
-        <div className='max-h-full w-full max-w-xl overflow-y-auto sm:rounded-2xl bg-white'>
+        <div className='max-h-full w-[50%]  overflow-y-auto sm:rounded-2xl bg-white  '>
           <div className='w-full'>
-            <div className='m-8 my-20 max-w-[400px] mx-auto'>
+            <div className=' my-20 w-[80%] mx-auto'>
               <div className='mb-8'>
                 <div className='text-center mx-auto flex justify-center'>
-                  <svg
-                    className='animate-bounce'
-                    xmlns='http://www.w3.org/2000/svg'
-                    x='0px'
-                    y='0px'
-                    width='68'
-                    height='68'
-                    viewBox='0 0 48 48'
-                  >
-                    <path
-                      fill='#4caf50'
-                      d='M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z'
-                    ></path>
-                    <path
-                      fill='#ccff90'
-                      d='M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z'
-                    ></path>
-                  </svg>
+                  <img className='w-[200px] fade-in-out-dm' src={`${logoFInish}`} alt='' />
                 </div>
-                <p className='text-gray-600'>
+                <p className='text-gray-600 font-semibold text-lg'>
                   Xin chúc mừng, bạn hoàn thành bài thi này nhanh thứ 5 trong số những ng tham gia.
                 </p>
+                <p className='text-gray-600 text-md'>
+                  tổng điểm Trắc Nghiệm : <span className='text-success font-bold text-lg'>100</span>
+                </p>
+                <p className='text-gray-600'>
+                  Thời gian hoàn thành : <span className='text-success font-bold text-lg'>10.02 phút</span>
+                </p>
+                <div className='text-gray-600'>
+                  <p className='flex items-center gap-5 mt-2'>
+                    <span>
+                      <img className='w-[30px]' src={`${doneExams}`} alt='' />
+                    </span>
+                    <span className='font-bold text-blue-500'>đúng : 10</span>
+                  </p>
+                  <p className='flex items-center gap-5 mt-2'>
+                    <span>
+                      <img className='w-[30px]' src={`${errorExams}`} alt='' />
+                    </span>
+                    <span> sai : 10</span>
+                  </p>
+                  <p className='flex items-center gap-5 mt-2'>
+                    <span>
+                      <MdOutlineError className='text-[34px]  text-danger font-bold' />
+                    </span>
+                    <span>chưa trả lời : 10</span>
+                  </p>
+                </div>
               </div>
               <div className='space-y-4'>
                 <button
                   onClick={() => navigate('/')}
                   className='p-3 bg-black rounded-full text-white w-full font-semibold'
                 >
-                  Allow notifications
+                  Về Trang chủ
                 </button>
               </div>
             </div>

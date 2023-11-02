@@ -4,7 +4,7 @@ import { PiKeyReturnFill } from 'react-icons/pi'
 import { Button } from '~/components'
 import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
-import { useNavigate } from 'react-router-dom'
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { AppContext } from '~/contexts/app.contexts'
 import { Radio } from 'antd'
@@ -17,11 +17,18 @@ const AcceptUserDipament = () => {
   const { data: dataDepartment, isLoading, isFetching } = useGetAllDepartmentQuery()
   const { t } = useTranslation(['header'])
   const { profile } = useContext(AppContext)
+  const [queryParameters] = useSearchParams()
+  const dataSearchQuery: string | null = queryParameters.get('exams')
+  console.log(dataSearchQuery, 'prf')
   const navigate = useNavigate()
   const handelGoon = () => {
-    // navigate('/action-bai-thi')
-    setCheckConcept(!checkConcept)
-    toastService.success(t('product.happy_user'))
+    if (dataSearchQuery != null) {
+      setCheckConcept(!checkConcept)
+      toastService.success(t('product.happy_user'))
+    } else {
+      alert('Vui Lòng Chọn Phòng Ban')
+      return false
+    }
   }
   return (
     <div className='relative'>
@@ -111,7 +118,7 @@ const AcceptUserDipament = () => {
                   <div className='col-span-12 mt-20 mb-5 text-gray-100'>
                     <button
                       className='rounded hover:bg-success bg-teal-500 w-full py-3'
-                      onClick={() => navigate('/action-bai-thi')}
+                      onClick={() => navigate('/ChoosExam')}
                     >
                       Bắt Đầu Ôn Thi
                     </button>
@@ -202,7 +209,7 @@ const AcceptUserDipament = () => {
                   <div className='col-span-12 mt-20 mb-5 text-gray-100'>
                     <button
                       className='rounded hover:bg-success bg-teal-500 w-full py-3'
-                      onClick={() => navigate('/action-bai-thi')}
+                      onClick={() => navigate('/ChoosExam')}
                     >
                       Bắt Đầu Thi
                     </button>
@@ -240,12 +247,19 @@ const AcceptUserDipament = () => {
                       style={{ marginTop: 16 }}
                     >
                       {dataDepartment?.data.map((items: IDepartmentType) => {
-                        console.log(items)
+                        console.log(items, 'pẩm')
                         return (
                           <div key={items._id}>
                             <Radio.Button
                               className='w-[200px]  hover:bg-warning hover:text-white font-medium hover:scale-95 rounded-none'
                               value='a'
+                              onClick={() =>
+                                navigate({
+                                  search: createSearchParams({
+                                    exams: items.name
+                                  }).toString()
+                                })
+                              }
                             >
                               {items.name}
                             </Radio.Button>
@@ -273,7 +287,7 @@ const AcceptUserDipament = () => {
         )}
       </div>
       {profile?.role.name !== 'Staff' && (
-        <div className='absolute right-15 -bottom-[13rem] flex '>
+        <div className='absolute right-15 -bottom-[15rem] flex '>
           <div className='w-[300px] h-[99px] shadow-xl rounded-md bg-white'>
             <p className='text-black font-medium text-left pl-5 pt-3'>
               <TypeAnimation sequence={['Quay Về Trang Quản Trị', 1000, '']} speed={50} repeat={Infinity} />

@@ -467,16 +467,28 @@
   33% {
     transform: rotateY(-180deg) translateZ(50px);
   }
-
   50% {
     transform: rotateY(-180deg) translateZ(100px);
   }
-
   60% {
     transform: rotateY(-180deg) translateZ(100px);
   }
-
   75% {
     transform: rotateY(-180deg) translateZ(50px);
   }
+}
+@keyframes demoSHowhide {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.fade-in-out-dm {
+  animation: demoSHowhide 6s infinite;
 }

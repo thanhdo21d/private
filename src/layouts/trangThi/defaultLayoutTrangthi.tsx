@@ -67,12 +67,12 @@ const DefaultLayoutTrangthi = () => {
 
       <div className='right-4 flex gap-2 justify-center top-5  absolute w-[500px] items-center text-center bg-black bg-opacity-50 rounded-lg h-[80px]'>
         <div
-          className='pt-4 relative w-[50px] h-[50px]  bg-danger rounded-full shadow-md cursor-pointer'
+          className='pt-4 relative w-[50px] h-[50px]  bg-danger hover:bg-warning  rounded-full shadow-md cursor-pointer'
           onClick={handelLogOut}
         >
           <span className='absolute top-[11px] left-[12px]'>
             <Tooltip placement='leftTop' title={t('product.logout')}>
-              <LuLogOut className='text-[30px]  hover:bg-warning ' />
+              <LuLogOut className='text-[30px]  ' />
             </Tooltip>
           </span>
         </div>

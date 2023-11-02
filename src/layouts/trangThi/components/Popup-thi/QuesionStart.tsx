@@ -34,9 +34,9 @@ const QuesionStart = () => {
     if (confirm) {
       setShowPop(true)
       toastService.success('Xin chúc mừng, bạn hoàn thành câu hỏi này nhanh thứ mấy trong số những ng tham gia')
-      setTimeout(() => {
-        navigate('/')
-      }, 10000)
+      // setTimeout(() => {
+      //   navigate('/')
+      // }, 10000)
     }
   }
   const handleProcedureContentChange = (content: string) => {

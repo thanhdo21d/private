@@ -32,6 +32,7 @@ import DetailsExams from './pages/bo-de-thi/dataDetails/DetailsExams'
 import DemoExcel from './layouts/trangThi/components/Popup-thi/DemoExcel'
 import MenuIten from './utils/Demol'
 import ChoosExam from './pages/accept-phong-ban/ChoosExam'
+import Setting from './pages/setting/Setting'
 //const randomizedData = [...data].sort(() => Math.random() - 0.5);
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
@@ -143,7 +144,8 @@ export const routers = createBrowserRouter([
           { path: 'roles/:id/memRole', element: <MemberInRole /> },
           { path: 'roles/add', element: <EditRoles /> },
           { path: 'banner', element: <AddBanner /> },
-          { path: 'banner/:id/edit', element: <EditBanner /> }
+          { path: 'banner/:id/edit', element: <EditBanner /> },
+          { path: 'setting', element: <Setting /> }
         ]
       }
     ]

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const CheckboxThree = () => {
+const CheckboxThree = (data) => {
   const [isChecked, setIsChecked] = useState<boolean>(false)
 
   return (

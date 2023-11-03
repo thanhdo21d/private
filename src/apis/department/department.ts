@@ -69,6 +69,16 @@ const DepartmentAPI = createApi({
         }
       },
       invalidatesTags: ['Department']
+    }),
+    changeRoleOtherAdmin: builder.mutation<void, { id: string; body: string[] }>({
+      query: ({ id, body }) => {
+        return {
+          url: `/changeAdminDepartment/${id}`,
+          method: 'PUT',
+          body: { idDepartMent: body }
+        }
+      },
+      invalidatesTags: ['Department']
     })
   })
 })
@@ -78,6 +88,7 @@ export const {
   useGetExamsDepartmentQuery,
   useRemoveExamsDepartmentMutation,
   useGetDetailsExamsQuery,
-  useDropDbExamsMutation
+  useDropDbExamsMutation,
+  useChangeRoleOtherAdminMutation
 } = DepartmentAPI
 export default DepartmentAPI

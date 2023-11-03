@@ -22,5 +22,6 @@ export interface IRoleDoc {
     updatedAt: number
     users: string[]
     tasks: string[]
+    adminDepartMent : []
   }
 }

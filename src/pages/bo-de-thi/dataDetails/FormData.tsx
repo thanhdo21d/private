@@ -1,4 +1,22 @@
-import { Badge, Descriptions, DescriptionsProps, Form, Input, Popconfirm, Select, Skeleton, Table, Tooltip } from 'antd'
+import {
+  Badge,
+  Col,
+  Descriptions,
+  DescriptionsProps,
+  Drawer,
+  DrawerProps,
+  Form,
+  Input,
+  Popconfirm,
+  Radio,
+  RadioChangeEvent,
+  Row,
+  Select,
+  Skeleton,
+  Space,
+  Table,
+  Tooltip
+} from 'antd'
 import { SelectCommonPlacement } from 'antd/es/_util/motion'
 import { Footer } from 'antd/es/layout/layout'
 import { useEffect, useState } from 'react'
@@ -18,18 +36,20 @@ import { PiKeyReturnThin } from 'react-icons/pi'
 import logoBacktop from '../../../assets/images/logo/top.png'
 import { AiFillEdit, AiOutlineLoading3Quarters } from 'react-icons/ai'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
+import DetailsDsEasy from '../level_easy/DetailsDsEasy'
 type FieldType = {
   keyword?: string
 }
 const FormData = () => {
   const url = import.meta.env.VITE_API
   const { id } = useParams()
-  const [placement, SetPlacement] = useState<SelectCommonPlacement>('topLeft')
+  const [open, setOpen] = useState(false)
   const [queryParameters] = useSearchParams()
   const dataExamsQuery: any = queryParameters.get('exams')
   const dataExamsQueryID: string | null = queryParameters.get('idExams')
   const dataPageQuery: string | null = queryParameters.get('page')
   const { data, isFetching, isLoading } = useGetIdDepartmentQuery(id as string)
+  const [showExcel, setShowExcel] = useState<boolean>(false)
   const { data: dataExams, isLoading: isLoadingExam } = useGetExamsDepartmentQuery({
     id: id,
     exams: dataExamsQuery || 'easy',
@@ -119,36 +139,6 @@ const FormData = () => {
       }
     },
     {
-      title: (
-        <div className='text-md font-bold flex justify-center'>
-          <Select
-            defaultValue='Options'
-            style={{ width: 130 }}
-            placement={placement}
-            options={[
-              {
-                value: 'Options',
-                label: <p>Options</p>
-              },
-              {
-                value: 'NingBo',
-                label: <p>lý thuyết</p>
-              },
-              {
-                value: 'WenZhou',
-                label: <p onClick={() => alert('ok')}>thực hành</p>
-              }
-            ]}
-          />
-        </div>
-      ),
-      dataIndex: 'option',
-      key: 'option',
-      render: (text: string) => {
-        return <p className='flex justify-center'>{text}</p>
-      }
-    },
-    {
       title: <p className='flex justify-center text-danger font-semibold text-xl'>actions</p>,
       render: ({ key: id }: { key: string }) => {
         return (
@@ -193,8 +183,56 @@ const FormData = () => {
       }
     }
   ]
+
+  const [placement, setPlacement] = useState<DrawerProps['placement']>('right')
+
+  const showDrawer = () => {
+    setOpen(true)
+  }
+
+  const onClose = () => {
+    setOpen(false)
+  }
   return (
     <div>
+      <>
+        <Drawer
+          title='Create a new exams'
+          width={820}
+          onClose={onClose}
+          open={open}
+          extra={
+            <Space>
+              <Button onClick={() => setShowExcel(!showExcel)}>{showExcel ? 'Add Exams' : 'import excels'}</Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </Space>
+          }
+        >
+          {showExcel ? (
+            <DetailsDsEasy />
+          ) : (
+            <Form layout='vertical' hideRequiredMark>
+              <Row gutter={22}>
+                <Col span={22}>
+                  <Form.Item
+                    name='name'
+                    label={<p className='font-bold text-xl'>Tên Phòng Ban</p>}
+                    rules={[{ required: true, message: 'vui lòng nhập Tên Phòng Ban ...!' }]}
+                  >
+                    <Input className='ml-7' placeholder='vui lòng nhập Tên Phòng Ban ...!' />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <button
+                type='submit'
+                className='  w-full btn flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl text-white  rounded-full tracking-wide bg-secondary  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg  transition ease-in duration-300'
+              >
+                Submit
+              </button>
+            </Form>
+          )}
+        </Drawer>
+      </>
       <div>
         <button
           type='submit'
@@ -222,92 +260,7 @@ const FormData = () => {
             </Button>
           </Form>
         </div>
-        <div className='flex items-center justify-end gap-10 '>
-          <div className='z-50'>
-            <div className='flex items-center justify-center '>
-              <div className=' h-[40px] relative inline-block text-left dropdown'>
-                <span className='rounded-md shadow-sm'>
-                  <button
-                    className='inline-flex justify-between hover:bg-warning hover:text-white  w-[200px] px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800'
-                    type='button'
-                    aria-haspopup='true'
-                    aria-expanded='true'
-                    aria-controls='headlessui-menu-items-117'
-                  >
-                    <span>Loại Câu Hỏi</span>
-                    <span>
-                      <svg className='w-5 h-5 ml-2 -mr-1' viewBox='0 0 20 20' fill='currentColor'>
-                        <path
-                          fillRule='evenodd'
-                          d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                </span>
-                <div className='opacity-0 invisible dropdown-menu transition-all duration-300 transform origin-top-right -translate-y-2 scale-95'>
-                  <div
-                    className='absolute right-0 w-64 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none'
-                    aria-labelledby='headlessui-menu-button-1'
-                    id='headlessui-menu-items-117'
-                    role='menu'
-                  >
-                    <div
-                      onClick={() =>
-                        navigate({
-                          search: createSearchParams({
-                            exams: 'easy'
-                          }).toString()
-                        })
-                      }
-                      className='px-4 py-3 hover:bg-warning cursor-pointer '
-                    >
-                      <p className='text-sm  hover:text-white hover:font-medium font-medium leading-5 text-gray-900 truncate'>
-                        Danh Sách Câu Hỏi Dễ
-                      </p>
-                    </div>
-                    <div
-                      onClick={() =>
-                        navigate({
-                          search: createSearchParams({
-                            exams: 'normal'
-                          }).toString()
-                        })
-                      }
-                      className='py-1 hover:bg-warning cursor-pointer'
-                    >
-                      <a
-                        tabIndex={0}
-                        className='text-gray-700 hover:text-white hover:font-medium flex justify-between w-full px-4 py-2 text-sm leading-5 text-left'
-                        role='menuitem'
-                      >
-                        Danh Sách Câu Hỏi Trung Bình
-                      </a>
-                    </div>
-                    <div
-                      onClick={() =>
-                        navigate({
-                          search: createSearchParams({
-                            exams: 'hard'
-                          }).toString()
-                        })
-                      }
-                      className='py-1 hover:bg-warning cursor-pointer'
-                    >
-                      <a
-                        tabIndex={3}
-                        className='text-gray-700 flex hover:text-white hover:font-medium justify-between w-full px-4 py-2 text-sm leading-5 text-left'
-                        role='menuitem'
-                      >
-                        Danh Sách Câu Hỏi Khó
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className='flex items-center justify-end gap-5 '>
           <div
             className={` bg-danger cursor-pointer h-[40px] flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
           >
@@ -333,15 +286,16 @@ const FormData = () => {
           </div>
           {/*  */}
           <div
-            className={` bg-white h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
+            onClick={showDrawer}
+            className={` bg-white h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide cursor-pointer  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
           >
-            <Tooltip title='Trở Về'>
-              <Link className='text-base font-medium text-black  flex items-center gap-4' to='/admin/de-kho'>
+            <Tooltip title='Thêm Câu Hỏi'>
+              <div className='text-base font-medium text-black  flex items-center gap-4'>
                 <span>
                   <PiKeyReturnThin className='text-xl text-danger' />
                 </span>
-                <span> Quay Lại</span>
-              </Link>
+                <span> Thêm Câu Hỏi</span>
+              </div>
             </Tooltip>
           </div>
         </div>

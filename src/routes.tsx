@@ -33,6 +33,8 @@ import DemoExcel from './layouts/trangThi/components/Popup-thi/DemoExcel'
 import MenuIten from './utils/Demol'
 import ChoosExam from './pages/accept-phong-ban/ChoosExam'
 import Setting from './pages/setting/Setting'
+import TreeMenu from './pages/bo-de-thi/qlTree/TreeMenu'
+import SetttingTree from './pages/bo-de-thi/qlTree/SetttingTree'
 //const randomizedData = [...data].sort(() => Math.random() - 0.5);
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
@@ -63,6 +65,14 @@ export const routers = createBrowserRouter([
         <NotFound />
       </Suspense>
     )
+  },
+  {
+    path: '/tree-menu',
+    element: <TreeMenu />,
+    children: [
+      { path: 'settings', element: <SetttingTree /> },
+      { path: 'category/:id', element: <FormData /> }
+    ]
   },
   {
     path: '/demo',
@@ -122,7 +132,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <CheckCookieUserLogin />,
+    // element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultLayout />,

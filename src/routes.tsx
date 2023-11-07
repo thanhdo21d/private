@@ -36,7 +36,7 @@ import Setting from './pages/setting/Setting'
 import TreeMenu from './pages/bo-de-thi/qlTree/TreeMenu'
 import SetttingTree from './pages/bo-de-thi/qlTree/SetttingTree'
 import EditTree from './pages/bo-de-thi/qlTree/EditTree'
-//const randomizedData = [...data].sort(() => Math.random() - 0.5);
+import ExamConfiguration from './pages/bo-de-thi/qlTree/ExamConfiguration'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -75,6 +75,7 @@ export const routers = createBrowserRouter([
       { path: 'settings/edit', element: <EditTree /> },
       { path: 'category/:id', element: <FormData /> },
       { path: 'details-exams/:id', element: <DetailsExams /> },
+      { path: 'settings/ki-thi', element: <ExamConfiguration /> },
     ]
   },
   {

@@ -12,6 +12,7 @@ const SetttingTree = () => {
   const [queryParameters] = useSearchParams()
   const dataExamsQuery: any = queryParameters.get('category')
   const { id } = useParams()
+  const navigate = useNavigate()
   const [checkCate, setCheckCate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
   const [categories, setCategories] = useState<any[]>([])
@@ -103,13 +104,14 @@ const SetttingTree = () => {
           </div>
         </motion.div>
         <motion.div
+          onClick={() => navigate('ki-thi')}
           variants={fadeIn('right', 0.35)}
           initial='hidden'
           whileInView={'show'}
           viewport={{ once: false, amount: 0.8 }}
           className='w-full mt-5 h-[60px] cursor-pointer flex items-center dark:bg-black rounded-md bg-white'
         >
-          <p className='text-left items-center pl-5'>Tạo Kì Thi</p>
+          <p className='text-left items-center pl-5'> Kì Thi</p>
         </motion.div>
       </div>
     </>

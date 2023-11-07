@@ -44,7 +44,7 @@ const Signin = () => {
       loginApi(data).then(({ data }: any) => {
         console.log(data.dataUser, 'ok')
         if (data !== 'undefined') {
-          console.log(data.checkDb,"dbrr")
+          console.log(data.checkDb, 'dbrr')
           setProfile(data.checkDb)
           setProfileToLS(data.checkDb)
           Cookies.set('token', data.accessToken, { expires: 1 })
@@ -120,6 +120,7 @@ const Signin = () => {
               Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
             </div>
           </div>
+
           <div
             className='lg:w-1/2 w-full flex items-center justify-center text-center md:px-16 px-0 z-0'
             style={{ backgroundColor: '#161616' }}
@@ -218,6 +219,9 @@ const Signin = () => {
                   </Button>
                 </div>
               </form>
+            </div>
+            <div className='bottom-0 absolute p-4 text-center  flex justify-center space-x-4'>
+              Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
             </div>
           </div>
         </section>

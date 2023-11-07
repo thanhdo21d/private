@@ -12,6 +12,8 @@ const SetttingTree = () => {
   const [queryParameters] = useSearchParams()
   const dataExamsQuery: any = queryParameters.get('category')
   const { id } = useParams()
+  const uri = import.meta.env.VITE_API
+
   const navigate = useNavigate()
   const [checkCate, setCheckCate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
@@ -25,7 +27,7 @@ const SetttingTree = () => {
   }
   useEffect(() => {
     axios
-      .get(`http://localhost:8282/category-tree/${id}`)
+      .get(`${uri}category-tree/${id}`)
       .then((response: any) => {
         setCategories([response.data])
       })

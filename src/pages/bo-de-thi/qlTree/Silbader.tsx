@@ -73,6 +73,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
   const navigate = useNavigate()
   const trigger = useRef<any>(null)
   const { id } = useParams()
+  const uri = import.meta.env.VITE_API
   const sidebar = useRef<any>(null)
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
@@ -105,7 +106,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
   }, [sidebarExpanded])
   useEffect(() => {
     axios
-      .get(`http://localhost:8282/category-tree/${id}`)
+      .get(`${uri}category-tree/${id}`)
       .then((response: any) => {
         setCategories([response.data])
       })

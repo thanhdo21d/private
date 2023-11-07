@@ -69,13 +69,18 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/tree-menu/:id',
-    element: <TreeMenu />,
+    element: <CheckCookieUserLogin />,
     children: [
-      { path: 'settings', element: <SetttingTree /> },
-      { path: 'settings/edit', element: <EditTree /> },
-      { path: 'category/:id', element: <FormData /> },
-      { path: 'details-exams/:id', element: <DetailsExams /> },
-      { path: 'settings/ki-thi', element: <ExamConfiguration /> },
+      {
+        element: <TreeMenu />,
+        children: [
+          { path: 'settings', element: <SetttingTree /> },
+          { path: 'settings/edit', element: <EditTree /> },
+          { path: 'category/:id', element: <FormData /> },
+          { path: 'details-exams/:id', element: <DetailsExams /> },
+          { path: 'settings/ki-thi', element: <ExamConfiguration /> }
+        ]
+      }
     ]
   },
   {

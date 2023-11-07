@@ -120,14 +120,6 @@ const DsDethi = () => {
                               Chi Tiết {data?.name}.
                             </button>
                           </div>
-                          {/* <div className='flex justify-center'>
-                            <button
-                              onClick={() => navigate(`/admin/level_easy/details/${data?._id}`)}
-                              className='p-3 bg-warning  text-white w-[90%] rounded-md font-semibold'
-                            >
-                              Thêm Đề Thi
-                            </button>
-                          </div> */}
                         </div>
                       </div>
                     </div>

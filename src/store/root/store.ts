@@ -10,6 +10,7 @@ import TaskRoleApi from '~/apis/task/task.api'
 import DepartmentAPI from '~/apis/department/department'
 import categorydepartmentAPI from '~/apis/category/categories'
 import { themeReducer } from '../slice/theme.slice'
+import ExamSetting from '~/apis/examSetting/examSetting'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -20,9 +21,8 @@ export const store = configureStore({
     [TaskRoleApi.reducerPath]: TaskRoleApi.reducer,
     [DepartmentAPI.reducerPath]: DepartmentAPI.reducer,
     [categorydepartmentAPI.reducerPath]: categorydepartmentAPI.reducer,
-
+    [ExamSetting.reducerPath]: ExamSetting.reducer,
     //toolkit
-
     theme: themeReducer
   },
   middleware: (getDefaultMiddleware) =>
@@ -35,6 +35,7 @@ export const store = configureStore({
       TaskRoleApi.middleware,
       DepartmentAPI.middleware,
       categorydepartmentAPI.middleware,
+      ExamSetting.middleware,
       rtkQueryErrorLogger
     )
 })

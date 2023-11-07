@@ -1,42 +1,18 @@
-import {
-  Badge,
-  Col,
-  Descriptions,
-  DescriptionsProps,
-  Drawer,
-  DrawerProps,
-  Form,
-  Input,
-  Popconfirm,
-  Radio,
-  RadioChangeEvent,
-  Row,
-  Select,
-  Skeleton,
-  Space,
-  Table,
-  Tooltip
-} from 'antd'
+import { Col, Drawer, DrawerProps, Form, Input, Popconfirm, Row, Skeleton, Space, Table, Tooltip } from 'antd'
 import { SelectCommonPlacement } from 'antd/es/_util/motion'
 import { Footer } from 'antd/es/layout/layout'
 import { useEffect, useState } from 'react'
 import { Link, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import {
-  useDropDbExamsMutation,
-  useGetDetailsExamsQuery,
-  useGetExamsDepartmentQuery,
-  useGetIdDepartmentQuery,
-  useRemoveExamsDepartmentMutation
-} from '~/apis/department/department'
+import { useDropDbExamsMutation } from '~/apis/department/department'
 import { Button } from '~/components'
 import Pagination from '~/pages/roles/Pagination'
-import { DownOutlined } from '@ant-design/icons'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { PiKeyReturnThin } from 'react-icons/pi'
 import logoBacktop from '../../../assets/images/logo/top.png'
 import { AiFillEdit, AiOutlineLoading3Quarters } from 'react-icons/ai'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
 import DetailsDsEasy from '../level_easy/DetailsDsEasy'
+import { useGetIDcategoriesQuery, useRemoveExamsDepartmentMutation } from '~/apis/category/categories'
 type FieldType = {
   keyword?: string
 }
@@ -45,21 +21,18 @@ const FormData = () => {
   const { id } = useParams()
   const [open, setOpen] = useState(false)
   const [queryParameters] = useSearchParams()
-  const dataExamsQuery: any = queryParameters.get('exams')
-  const dataExamsQueryID: string | null = queryParameters.get('idExams')
   const dataPageQuery: string | null = queryParameters.get('page')
-  const { data, isFetching, isLoading } = useGetIdDepartmentQuery(id as string)
   const [showExcel, setShowExcel] = useState<boolean>(false)
-  const { data: dataExams, isLoading: isLoadingExam } = useGetExamsDepartmentQuery({
+  const {
+    data: getDetailsExams,
+    isFetching,
+    isLoading
+  } = useGetIDcategoriesQuery({
     id: id,
-    exams: dataExamsQuery || 'easy',
-    page: 1,
-    limit: 30
+    page: dataPageQuery || 1,
+    limit: 10
   })
-  const { data: getDetailsExams } = useGetDetailsExamsQuery({
-    idDepartment: dataExamsQueryID,
-    exams: dataExamsQuery || 'easy'
-  })
+  console.log(getDetailsExams)
   const [
     removeExamsDepartment,
     { isLoading: isRemoveLoading, isSuccess: isRemoveSuccess, isError: isRemoveExamsError }
@@ -68,8 +41,7 @@ const FormData = () => {
   const confirm = (idExams: string) => {
     removeExamsDepartment({
       id: id,
-      body: [idExams],
-      exmas: dataExamsQuery
+      body: [idExams]
     })
       .unwrap()
       .then(() => toastService.success('Delete success'))
@@ -80,22 +52,18 @@ const FormData = () => {
   }
   const handelGetDetailsExams = (idExams: string) => {
     navigate({
-      pathname: `/admin/details-exams/${idExams}`,
-      search: createSearchParams({
-        exams: dataExamsQuery || 'easy'
-      }).toString()
+      pathname: `/tree-menu/${id}/details-exams/${idExams}`
     })
   }
   const [handelDropExasm] = useDropDbExamsMutation()
   const handelDropDbExmams = () => {
     handelDropExasm({
-      idDepartment: id,
-      examsLevel: dataExamsQuery as string
+      idDepartment: id
     })
       .unwrap()
       .then(() => toastService.success('Drop db successfully deleted'))
   }
-  const dataSource = dataExams?.data?.map((items: any, index: number) => ({
+  const dataSource = getDetailsExams?.data?.easy.map((items: any, index: number) => ({
     key: items._id,
     index: index + 1,
     question: items.question,
@@ -183,13 +151,10 @@ const FormData = () => {
       }
     }
   ]
-
   const [placement, setPlacement] = useState<DrawerProps['placement']>('right')
-
   const showDrawer = () => {
     setOpen(true)
   }
-
   const onClose = () => {
     setOpen(false)
   }
@@ -219,7 +184,7 @@ const FormData = () => {
                     label={<p className='font-bold text-xl'>Tên Phòng Ban</p>}
                     rules={[{ required: true, message: 'vui lòng nhập Tên Phòng Ban ...!' }]}
                   >
-                    <Input className='ml-7' placeholder='vui lòng nhập Tên Phòng Ban ...!' />
+                    <Input className='ml-7 rounded-md ' placeholder='vui lòng nhập Tên Phòng Ban ...!' />
                   </Form.Item>
                 </Col>
               </Row>
@@ -238,7 +203,8 @@ const FormData = () => {
           type='submit'
           className='my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4 text-2xl text-white  rounded-sm tracking-wide bg-[#001529]  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg  transition ease-in duration-300'
         >
-          Bộ Đề Thi {data?.data.name}
+          Bộ Đề Thi
+          {/* {data?.data.name} */}
         </button>
       </div>
       <div className='flex items-center justify-between'>
@@ -311,7 +277,7 @@ const FormData = () => {
       </div>
       {/*  */}
       <div>
-        {isLoading || isFetching || isLoadingExam ? (
+        {isLoading || isFetching ? (
           <div>
             <Skeleton />
             <Skeleton />
@@ -320,10 +286,10 @@ const FormData = () => {
             <Skeleton />
           </div>
         ) : (
-          <Table dataSource={dataSource} columns={columns} pagination={false} />
+          <Table dataSource={dataSource} columns={columns} pagination={false} className='dark:bg-black  mt-4 ' />
         )}
-        <Footer className='mt-5 flex justify-between'>
-          <div className='text-md font-semibold text-center'>
+        <Footer className='mt-5 flex justify-between dark:bg-black '>
+          <div className='text-md font-semibold text-center dark:text-white'>
             Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
           </div>
           <div>

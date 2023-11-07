@@ -146,14 +146,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
                         </div>
                       )
                     })}
-                <Menu
-                  theme='dark'
-                  defaultSelectedKeys={['1']}
-                  defaultOpenKeys={['sub1']}
-                  mode='inline'
-                  items={settingsSystem}
-                />
-                
               </div>
             )}
           </div>

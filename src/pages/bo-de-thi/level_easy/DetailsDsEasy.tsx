@@ -10,8 +10,6 @@ const DetailsDsEasy = () => {
   const { pathname } = useLocation()
   console.log(pathname)
   const { id } = useParams()
-  const [queryParameters] = useSearchParams()
-  const dataExamsQuery: any = queryParameters.get('exams')
   const [file, setFile] = useState<any>(null)
   const handleFileChange = (event: any) => {
     setFile(event.target.files[0])
@@ -24,9 +22,6 @@ const DetailsDsEasy = () => {
       const response = await axios.post(`${url}upload/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
-        },
-        params: {
-          examsLevel: dataExamsQuery
         }
       })
       console.log(response.data)

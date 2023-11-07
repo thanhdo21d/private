@@ -11,10 +11,11 @@ import { Radio } from 'antd'
 import logoAction from '../../assets/hello.png'
 import { TypeAnimation } from 'react-type-animation'
 import { useGetAllDepartmentQuery } from '~/apis/department/department'
-import { IDepartmentType } from '~/types/department/department.type'
+import { IDepartmentType, category } from '~/types/department/department.type'
+import { useGetAllCategoriesQuery } from '~/apis/category/categories'
 const AcceptUserDipament = () => {
   const [checkConcept, setCheckConcept] = useState<boolean>(false)
-  const { data: dataDepartment, isLoading, isFetching } = useGetAllDepartmentQuery()
+  const { data: dataAllCategories, isFetching: isGetCategoriesLoading } = useGetAllCategoriesQuery()
   const { t } = useTranslation(['header'])
   const { profile } = useContext(AppContext)
   const [queryParameters] = useSearchParams()
@@ -246,26 +247,28 @@ const AcceptUserDipament = () => {
                       buttonStyle='solid'
                       style={{ marginTop: 16 }}
                     >
-                      {dataDepartment?.data.map((items: IDepartmentType) => {
-                        console.log(items, 'pẩm')
-                        return (
-                          <div key={items._id}>
-                            <Radio.Button
-                              className='w-[200px]  hover:bg-warning hover:text-white font-medium hover:scale-95 rounded-none'
-                              value='a'
-                              onClick={() =>
-                                navigate({
-                                  search: createSearchParams({
-                                    exams: items.name
-                                  }).toString()
-                                })
-                              }
-                            >
-                              {items.name}
-                            </Radio.Button>
-                          </div>
-                        )
-                      })}
+                      {dataAllCategories?.data
+                        .filter((items: category) => items.parentCheck !== '0')
+                        .map((items: IDepartmentType) => {
+                          console.log(items, 'pẩm')
+                          return (
+                            <div key={items._id}>
+                              <Radio.Button
+                                className='w-[200px]  hover:bg-warning hover:text-white font-medium hover:scale-95 rounded-none'
+                                value='a'
+                                onClick={() =>
+                                  navigate({
+                                    search: createSearchParams({
+                                      exams: items.name
+                                    }).toString()
+                                  })
+                                }
+                              >
+                                {items.name}
+                              </Radio.Button>
+                            </div>
+                          )
+                        })}
                     </Radio.Group>
                   </div>
                   <div className='w-full absolute  bottom-5 '>

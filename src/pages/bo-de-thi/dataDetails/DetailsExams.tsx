@@ -11,8 +11,7 @@ const DetailsExams = () => {
   const navigate = useNavigate()
   const dataExamsQuery: string | null = queryParameters.get('exams')
   const { data: getDetailsExams, isFetching: isDeailFetching } = useGetDetailsExamsQuery({
-    idDepartment: id,
-    exams: dataExamsQuery || 'easy'
+    idDepartment: id
   })
   console.log(dataExamsQuery)
   const { data, isFetching } = useGetIdDepartmentQuery(id as string)

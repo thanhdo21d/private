@@ -35,6 +35,7 @@ import ChoosExam from './pages/accept-phong-ban/ChoosExam'
 import Setting from './pages/setting/Setting'
 import TreeMenu from './pages/bo-de-thi/qlTree/TreeMenu'
 import SetttingTree from './pages/bo-de-thi/qlTree/SetttingTree'
+import EditTree from './pages/bo-de-thi/qlTree/EditTree'
 //const randomizedData = [...data].sort(() => Math.random() - 0.5);
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
@@ -67,11 +68,13 @@ export const routers = createBrowserRouter([
     )
   },
   {
-    path: '/tree-menu',
+    path: '/tree-menu/:id',
     element: <TreeMenu />,
     children: [
       { path: 'settings', element: <SetttingTree /> },
-      { path: 'category/:id', element: <FormData /> }
+      { path: 'settings/edit', element: <EditTree /> },
+      { path: 'category/:id', element: <FormData /> },
+      { path: 'details-exams/:id', element: <DetailsExams /> },
     ]
   },
   {
@@ -145,7 +148,6 @@ export const routers = createBrowserRouter([
           { path: 'details/dethi/:id', element: <FormData /> },
           { path: 'details/dethi/edit/:id', element: <EditExams /> },
           { path: 'level_easy/details/:id', element: <DetailsDsEasy /> },
-          { path: 'details-exams/:id', element: <DetailsExams /> },
           { path: 'de-trung-binh', element: <DsDeThiTB /> },
           { path: 'de-de', element: <DsDeThiEszy /> },
           { path: 'member/:id/edit', element: <EditMember /> },

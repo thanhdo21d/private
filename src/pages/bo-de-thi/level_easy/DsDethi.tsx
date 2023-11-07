@@ -17,11 +17,9 @@ const DsDethi = () => {
   console.log(profile)
   const { Option } = Select
   const [open, setOpen] = useState(false)
-
   const showDrawer = () => {
     setOpen(true)
   }
-
   const onClose = () => {
     setOpen(false)
   }
@@ -68,7 +66,7 @@ const DsDethi = () => {
                 label={<p className='font-bold text-xl'>Tên Phòng Ban</p>}
                 rules={[{ required: true, message: 'vui lòng nhập Tên Phòng Ban ...!' }]}
               >
-                <Input className='ml-7' placeholder='vui lòng nhập Tên Phòng Ban ...!' />
+                <Input className='ml-7 rounded-md' placeholder='vui lòng nhập Tên Phòng Ban ...!' />
               </Form.Item>
             </Col>
           </Row>
@@ -116,7 +114,7 @@ const DsDethi = () => {
                         <div className='mt-5 mx-auto grid gap-y-4 '>
                           <div className='flex justify-center'>
                             <button
-                              onClick={() => navigate(`/admin/details/dethi/${data?._id}`)}
+                              onClick={() => navigate(`/tree-menu/${data?._id}/category/${data?._id}`)}
                               className='p-3 bg-strokedark  text-white w-[90%] rounded-md font-semibold'
                             >
                               Chi Tiết {data?.name}.

@@ -5,7 +5,10 @@ import 'react-toastify/dist/ReactToastify.css'
 import { pause } from './utils/utils'
 import { useState } from 'react'
 import { Loader } from './common'
+import { ConfigProvider, theme } from 'antd'
+import { useAppSelector } from './store/root/hook'
 const App = () => {
+  const { theme: currentTheme } = useAppSelector((state) => state.theme)
   const [isLoading, setIsLoading] = useState(true)
   pause(2000).then(() => {
     setIsLoading(false)
@@ -13,8 +16,14 @@ const App = () => {
   if (isLoading) return <Loader />
   return (
     <>
-      <RouterProvider router={routers} />
-      <ToastContainer autoClose={1000} transition={Slide} />
+      <ConfigProvider
+        theme={{
+          algorithm: currentTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm
+        }}
+      >
+        <RouterProvider router={routers} />
+        <ToastContainer autoClose={1000} transition={Slide} />
+      </ConfigProvider>
     </>
   )
 }

@@ -51,7 +51,7 @@ export const itemsUser: MenuProps['items'] = [
 ]
 export const settingsSystem: MenuProps['items'] = [
   getItem('Người dùng', 'uses', <UserOutlined />, [
-    getItem(<NavLink to={`/tree-menu/settings`}>Nhân viên</NavLink>, 'staffs', <FaUserEdit />)
+    getItem(<NavLink to={`/tree-menu/1/settings`}>Nhân viên</NavLink>, 'staffs', <FaUserEdit />)
   ]),
-  getItem(<NavLink to={`/tree-menu/settings`}>Cài đặt</NavLink>, 'settings', <SettingOutlined />)
 ]
+//${id}

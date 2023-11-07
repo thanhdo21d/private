@@ -20,52 +20,20 @@ const DepartmentAPI = createApi({
       query: (id: string) => `/department/query/${id}`,
       providesTags: ['Department']
     }),
-    getExamsDepartment: builder.query<any, any>({
-      query: ({ id, exams, page, limit }: any) => {
-        return {
-          url: `/department/queryExams/${id}`,
-          method: 'GET',
-          params: {
-            exams: exams,
-            page: page || 1,
-            limit: limit || 40
-          }
-        }
-      },
-      providesTags: ['Department']
-    }),
-    removeExamsDepartment: builder.mutation<any, any>({
-      query: ({ id, body, exmas }: any) => {
-        return {
-          url: `/department/removeExams/${id}`,
-          method: 'DELETE',
-          body: { idExams: body },
-          params: {
-            dynamicLevelExams: exmas || 'easy'
-          }
-        }
-      },
-      invalidatesTags: ['Department']
-    }),
+
     getDetailsExams: builder.query<any, any>({
-      query: ({ idDepartment, exams }: { idDepartment: string; exams: string }) => {
+      query: ({ idDepartment }: { idDepartment: string }) => {
         return {
-          url: `/examsDetails/${idDepartment}`,
-          params: {
-            exams: exams || 'easy'
-          }
+          url: `/examsDetails/${idDepartment}`
         }
       },
       providesTags: ['Department']
     }),
     dropDbExams: builder.mutation<void, any>({
-      query: ({ idDepartment, examsLevel }: { idDepartment: string; examsLevel: string }) => {
+      query: ({ idDepartment }: { idDepartment: string }) => {
         return {
           url: `/ExamsRoutes/dropdb/${idDepartment}`,
-          method: 'POST',
-          params: {
-            queryExamsLevelCheck: examsLevel
-          }
+          method: 'POST'
         }
       },
       invalidatesTags: ['Department']
@@ -85,8 +53,6 @@ const DepartmentAPI = createApi({
 export const {
   useGetAllDepartmentQuery,
   useGetIdDepartmentQuery,
-  useGetExamsDepartmentQuery,
-  useRemoveExamsDepartmentMutation,
   useGetDetailsExamsQuery,
   useDropDbExamsMutation,
   useChangeRoleOtherAdminMutation

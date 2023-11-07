@@ -4,7 +4,6 @@ import { useGetAllCategoriesQuery } from '~/apis/category/categories'
 import { useGetIdRolesQuery } from '~/apis/roles/roles.api'
 
 const Setting = () => {
-
   return (
     <div>
       <div className='w-full h-[65px] flex items-center bg-graydark mt-5'>

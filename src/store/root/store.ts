@@ -9,6 +9,7 @@ import BannerApi from '~/apis/banner/banner.api'
 import TaskRoleApi from '~/apis/task/task.api'
 import DepartmentAPI from '~/apis/department/department'
 import categorydepartmentAPI from '~/apis/category/categories'
+import { themeReducer } from '../slice/theme.slice'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -18,7 +19,11 @@ export const store = configureStore({
     [BannerApi.reducerPath]: BannerApi.reducer,
     [TaskRoleApi.reducerPath]: TaskRoleApi.reducer,
     [DepartmentAPI.reducerPath]: DepartmentAPI.reducer,
-    [categorydepartmentAPI.reducerPath]: categorydepartmentAPI.reducer
+    [categorydepartmentAPI.reducerPath]: categorydepartmentAPI.reducer,
+
+    //toolkit
+
+    theme: themeReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

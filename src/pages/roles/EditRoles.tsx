@@ -236,7 +236,7 @@ const EditRoles: React.FC = () => {
                   value={selectedItems}
                   onChange={handleSelectChange}
                   style={{ width: '100%', height: '50px', paddingLeft: '10px' }}
-                  options={filteredOptions.map((item) => ({
+                  options={filteredOptions?.map((item: any) => ({
                     value: item.name,
                     label: item.name
                   }))}

@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useContext, useEffect, useRef, useState } from 'react'
-import { BarsIcon } from '~/components'
+import { BarsIcon, Button } from '~/components'
 import { Menu, Tooltip } from 'antd'
-import { Link, NavLink, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
-import { AiFillHome } from 'react-icons/ai'
+import { Link, NavLink, createSearchParams, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { AiFillHome, AiFillSetting } from 'react-icons/ai'
 import { AppContext } from '~/contexts/app.contexts'
 import axios from 'axios'
 import { settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
@@ -14,55 +14,65 @@ interface SidebarProps {
   textUi: string
   checkInfo?: boolean
 }
-function CategoryTreeItem({ category, level }: any) {
+export function CategoryTreeItem({ category, level, bg }: any) {
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
-
   const toggleOpen = () => {
     setIsOpen((prevState) => !prevState)
   }
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    navigate(`/tree-menu/category/${category._id}`)
-    // {
-    //   search: createSearchParams({
-    //     category: category?._id
-    //   }).toString()
-    // }
+    {
+      bg
+        ? navigate({
+            search: createSearchParams({
+              category: category?._id
+            }).toString()
+          })
+        : navigate({
+            pathname: `category/${category._id}`,
+            search: createSearchParams({
+              category: category?._id
+            }).toString()
+          })
+    }
   }
-
   return (
-    <div className='bg-[#000c17]'>
-      <div onClick={toggleOpen} className='cursor-pointer  px-3 py-2'>
-        <div className='category-item relative'>
-          {category.children && category.children.length > 0 ? (
-            <span className='mr-3'>{isOpen ? '-' : '+'}</span>
-          ) : null}
-          <span
-            className='category-name  hover:text-md hover:text-white hover:font-semibold'
-            onClick={handleCategoryClick}
-          >
-            {category.name}
-          </span>
+    <div>
+      <div className={`${bg ? 'bg-white' : 'bg-[#000c17]'}`}>
+        <div onClick={toggleOpen} className='cursor-pointer  px-3 py-2'>
+          <div className='category-item relative flex justify-between  gap-5'>
+            <div>
+              {category.children && category.children.length > 0 ? (
+                <span className='mr-3'>{isOpen ? '-' : '+'}</span>
+              ) : null}
+              <span
+                className={`category-name  hover:text-md ${
+                  bg ? 'hover:text-black' : 'hover:text-white'
+                } hover:font-semibold`}
+                onClick={handleCategoryClick}
+              >
+                {category.name}
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className={`ml-5 space-y-1 transition-all ${isOpen ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'}`}>
-        {category.children &&
-          category.children.length > 0 &&
-          category.children.map((child: any) => (
-            <CategoryTreeItem key={child._id} category={child} level={level + 1} />
-          ))}
+        <div className={`ml-5 space-y-1 transition-all ${isOpen ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'}`}>
+          {category.children &&
+            category.children.length > 0 &&
+            category.children.map((child: any) => (
+              <CategoryTreeItem key={child._id} category={child} level={level + 1} bg={bg ? true : false} />
+            ))}
+        </div>
       </div>
     </div>
   )
 }
 const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProps) => {
-  const { pathname } = useLocation()
   const [categories, setCategories] = useState<any[]>([])
   const navigate = useNavigate()
-  const [dataTask, setDataTask] = useState<any[]>([])
   const trigger = useRef<any>(null)
-  const [checkMenu, setCheckMenu] = useState<boolean>(false)
+  const { id } = useParams()
   const sidebar = useRef<any>(null)
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
@@ -95,7 +105,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
   }, [sidebarExpanded])
   useEffect(() => {
     axios
-      .get('http://localhost:8080/category-tree/6543aef2e61d2cdb6d249277')
+      .get(`http://localhost:8282/category-tree/${id}`)
       .then((response: any) => {
         setCategories([response.data])
       })
@@ -104,7 +114,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
       })
   }, [])
   return (
-    <aside
+    <div
       ref={sidebar}
       className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-[#001529] duration-300 ease-linear dark:bg-[#001529] lg:static lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -144,8 +154,16 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
           </div>
         </nav>
       </div>
-      <Menu theme='dark' defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={settingsSystem} />
-    </aside>
+      <p
+        className='flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md'
+        onClick={() => navigate(`settings`)}
+      >
+        <span>
+          <AiFillSetting />
+        </span>
+        <span className='text-md text-bodydark1 font-medium'>Cài Đặt</span>
+      </p>
+    </div>
   )
 }
 export default SidebarTree

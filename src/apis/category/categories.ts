@@ -26,8 +26,36 @@ const categorydepartmentAPI = createApi({
         }
       },
       invalidatesTags: ['Category']
+    }),
+    getIDcategories: builder.query<any[], any>({
+      query: ({ id, page, limit }) => {
+        return {
+          url: `/query-id/category/${id}`,
+          method: 'GET',
+          params: {
+            page: page,
+            limit: limit
+          }
+        }
+      },
+      providesTags: ['Category']
+    }),
+    removeExamsDepartment: builder.mutation<any, any>({
+      query: ({ id, body }: any) => {
+        return {
+          url: `/department/removeExams/${id}`,
+          method: 'DELETE',
+          body: { idExams: body }
+        }
+      },
+      invalidatesTags: ['Category']
     })
   })
 })
-export const { useGetAllCategoriesQuery, useCreateCategoriesMutation } = categorydepartmentAPI
+export const {
+  useGetAllCategoriesQuery,
+  useCreateCategoriesMutation,
+  useGetIDcategoriesQuery,
+  useRemoveExamsDepartmentMutation
+} = categorydepartmentAPI
 export default categorydepartmentAPI

@@ -20,6 +20,7 @@ const Roles = () => {
   const dataSortQuery: string | null = queryParameters.get('sort')
   const dataPageQuery: string | null = queryParameters.get('page')
   const { data: dataGetRole } = useSearchRoleApiGETQuery(dataSearchQuery)
+ 
   const [searchResults, setSearchResults] = useState<any[]>([])
   const navigate = useNavigate()
   const confirm = (id: string) => {

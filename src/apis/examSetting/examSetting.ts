@@ -21,11 +21,21 @@ const ExamSetting = createApi({
       },
       invalidatesTags: ['ExamSetting']
     }),
+    removeExamsCategories: builder.mutation<any, any>({
+      query: ({ id, idCate }: { id: string; idCate: string }) => {
+        return {
+          url: `/examsktRoutes/remove/${id}/${idCate}`,
+          method: 'DELETE'
+        }
+      },
+      invalidatesTags: ['ExamSetting']
+    }),
     getAllExamsCategories: builder.query<any, string>({
       query: (id: string) => `/examsktRoutes/get/${id}`,
       providesTags: ['ExamSetting']
     })
   })
 })
-export const { useCreateExamsDepartmentMutation, useGetAllExamsCategoriesQuery } = ExamSetting
+export const { useCreateExamsDepartmentMutation, useGetAllExamsCategoriesQuery, useRemoveExamsCategoriesMutation } =
+  ExamSetting
 export default ExamSetting

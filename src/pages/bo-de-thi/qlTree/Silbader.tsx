@@ -2,12 +2,13 @@
 
 import { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon, Button } from '~/components'
-import { Menu, Tooltip } from 'antd'
+import { Menu, Skeleton, Tooltip } from 'antd'
 import { Link, NavLink, createSearchParams, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { AiFillHome, AiFillSetting } from 'react-icons/ai'
 import { AppContext } from '~/contexts/app.contexts'
 import axios from 'axios'
 import { settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
+import { useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
 interface SidebarProps {
   sidebarOpen: boolean
   setSidebarOpen: (arg: boolean) => void
@@ -77,6 +78,8 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
   const sidebar = useRef<any>(null)
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
+  const { data: dataCategoriTree, isLoading, isFetching } = useGetCategoriesDepartmentsQuery(id)
+  console.log(dataCategoriTree, 'hihi')
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -105,15 +108,18 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
     }
   }, [sidebarExpanded])
   useEffect(() => {
-    axios
-      .get(`${uri}category-tree/${id}`)
-      .then((response: any) => {
-        setCategories([response.data])
-      })
-      .catch((error) => {
-        console.error('Error fetching categories', error)
-      })
-  }, [])
+    // axios
+    //   .get(`${uri}category-tree/${id}`)
+    //   .then((response: any) => {
+    //     setCategories([response.data])
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error fetching categories', error)
+    //   })
+    if (dataCategoriTree) {
+      setCategories([dataCategoriTree])
+    }
+  }, [dataCategoriTree])
   return (
     <div
       ref={sidebar}
@@ -144,17 +150,28 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
         </button>
       </div>
       {/* <!-- SIDEBAR HEADER --> */}
-      <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
-        {/* <!-- Sidebar Menu --> */}
-        <nav className='px-3 mt-5'>
-          <div className='select-none'>
-            <h3 className='text-bodydark2 mb-4 ml-4 text-sm font-semibold select-none'>categories</h3>
-            {categories.map((category: any) => (
-              <CategoryTreeItem key={category._id} category={category} level={0} />
-            ))}
-          </div>
-        </nav>
-      </div>
+      {isLoading || isFetching ? (
+        <div>
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+        </div>
+      ) : (
+        <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
+          {/* <!-- Sidebar Menu --> */}
+          <nav className='px-3 mt-5'>
+            <div className='select-none'>
+              <h3 className='text-bodydark2 mb-4 ml-4 text-sm font-semibold select-none'>categories</h3>
+              {categories.map((category: any) => (
+                <CategoryTreeItem key={category._id} category={category} level={0} />
+              ))}
+            </div>
+          </nav>
+        </div>
+      )}
+
       <p
         className='flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md'
         onClick={() => navigate(`settings`)}

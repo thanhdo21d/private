@@ -1,10 +1,14 @@
-import { Col, Drawer, Form, Input, Row, Space } from 'antd'
+import { Col, Drawer, Form, Input, Row, Skeleton, Space } from 'antd'
 import { SizeType } from 'antd/es/config-provider/SizeContext'
 import React, { useState } from 'react'
 import { Button } from '~/components'
 import { DatePicker } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
-import { useCreateExamsDepartmentMutation, useGetAllExamsCategoriesQuery } from '~/apis/examSetting/examSetting'
+import {
+  useCreateExamsDepartmentMutation,
+  useGetAllExamsCategoriesQuery,
+  useRemoveExamsCategoriesMutation
+} from '~/apis/examSetting/examSetting'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toastService } from '~/utils/toask/toaskMessage'
 const { RangePicker } = DatePicker
@@ -17,6 +21,7 @@ const ExamConfiguration = () => {
     isLoading: isDataExamsCategoriesLoading,
     isFetching
   } = useGetAllExamsCategoriesQuery(id as string)
+  const [removeExamsCategories] = useRemoveExamsCategoriesMutation()
   console.log(dataExamsCategories)
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState({
@@ -56,6 +61,14 @@ const ExamConfiguration = () => {
       toastService.error('Failed to create')
     }
   }
+  const handelRemoveExams = async (idCate: string) => {
+    await removeExamsCategories({
+      id: idCate,
+      idCate: id
+    })
+      .unwrap()
+      .then(() => toastService.success('Successfully removed'))
+  }
   return (
     <div>
       <Button onClick={showDrawer}>Tạo Kì Thi</Button>
@@ -86,54 +99,74 @@ const ExamConfiguration = () => {
         </Form>
       </Drawer>
 
-      <div className='grid grid-cols-3 mt-5 gap-y-5'>
-        {dataExamsCategories?.exam?.examsKT?.map((data: any) => (
-          <div key={data?._id}>
-            <div className=''>
-              <div className='max-h-full w-[400px] max-w-xl overflow-y-auto sm:rounded-2xl bg-white'>
-                <div className='w-full'>
-                  <div className='m-8 my-20 max-w-[400px] mx-auto'>
-                    <div className='mb-8'>
-                      <div className='text-center animate-bounce mx-auto flex justify-center'>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          x='0px'
-                          y='0px'
-                          width='48'
-                          height='48'
-                          viewBox='0 0 48 48'
-                        >
-                          <path
-                            fill='#4caf50'
-                            d='M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z'
-                          ></path>
-                          <path
-                            fill='#ccff90'
-                            d='M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z'
-                          ></path>
-                        </svg>
+      {isDataExamsCategoriesLoading ? (
+        <div>
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+        </div>
+      ) : (
+        <div className='grid grid-cols-3 mt-5 gap-y-5'>
+          {dataExamsCategories?.exam?.examsKT?.map((data: any) => (
+            <div key={data?._id}>
+              <div className=''>
+                <div className='max-h-full w-[400px] max-w-xl overflow-y-auto sm:rounded-2xl bg-white'>
+                  <div className='w-full'>
+                    <div className='m-8 my-20 max-w-[400px] mx-auto'>
+                      <div className='mb-8'>
+                        <div className='text-center animate-bounce mx-auto flex justify-center'>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            x='0px'
+                            y='0px'
+                            width='48'
+                            height='48'
+                            viewBox='0 0 48 48'
+                          >
+                            <path
+                              fill='#4caf50'
+                              d='M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z'
+                            ></path>
+                            <path
+                              fill='#ccff90'
+                              d='M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z'
+                            ></path>
+                          </svg>
+                        </div>
+                        <p className='text-gray-600 text-center'>{data?.name}.</p>
                       </div>
-                      <p className='text-gray-600 text-center'>{data?.name}.</p>
-                    </div>
-                    <div className='mt-5 mx-auto grid gap-y-4 '>
-                      <div className='flex justify-center'>
-                        <button
-                          // onClick={() => navigate(`/tree-menu/${data?._id}/category/${data?._id}`)}
-                          onClick={() => toastService.warning('pendding category')}
-                          className='p-3 bg-strokedark  text-white w-[90%] rounded-md font-semibold'
-                        >
-                          Chi Tiết
-                        </button>
+                      <div className='mt-5 mx-auto  '>
+                        <div className='flex justify-center'>
+                          <button
+                            // onClick={() => navigate(`/tree-menu/${data?._id}/category/${data?._id}`)}
+                            onClick={() => toastService.warning('pendding category')}
+                            className='p-3 bg-strokedark  text-white w-[90%] rounded-md font-semibold'
+                          >
+                            Chi Tiết
+                          </button>
+                        </div>
+                        <div className='flex justify-center mt-5'>
+                          <button
+                            // onClick={() => navigate(`/tree-menu/${data?._id}/category/${data?._id}`)}
+                            onClick={() => handelRemoveExams(data?._id)}
+                            className='p-3 bg-warning  text-white w-[90%] rounded-md font-semibold'
+                          >
+                            Remove
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                {/*  */}
               </div>
-              {/*  */}
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

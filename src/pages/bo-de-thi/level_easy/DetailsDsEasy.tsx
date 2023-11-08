@@ -5,6 +5,7 @@ import { Breadcrumb } from '~/components'
 import { Tabs } from 'antd'
 import { itemsDataBeardCrumb } from './data'
 import { toastService } from '~/utils/toask/toaskMessage'
+import { Loader } from '~/common'
 const DetailsDsEasy = () => {
   const url = import.meta.env.VITE_API
   const { pathname } = useLocation()
@@ -18,6 +19,7 @@ const DetailsDsEasy = () => {
     event.preventDefault()
     const formData = new FormData()
     formData.append('file', file)
+
     try {
       const response = await axios.post(`${url}upload/${id}`, formData, {
         headers: {

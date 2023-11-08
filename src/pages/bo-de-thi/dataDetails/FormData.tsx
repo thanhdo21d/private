@@ -1,7 +1,7 @@
 import { Col, Drawer, DrawerProps, Form, Input, Popconfirm, Row, Skeleton, Space, Table, Tooltip } from 'antd'
 import { SelectCommonPlacement } from 'antd/es/_util/motion'
 import { Footer } from 'antd/es/layout/layout'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Link, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useDropDbExamsMutation } from '~/apis/department/department'
 import { Button } from '~/components'
@@ -13,6 +13,7 @@ import { AiFillEdit, AiOutlineLoading3Quarters } from 'react-icons/ai'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
 import DetailsDsEasy from '../level_easy/DetailsDsEasy'
 import { useGetIDcategoriesQuery, useRemoveExamsDepartmentMutation } from '~/apis/category/categories'
+import InputNumber from '~/components/inputNumber'
 type FieldType = {
   keyword?: string
 }
@@ -20,8 +21,15 @@ const FormData = () => {
   const url = import.meta.env.VITE_API
   const { id } = useParams()
   const [open, setOpen] = useState(false)
+  const [showImage, setShowImage] = useState<boolean>(false)
+  const [Image, setImage] = useState<string>('')
   const [queryParameters] = useSearchParams()
   const dataPageQuery: string | null = queryParameters.get('page')
+  const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const [datalimitQuery, setDatalimitQuery] = useState('')
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDatalimitQuery(event.target.value)
+  }
   const [showExcel, setShowExcel] = useState<boolean>(false)
   const {
     data: getDetailsExams,
@@ -30,9 +38,8 @@ const FormData = () => {
   } = useGetIDcategoriesQuery({
     id: id,
     page: dataPageQuery || 1,
-    limit: 10
+    limit: datalimitQueryChange
   })
-  console.log(getDetailsExams)
   const [
     removeExamsDepartment,
     { isLoading: isRemoveLoading, isSuccess: isRemoveSuccess, isError: isRemoveExamsError }
@@ -103,7 +110,24 @@ const FormData = () => {
       dataIndex: 'image',
       key: 'image',
       render: (img: string) => {
-        return <img className='w-[50px]' loading='lazy' crossOrigin='anonymous' src={`${url}${img}`} />
+        return (
+          <div>
+            <Tooltip title='Click details'>
+              {img && (
+                <img
+                  onClick={() => {
+                    setShowImage(!showImage)
+                    setImage(`${url}${img}`)
+                  }}
+                  className='w-[50px] cursor-pointer hover:scale-110'
+                  loading='lazy'
+                  crossOrigin='anonymous'
+                  src={`${url}${img}`}
+                />
+              )}
+            </Tooltip>
+          </div>
+        )
       }
     },
     {
@@ -151,15 +175,21 @@ const FormData = () => {
       }
     }
   ]
-  const [placement, setPlacement] = useState<DrawerProps['placement']>('right')
   const showDrawer = () => {
     setOpen(true)
   }
   const onClose = () => {
     setOpen(false)
   }
+  const handleClick = () => {
+    navigate({
+      search: createSearchParams({
+        limit: datalimitQuery
+      }).toString()
+    })
+  }
   return (
-    <div>
+    <div className='relative'>
       <>
         <Drawer
           title='Create a new exams'
@@ -251,6 +281,16 @@ const FormData = () => {
             </Popconfirm>
           </div>
           {/*  */}
+          {showImage && (
+            <div
+              onClick={() => setShowImage(false)}
+              className='fixed inset-0 w-full z-10   h-screen bg-black bg-opacity-5 flex mx-auto justify-center items-center'
+            >
+              <div className='w-1/3 flex mx-auto justify-center items-center'>
+                <img className='w-full h-full shadow-2xl' src={Image} />
+              </div>
+            </div>
+          )}
           <div
             onClick={showDrawer}
             className={` bg-white h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide cursor-pointer  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
@@ -293,12 +333,28 @@ const FormData = () => {
             Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
           </div>
           <div>
-            <Pagination pageSize={2} />
+            <Pagination pageSize={getDetailsExams?.totalPages} queryConfig={dataPageQuery} />
+            <div className='flex items-center gap-5 mt-4'>
+              <div style={{ textDecoration: 'underline' }} className='text-md'>
+                số bản ghi
+              </div>
+              <div className='flex items-center gap-5 mt-4'>
+                <InputNumber
+                  className=''
+                  classNameError='hidden'
+                  classNameInput='h-8 w-50 border-t border-b border-gray-300 p-1 text-center outline-none'
+                  onChange={handleChange}
+                  value={datalimitQuery}
+                />
+                <Button styleClass='py-1 px-1 hover:bg-opacity-80' onClick={handleClick}>
+                  Áp dụng
+                </Button>
+              </div>
+            </div>
           </div>
         </Footer>
       </div>
     </div>
   )
 }
-
 export default FormData

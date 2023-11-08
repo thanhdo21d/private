@@ -221,7 +221,7 @@ const Signin = () => {
               </form>
             </div>
             <div className='bottom-0 absolute p-4 text-center  flex justify-center space-x-4'>
-              Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+              Design by ThanhDo IS@.
             </div>
           </div>
         </section>

@@ -49,6 +49,15 @@ const categorydepartmentAPI = createApi({
         }
       },
       invalidatesTags: ['Category']
+    }),
+    getCategoriesDepartments: builder.query({
+      query: (id) => {
+        return {
+          url: `category-tree/${id}`,
+          method: 'GET'
+        }
+      },
+      providesTags: ['Category']
     })
   })
 })
@@ -56,6 +65,7 @@ export const {
   useGetAllCategoriesQuery,
   useCreateCategoriesMutation,
   useGetIDcategoriesQuery,
-  useRemoveExamsDepartmentMutation
+  useRemoveExamsDepartmentMutation,
+  useGetCategoriesDepartmentsQuery
 } = categorydepartmentAPI
 export default categorydepartmentAPI

@@ -14,7 +14,7 @@ const TreeMenu = () => {
       </Helmet>
       <div className='flex h-screen overflow-hidden'>
         {/* <!-- ===== Sidebar Start ===== --> */}
-        <SidebarTree sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} textUi='Trang Quản Trị'/>
+        <SidebarTree sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} textUi='Trang Quản Trị' />
         {/* <!-- ===== Content Area Start ===== --> */}
         <div className='relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden'>
           {/* <!-- ===== Header Start ===== --> */}

@@ -34,7 +34,7 @@ const SetttingTree = () => {
       .catch((error) => {
         console.error('Error fetching categories', error)
       })
-  }, [id])
+  }, [id, uri])
   const onFinish = ({ name }: { name: string }) => {
     createCategories({
       name: name,
@@ -44,7 +44,6 @@ const SetttingTree = () => {
       .then(() => {
         toastService.success('Successfully created categories')
         setOpen(false)
-        window.location.reload()
       })
   }
   return (
@@ -74,7 +73,6 @@ const SetttingTree = () => {
               </Col>
             </Row>
           </div>
-
           <p className='my-5 font-bold text-xl'> {checkCate ? 'Categoies thuộc' : ''} </p>
           {categories.map((category: any) => (
             <CategoryTreeItem key={category._id} category={category} level={0} bg={true} />

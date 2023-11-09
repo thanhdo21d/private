@@ -142,7 +142,7 @@ const ExamConfiguration = () => {
                         <div className='flex justify-center'>
                           <button
                             // onClick={() => navigate(`/tree-menu/${data?._id}/category/${data?._id}`)}
-                            onClick={() => toastService.warning('pendding category')}
+                            onClick={() => navigate(`bai-thi/${data?._id}`)}
                             className='p-3 bg-strokedark  text-white w-[90%] rounded-md font-semibold'
                           >
                             Chi Tiết

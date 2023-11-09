@@ -33,9 +33,38 @@ const ExamSetting = createApi({
     getAllExamsCategories: builder.query<any, string>({
       query: (id: string) => `/examsktRoutes/get/${id}`,
       providesTags: ['ExamSetting']
+    }),
+    getIdExamsCategories: builder.query<any, string>({
+      query: (id: string) => `/examsk/getId/${id}`,
+      providesTags: ['ExamSetting']
+    }),
+    removeTopicExams: builder.mutation<any, any>({
+      query: ({ id, idkt }: { id: string; idkt: string }) => {
+        return {
+          url: `/remove/TopicExams/${id}/${idkt}`,
+          method: 'DELETE'
+        }
+      },
+      invalidatesTags: ['ExamSetting']
+    }),
+    createTopicExams: builder.mutation<any, any>({
+      query: ({ id, body }: { id: string; body: any }) => {
+        return {
+          url: `/topicExams/create/${id}`,
+          method: 'POST',
+          body: body
+        }
+      },
+      invalidatesTags: ['ExamSetting']
     })
   })
 })
-export const { useCreateExamsDepartmentMutation, useGetAllExamsCategoriesQuery, useRemoveExamsCategoriesMutation } =
-  ExamSetting
+export const {
+  useCreateExamsDepartmentMutation,
+  useGetAllExamsCategoriesQuery,
+  useRemoveExamsCategoriesMutation,
+  useGetIdExamsCategoriesQuery,
+  useRemoveTopicExamsMutation,
+  useCreateTopicExamsMutation
+} = ExamSetting
 export default ExamSetting

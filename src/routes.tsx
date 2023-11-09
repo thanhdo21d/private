@@ -37,6 +37,7 @@ import TreeMenu from './pages/bo-de-thi/qlTree/TreeMenu'
 import SetttingTree from './pages/bo-de-thi/qlTree/SetttingTree'
 import EditTree from './pages/bo-de-thi/qlTree/EditTree'
 import ExamConfiguration from './pages/bo-de-thi/qlTree/ExamConfiguration'
+import ExamsQuestion from './pages/bo-de-thi/detailExamsQuestion/ExamsQuestion'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -78,7 +79,8 @@ export const routers = createBrowserRouter([
           { path: 'settings/edit', element: <EditTree /> },
           { path: 'category/:id', element: <FormData /> },
           { path: 'details-exams/:id', element: <DetailsExams /> },
-          { path: 'settings/ki-thi', element: <ExamConfiguration /> }
+          { path: 'settings/ki-thi', element: <ExamConfiguration /> },
+          { path: 'settings/ki-thi/bai-thi/:id', element: <ExamsQuestion /> }
         ]
       }
     ]
@@ -103,7 +105,7 @@ export const routers = createBrowserRouter([
           { path: 'home', element: <AcceptUserDipament /> },
           { path: 'excel', element: <DemoExcel /> },
           { path: 'action-bai-thi', element: <PopQuesion /> },
-          { path: 'ChoosExam', element: <ChoosExam /> }
+          { path: 'ChoosExam/:id', element: <ChoosExam /> }
         ]
       }
     ]

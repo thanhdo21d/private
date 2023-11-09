@@ -15,6 +15,7 @@ const DetailsExams = () => {
   const { data: getDetailsExams, isFetching: isDeailFetching } = useGetDetailsExamsQuery({
     idDepartment: id
   })
+  console.log(getDetailsExams)
   const { data, isFetching } = useGetIdDepartmentQuery(id as string)
   const items: DescriptionsProps['items'] = [
     {
@@ -111,7 +112,7 @@ const DetailsExams = () => {
         </Button>
       </div>
       <div className='border-t border-black my-2 pt-4 '>
-        {isDeailFetching || isFetching ? (
+        {isDeailFetching ? (
           <div>
             <Skeleton />
             <Skeleton />

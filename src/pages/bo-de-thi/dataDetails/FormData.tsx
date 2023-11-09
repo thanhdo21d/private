@@ -233,7 +233,7 @@ const FormData = () => {
           type='submit'
           className='my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4 text-2xl text-white  rounded-sm tracking-wide bg-[#001529]  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg  transition ease-in duration-300'
         >
-          Bộ Đề Thi
+          Bộ Câu Hỏi Thi
           {/* {data?.data.name} */}
         </button>
       </div>

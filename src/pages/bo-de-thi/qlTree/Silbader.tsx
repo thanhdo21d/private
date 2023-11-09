@@ -69,7 +69,7 @@ export function CategoryTreeItem({ category, level, bg }: any) {
     </div>
   )
 }
-const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProps) => {
+const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
   const [categories, setCategories] = useState<any[]>([])
   const navigate = useNavigate()
   const trigger = useRef<any>(null)
@@ -79,7 +79,6 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
   const { data: dataCategoriTree, isLoading, isFetching } = useGetCategoriesDepartmentsQuery(id)
-  console.log(dataCategoriTree, 'hihi')
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -108,18 +107,15 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
     }
   }, [sidebarExpanded])
   useEffect(() => {
-    // axios
-    //   .get(`${uri}category-tree/${id}`)
-    //   .then((response: any) => {
-    //     setCategories([response.data])
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error fetching categories', error)
-    //   })
-    if (dataCategoriTree) {
-      setCategories([dataCategoriTree])
-    }
-  }, [dataCategoriTree])
+    axios
+      .get(`${uri}category-tree/${id}`)
+      .then((response: any) => {
+        setCategories([response.data])
+      })
+      .catch((error) => {
+        console.error('Error fetching categories', error)
+      })
+  }, [])
   return (
     <div
       ref={sidebar}
@@ -171,7 +167,6 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: Sidebar
           </nav>
         </div>
       )}
-
       <p
         className='flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md'
         onClick={() => navigate(`settings`)}

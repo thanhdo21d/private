@@ -1,4 +1,4 @@
-import { Pagination, Popconfirm, Skeleton, Table } from 'antd'
+import { Image, Pagination, Popconfirm, Skeleton, Table } from 'antd'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiFillEdit } from 'react-icons/ai'
@@ -44,7 +44,7 @@ const AddBanner = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text: string) => {
-        return <img className='w-[200px] h-[100px]' src={`${text}`} />
+        return <Image  width={200} src={`${text}`} />
       }
     },
     {

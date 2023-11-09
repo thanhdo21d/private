@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { IDepartmentTypeDocs } from '~/types/department/department.type'
-const DepartmentAPI = createApi({
+const DepartmentAPI  = createApi({
   reducerPath: 'Department',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API

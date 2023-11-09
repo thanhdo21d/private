@@ -47,7 +47,10 @@ const AcceptUserDipament = () => {
                 dataExamsCategories?.exam?.examsKT?.map((data: any) => {
                   console.log(data)
                   return (
-                    <div className='rounded bg-white bg-opacity-30 w-72 m-5 shadow-xl hover:bg-success flex flex-col text-gray-200'>
+                    <div
+                      key={data?._id}
+                      className='rounded bg-white bg-opacity-30 w-72 m-5 shadow-xl hover:bg-success flex flex-col text-gray-200'
+                    >
                       {/* Title */}
                       <p className='font-semibold bg-white bg-opacity-20 rounded-t px-4 py-2'>{data?.name}</p>
                       {/* Pricing */}
@@ -133,7 +136,7 @@ const AcceptUserDipament = () => {
                         <div className='col-span-12 mt-20 mb-5 text-gray-100'>
                           <button
                             className='rounded hover:bg-success bg-teal-500 w-full py-3'
-                            onClick={() => navigate('/ChoosExam')}
+                            onClick={() => navigate(`/ChoosExam/${data?._id}`)}
                           >
                             Bắt Đầu Ôn Thi
                           </button>

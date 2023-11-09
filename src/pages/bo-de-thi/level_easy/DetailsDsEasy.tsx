@@ -9,7 +9,7 @@ import { Loader } from '~/common'
 const DetailsDsEasy = () => {
   const url = import.meta.env.VITE_API
   const { pathname } = useLocation()
-  console.log(pathname)
+  const [isLoading, setIsLoading] = useState(false)
   const { id } = useParams()
   const [file, setFile] = useState<any>(null)
   const handleFileChange = (event: any) => {
@@ -19,7 +19,7 @@ const DetailsDsEasy = () => {
     event.preventDefault()
     const formData = new FormData()
     formData.append('file', file)
-
+    setIsLoading(true)
     try {
       const response = await axios.post(`${url}upload/${id}`, formData, {
         headers: {
@@ -28,9 +28,11 @@ const DetailsDsEasy = () => {
       })
       console.log(response.data)
       toastService.success(' uploading file successfully')
+      setIsLoading(false)
     } catch (error) {
       console.error(error)
       toastService.error('Error uploading file')
+      setIsLoading(false)
     }
   }
   return (
@@ -61,37 +63,42 @@ const DetailsDsEasy = () => {
                 placeholder='mail@gmail.com'
               />
             </div>
-            <div className='grid grid-cols-1 space-y-2'>
-              <label className='text-sm font-bold text-gray-500 tracking-wide'>Attach Document</label>
-              <div className='flex items-center justify-center w-full '>
-                <label className='flex  cursor-pointer flex-col rounded-lg border-4 border-dashed w-full h-70 p-10 group text-center'>
-                  <div className='h-full w-full text-center flex flex-col mt-7 items-center justify-center  '>
-                    <div className='flex flex-auto max-h-48 w-2/5 mx-auto -mt-10'>
-                      <img
-                        className='has-mask h-36 object-center animate-bounce rounded-lg'
-                        src='https://img.freepik.com/free-vector/image-upload-concept-landing-page_52683-27130.jpg?size=338&ext=jpg'
-                        alt='freepik image'
-                      />
+            {isLoading ? (
+              <div className='loader'></div>
+            ) : (
+              <div className='grid grid-cols-1 space-y-2'>
+                <label className='text-sm font-bold text-gray-500 tracking-wide'>Attach Document</label>
+                <div className='flex items-center justify-center w-full '>
+                  <label className='flex  cursor-pointer flex-col rounded-lg border-4 border-dashed w-full h-70 p-10 group text-center'>
+                    <div className='h-full w-full text-center flex flex-col mt-7 items-center justify-center  '>
+                      <div className='flex flex-auto max-h-48 w-2/5 mx-auto -mt-10'>
+                        <img
+                          className='has-mask h-36 object-center animate-bounce rounded-lg'
+                          src='https://img.freepik.com/free-vector/image-upload-concept-landing-page_52683-27130.jpg?size=338&ext=jpg'
+                          alt='freepik image'
+                        />
+                      </div>
+                      <p className='pointer-none text-gray-500 '>
+                        <span className='text-sm'>Drag and drop</span> files here <br /> or{' '}
+                        <a className='text-blue-600 hover:underline'>select a file</a> from your computer
+                      </p>
                     </div>
-                    <p className='pointer-none text-gray-500 '>
-                      <span className='text-sm'>Drag and drop</span> files here <br /> or{' '}
-                      <a className='text-blue-600 hover:underline'>select a file</a> from your computer
-                    </p>
-                  </div>
-                  <input
-                    type='file'
-                    onChange={handleFileChange}
-                    className='hidden'
-                    onDragOver={(e) => e.preventDefault()}
-                    onDrop={(e) => {
-                      e.preventDefault()
-                      const files = Array.from(e.dataTransfer.files)
-                      console.log(files)
-                    }}
-                  />
-                </label>
+                    <input
+                      type='file'
+                      onChange={handleFileChange}
+                      className='hidden'
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        e.preventDefault()
+                        const files = Array.from(e.dataTransfer.files)
+                        console.log(files)
+                      }}
+                    />
+                  </label>
+                </div>
               </div>
-            </div>
+            )}
+
             <p className='text-sm text-gray-300'>
               <span>File type: Excel</span>
             </p>

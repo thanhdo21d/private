@@ -15,60 +15,86 @@ interface SidebarProps {
   textUi: string
   checkInfo?: boolean
 }
+// ...
+
 export function CategoryTreeItem({ category, level, bg }: any) {
-  const [isOpen, setIsOpen] = useState(false)
+  const location = useLocation()
   const navigate = useNavigate()
-  const toggleOpen = () => {
-    setIsOpen((prevState) => !prevState)
-  }
+  // Khởi tạo state isOpen dựa vào sessionStorage
+  const [isOpen, setIsOpen] = useState(() => {
+    const openCategories = JSON.parse(sessionStorage.getItem('openCategories') || '{}')
+    return !!openCategories[category._id]
+  })
+
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    {
-      bg
-        ? navigate({
-            search: createSearchParams({
-              category: category?._id
-            }).toString()
-          })
-        : navigate({
-            pathname: `category/${category._id}`,
-            search: createSearchParams({
-              category: category?._id
-            }).toString()
-          })
-    }
+    navigate({
+      pathname: `category/${category._id}`,
+      search: createSearchParams({
+        category: category?._id
+      }).toString()
+    })
   }
+
+  const toggleOpen = () => {
+    setIsOpen((prevState) => {
+      const newState = !prevState
+      const openCategories = JSON.parse(sessionStorage.getItem('openCategories') || '{}')
+      if (newState) {
+        openCategories[category._id] = true
+      } else {
+        delete openCategories[category._id]
+      }
+      sessionStorage.setItem('openCategories', JSON.stringify(openCategories))
+      return newState
+    })
+  }
+
+  // Xác định xem mục danh mục hiện tại có phải là mục đang được chọn không
+  const isActive = location.pathname.includes(`category/${category._id}`)
+
+  // Style cho mục đang được chọn
+  const activeStyle = {
+    fontWeight: 'bold',
+    color: '#4CAF50' // Màu xanh
+  }
+
   return (
     <div>
       <div className={`${bg ? 'bg-white' : 'bg-[#000c17]'}`}>
-        <div onClick={toggleOpen} className='cursor-pointer  px-3 py-2'>
-          <div className='category-item relative flex justify-between  gap-5'>
+        <div onClick={toggleOpen} className='cursor-pointer px-3 py-2'>
+          <div className='category-item relative flex justify-between gap-5'>
             <div>
               {category.children && category.children.length > 0 ? (
                 <span className='mr-3'>{isOpen ? '-' : '+'}</span>
               ) : null}
               <span
-                className={`category-name  hover:text-md ${
+                className={`category-name hover:text-md ${
                   bg ? 'hover:text-black' : 'hover:text-white'
                 } hover:font-semibold`}
                 onClick={handleCategoryClick}
+                style={isActive ? activeStyle : {}}
               >
                 {category.name}
               </span>
             </div>
           </div>
         </div>
-        <div className={`ml-5 space-y-1 transition-all ${isOpen ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'}`}>
-          {category.children &&
-            category.children.length > 0 &&
-            category.children.map((child: any) => (
-              <CategoryTreeItem key={child._id} category={child} level={level + 1} bg={bg ? true : false} />
-            ))}
-        </div>
+        {isOpen && (
+          <div className={`ml-5 space-y-1 transition-all opacity-100 max-h-96`}>
+            {category.children &&
+              category.children.map((child: any) => (
+                <CategoryTreeItem key={child._id} category={child} level={level + 1} bg={bg} />
+              ))}
+          </div>
+        )}
       </div>
     </div>
   )
 }
+
+// ...
+
 const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
   const [categories, setCategories] = useState<any[]>([])
   const navigate = useNavigate()
@@ -106,16 +132,29 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
       document.querySelector('body')?.classList.remove('sidebar-expanded')
     }
   }, [sidebarExpanded])
+  // Trong SidebarTree component
+
   useEffect(() => {
-    axios
-      .get(`${uri}category-tree/${id}`)
-      .then((response: any) => {
-        setCategories([response.data])
-      })
-      .catch((error) => {
-        console.error('Error fetching categories', error)
-      })
-  }, [])
+    // Kiểm tra trước khi thực hiện API call
+    const savedCategories = sessionStorage.getItem('categories')
+    if (savedCategories) {
+      setCategories(JSON.parse(savedCategories))
+    } else {
+      axios
+        .get(`${uri}category-tree/${id}`)
+        .then((response) => {
+          setCategories([response.data])
+          // Lưu kết quả vào sessionStorage
+          sessionStorage.setItem('categories', JSON.stringify([response.data]))
+        })
+        .catch((error) => {
+          console.error('Error fetching categories', error)
+        })
+    }
+  }, [id, uri]) // Bạn nên thêm `id` và `uri` vào dependencies array
+
+  // ...phần còn lại của component
+
   return (
     <div
       ref={sidebar}

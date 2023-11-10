@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon } from '~/components'
 import { Menu, Tooltip } from 'antd'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { items, itemsUser, settingsSystem } from './components'
+import { items, itemsUser, settingsSystem, settingsSystemLogs } from './components'
 import { AiFillHome } from 'react-icons/ai'
 import { AppContext } from '~/contexts/app.contexts'
 import { useGetAllRolesQuery } from '~/apis/roles/roles.api'
@@ -146,6 +146,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
                         </div>
                       )
                     })}
+                <Menu
+                  theme='dark'
+                  defaultSelectedKeys={['1']}
+                  defaultOpenKeys={['sub1']}
+                  mode='inline'
+                  items={settingsSystemLogs}
+                />
               </div>
             )}
           </div>

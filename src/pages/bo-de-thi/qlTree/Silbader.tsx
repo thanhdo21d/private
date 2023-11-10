@@ -28,12 +28,20 @@ export function CategoryTreeItem({ category, level, bg }: any) {
 
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    navigate({
-      pathname: `category/${category._id}`,
-      search: createSearchParams({
-        category: category?._id
-      }).toString()
-    })
+    {
+      bg
+        ? navigate({
+            search: createSearchParams({
+              category: category?._id
+            }).toString()
+          })
+        : navigate({
+            pathname: `category/${category._id}`,
+            search: createSearchParams({
+              category: category?._id
+            }).toString()
+          })
+    }
   }
 
   const toggleOpen = () => {

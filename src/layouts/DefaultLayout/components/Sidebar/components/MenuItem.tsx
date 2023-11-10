@@ -2,7 +2,7 @@ import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons'
 import { CgProfile } from 'react-icons/cg'
 import type { MenuProps } from 'antd'
 import { NavLink } from 'react-router-dom'
-import { UserOutlined, BarChartOutlined, ShoppingOutlined } from '@ant-design/icons'
+import { UserOutlined, BarChartOutlined, ShoppingOutlined, BugOutlined } from '@ant-design/icons'
 import { FaUserEdit, FaUserFriends, FaClipboardList, FaRegNewspaper, FaImages } from 'react-icons/fa'
 type MenuItem = Required<MenuProps>['items'][number]
 export function getItem(
@@ -52,6 +52,10 @@ export const itemsUser: MenuProps['items'] = [
 export const settingsSystem: MenuProps['items'] = [
   getItem('Người dùng', 'uses', <UserOutlined />, [
     getItem(<NavLink to={`/tree-menu/1/settings`}>Nhân viên</NavLink>, 'staffs', <FaUserEdit />)
-  ]),
+  ])
 ]
-//${id}
+export const settingsSystemLogs: MenuProps['items'] = [
+  getItem('Cài Đặt', 'settings', <SettingOutlined />, [
+    getItem(<NavLink to={`/admin/check-log`}>Logs Hệ Thống</NavLink>, 'log', <BugOutlined />),
+  ])
+]

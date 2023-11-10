@@ -182,6 +182,10 @@ const FormData = () => {
     setOpen(false)
   }
   const handleClick = () => {
+    if (Number(datalimitQuery) < 1) {
+      alert('Số Bản Ghi Ít Nhất Là 1')
+      return false
+    }
     navigate({
       search: createSearchParams({
         limit: datalimitQuery
@@ -306,6 +310,23 @@ const FormData = () => {
           </div>
         </div>
       </div>
+      <div className='flex items-center gap-5 mt-4'>
+        <div style={{ textDecoration: 'underline' }} className='text-md'>
+          số bản ghi
+        </div>
+        <div className='flex items-center gap-5 mt-4'>
+          <InputNumber
+            className=''
+            classNameError='hidden'
+            classNameInput='h-8 w-50 border-t border-b border-gray-300 p-1 text-center outline-none'
+            onChange={handleChange}
+            value={datalimitQuery}
+          />
+          <Button styleClass='py-1 px-1 hover:bg-opacity-80' onClick={handleClick}>
+            Áp dụng
+          </Button>
+        </div>
+      </div>
       {/*  */}
       <div>
         <Tooltip title='back to top'>
@@ -334,23 +355,6 @@ const FormData = () => {
           </div>
           <div>
             <Pagination pageSize={getDetailsExams?.totalPages} queryConfig={dataPageQuery} />
-            <div className='flex items-center gap-5 mt-4'>
-              <div style={{ textDecoration: 'underline' }} className='text-md'>
-                số bản ghi
-              </div>
-              <div className='flex items-center gap-5 mt-4'>
-                <InputNumber
-                  className=''
-                  classNameError='hidden'
-                  classNameInput='h-8 w-50 border-t border-b border-gray-300 p-1 text-center outline-none'
-                  onChange={handleChange}
-                  value={datalimitQuery}
-                />
-                <Button styleClass='py-1 px-1 hover:bg-opacity-80' onClick={handleClick}>
-                  Áp dụng
-                </Button>
-              </div>
-            </div>
           </div>
         </Footer>
       </div>

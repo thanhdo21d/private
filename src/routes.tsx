@@ -38,6 +38,7 @@ import SetttingTree from './pages/bo-de-thi/qlTree/SetttingTree'
 import EditTree from './pages/bo-de-thi/qlTree/EditTree'
 import ExamConfiguration from './pages/bo-de-thi/qlTree/ExamConfiguration'
 import ExamsQuestion from './pages/bo-de-thi/detailExamsQuestion/ExamsQuestion'
+import CheckLog from './pages/check-log/CheckLog'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -165,7 +166,8 @@ export const routers = createBrowserRouter([
           { path: 'roles/add', element: <EditRoles /> },
           { path: 'banner', element: <AddBanner /> },
           { path: 'banner/:id/edit', element: <EditBanner /> },
-          { path: 'setting', element: <Setting /> }
+          { path: 'setting', element: <Setting /> },
+          { path: 'check-log', element: <CheckLog /> }
         ]
       }
     ]

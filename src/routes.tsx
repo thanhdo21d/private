@@ -39,6 +39,8 @@ import EditTree from './pages/bo-de-thi/qlTree/EditTree'
 import ExamConfiguration from './pages/bo-de-thi/qlTree/ExamConfiguration'
 import ExamsQuestion from './pages/bo-de-thi/detailExamsQuestion/ExamsQuestion'
 import CheckLog from './pages/check-log/CheckLog'
+import DashBoardOtherAdmin from './layouts/otherAdmin/DashBoardOtherAdmin'
+import CreateExams from './pages/bo-de-thi/qlTree/CreateExams'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -71,17 +73,19 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/tree-menu/:id',
-    // element: <CheckCookieUserLogin />,
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <TreeMenu />,
         children: [
           { path: 'settings', element: <SetttingTree /> },
+          { path: 'dashboard-other-admin', element: <DashBoardOtherAdmin /> },
           { path: 'settings/edit', element: <EditTree /> },
           { path: 'category/:id', element: <FormData /> },
           { path: 'details-exams/:id', element: <DetailsExams /> },
           { path: 'settings/ki-thi', element: <ExamConfiguration /> },
-          { path: 'settings/ki-thi/bai-thi/:id', element: <ExamsQuestion /> }
+          { path: 'settings/ki-thi/bai-thi/:id', element: <ExamsQuestion /> },
+          { path: 'settings/ki-thi/bai-thi/:id/create-exams', element: <CreateExams /> }
         ]
       }
     ]
@@ -97,7 +101,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/',
-    // element: <CheckCookieUserLogin />,
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultLayoutTrangthi />,
@@ -144,7 +148,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/admin',
-    // element: <CheckCookieUserLogin />,
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultLayout />,

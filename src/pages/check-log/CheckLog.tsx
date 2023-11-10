@@ -1,7 +1,7 @@
 import { DatePicker, Divider, Form, Input, Table } from 'antd'
 import React from 'react'
+import { UserOutlined } from '@ant-design/icons';
 import { Breadcrumb, Button } from '~/components'
-
 const CheckLog = () => {
   const onFinish = (values: any) => {
     console.log('Success:', values)
@@ -34,17 +34,32 @@ const CheckLog = () => {
 
   const columns = [
     {
-      title: 'Name',
+      title: 'ID',
       dataIndex: 'name',
       key: 'name'
     },
     {
-      title: 'Age',
+      title: 'LogType',
       dataIndex: 'age',
       key: 'age'
     },
     {
-      title: 'Address',
+      title: 'Contents',
+      dataIndex: 'address',
+      key: 'address'
+    },
+    {
+      title: 'Author',
+      dataIndex: 'address',
+      key: 'address'
+    },
+    {
+      title: 'IP Computer',
+      dataIndex: 'address',
+      key: 'address'
+    },
+    {
+      title: 'Ngày Tạo',
       dataIndex: 'address',
       key: 'address'
     }
@@ -58,7 +73,7 @@ const CheckLog = () => {
         name='basic'
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600, display: 'flex' }}
+        style={{ maxWidth: 900, display: 'flex', justifyContent: 'space-between' }}
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -70,16 +85,19 @@ const CheckLog = () => {
         <Form.Item<FieldType>
           label='Author Code'
           name='password'
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[{ required: true, message: 'Please input your Author Code!' }]}
         >
-          <Input.Password />
+          <Input placeholder='Author Code' prefix={<UserOutlined />} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button styleClass='py-2' type='submit'>Submit</Button>
+          <Button styleClass='py-2' type='submit'>
+            Submit
+          </Button>
         </Form.Item>
       </Form>
-      <Table dataSource={dataSource} columns={columns} pagination={false} />
+      <Divider orientation='left'></Divider>
+      <Table className='mt-5' dataSource={dataSource} columns={columns} pagination={false} />
     </div>
   )
 }

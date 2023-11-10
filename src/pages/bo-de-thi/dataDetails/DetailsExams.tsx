@@ -16,7 +16,6 @@ const DetailsExams = () => {
     idDepartment: id
   })
   console.log(getDetailsExams)
-  const { data, isFetching } = useGetIdDepartmentQuery(id as string)
   const items: DescriptionsProps['items'] = [
     {
       key: '3',

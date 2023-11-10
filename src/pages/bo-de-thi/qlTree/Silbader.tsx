@@ -4,10 +4,10 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon, Button } from '~/components'
 import { Menu, Skeleton, Tooltip } from 'antd'
 import { Link, NavLink, createSearchParams, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { AiFillHome, AiFillSetting } from 'react-icons/ai'
+import { AiFillHome, AiFillSetting, AiOutlineDashboard } from 'react-icons/ai'
 import { AppContext } from '~/contexts/app.contexts'
 import axios from 'axios'
-import { settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
+import { dashboardOther, settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
 import { useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
 interface SidebarProps {
   sidebarOpen: boolean
@@ -203,6 +203,13 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         </div>
       ) : (
         <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
+          <Menu
+            theme='dark'
+            defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            mode='inline'
+            items={dashboardOther}
+          />
           {/* <!-- Sidebar Menu --> */}
           <nav className='px-3 mt-5'>
             <div className='select-none'>

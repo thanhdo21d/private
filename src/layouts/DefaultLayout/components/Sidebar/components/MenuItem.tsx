@@ -4,6 +4,7 @@ import type { MenuProps } from 'antd'
 import { NavLink } from 'react-router-dom'
 import { UserOutlined, BarChartOutlined, ShoppingOutlined, BugOutlined } from '@ant-design/icons'
 import { FaUserEdit, FaUserFriends, FaClipboardList, FaRegNewspaper, FaImages } from 'react-icons/fa'
+import { AiOutlineDashboard } from 'react-icons/ai'
 type MenuItem = Required<MenuProps>['items'][number]
 export function getItem(
   label?: React.ReactNode,
@@ -57,5 +58,10 @@ export const settingsSystem: MenuProps['items'] = [
 export const settingsSystemLogs: MenuProps['items'] = [
   getItem('Cài Đặt', 'settings', <SettingOutlined />, [
     getItem(<NavLink to={`/admin/check-log`}>Logs Hệ Thống</NavLink>, 'log', <BugOutlined />),
+  ])
+]
+export const dashboardOther: MenuProps['items'] = [
+  getItem('dashboard', 'Other', <AiOutlineDashboard />, [
+    getItem(<NavLink to={`dashboard-other-admin`}>dashboard</NavLink>, 'Others', <BugOutlined />),
   ])
 ]

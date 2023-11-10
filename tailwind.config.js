@@ -44,8 +44,7 @@ export default {
       danger: '#D34053',
       warning: '#FFA70B',
       login: '#f0f8ff',
-      blue23: '#00BFFF',
-      
+      blue23: '#00BFFF'
     },
     screens: {
       '2xsm': '375px',

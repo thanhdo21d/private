@@ -3,7 +3,7 @@ import { Footer } from 'antd/es/layout/layout'
 import React from 'react'
 import { AiFillEdit } from 'react-icons/ai'
 import { PiKeyReturnThin } from 'react-icons/pi'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   useCreateTopicExamsMutation,
   useGetIdExamsCategoriesQuery,
@@ -23,7 +23,6 @@ const ExamsQuestion = () => {
   const { data: dataIdExmas, isLoading, isFetching } = useGetIdExamsCategoriesQuery(id as string)
   const [addTopicQuestion] = useCreateTopicExamsMutation()
   const [removeTopic, { isLoading: isRemoveTopicLoading }] = useRemoveTopicExamsMutation()
-  console.log(id)
   console.log(dataIdExmas?.data?.topicExams)
   const confirm = (idExams: string) => {
     removeTopic({
@@ -180,7 +179,8 @@ const ExamsQuestion = () => {
             </Popconfirm>
           </div>
           {/*  */}
-          <div
+          <Link
+            to='create-exams'
             className={` bg-white h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide cursor-pointer  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
           >
             <Tooltip title='Thêm Đề Thi'>
@@ -191,7 +191,7 @@ const ExamsQuestion = () => {
                 <span> Thêm Đề Thi</span>
               </div>
             </Tooltip>
-          </div>
+          </Link>
         </div>
       </div>
       {isLoading || isFetching ? (

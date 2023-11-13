@@ -42,6 +42,7 @@ const categorydepartmentAPI = createApi({
     }),
     removeExamsDepartment: builder.mutation<any, any>({
       query: ({ id, body }: any) => {
+        console.log(body, 'db day')
         return {
           url: `/department/removeExams/${id}`,
           method: 'DELETE',

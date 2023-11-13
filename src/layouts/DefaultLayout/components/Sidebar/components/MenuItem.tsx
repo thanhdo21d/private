@@ -57,7 +57,7 @@ export const settingsSystem: MenuProps['items'] = [
 ]
 export const settingsSystemLogs: MenuProps['items'] = [
   getItem('Cài Đặt', 'settings', <SettingOutlined />, [
-    getItem(<NavLink to={`/admin/check-log`}>Logs Hệ Thống</NavLink>, 'log', <BugOutlined />),
+    getItem(<NavLink to={`/admin/check-log`}>Logs Hệ Thống</NavLink>, 'log', <BugOutlined />)
   ])
 ]
 export const dashboardOther: MenuProps['items'] = [

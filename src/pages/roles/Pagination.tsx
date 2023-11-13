@@ -1,12 +1,13 @@
 import classNames from 'classnames'
-import { Link, createSearchParams } from 'react-router-dom'
+import { Link, createSearchParams, useSearchParams } from 'react-router-dom'
 import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from 'react-icons/tb'
 interface Props {
   queryConfig?: any
   pageSize: number
+  limit?: any
 }
 const RANGE = 2
-export default function Pagination({ queryConfig, pageSize }: Props) {
+export default function Pagination({ queryConfig, pageSize, limit }: Props) {
   const page = Number(queryConfig || 1)
   const renderPagination = () => {
     let dotAfter = false
@@ -77,7 +78,8 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
           to={{
             search: createSearchParams({
               ...queryConfig,
-              page: (page - 1).toString()
+              page: (page - 1).toString(),
+              limit: limit
             }).toString()
           }}
           className='mx-2 cursor-pointer rounded-md flex gap-2 items-center  border-none bg-white px-3 py-2  shadow-sm'
@@ -97,7 +99,8 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
           to={{
             search: createSearchParams({
               ...queryConfig,
-              page: (page + 1).toString()
+              page: (page + 1).toString(),
+              limit: limit
             }).toString()
           }}
           className='mx-2 cursor-pointer  border-none rounded-md flex gap-2 items-center bg-white px-3 py-2  shadow-sm'

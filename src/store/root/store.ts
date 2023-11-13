@@ -11,6 +11,8 @@ import DepartmentAPI from '~/apis/department/department'
 import categorydepartmentAPI from '~/apis/category/categories'
 import { themeReducer } from '../slice/theme.slice'
 import ExamSetting from '~/apis/examSetting/examSetting'
+import loggersAPI from '~/apis/logs/loggersAPi'
+import { loggersReducer } from '../slice/dateLogger.slice'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -22,8 +24,10 @@ export const store = configureStore({
     [DepartmentAPI.reducerPath]: DepartmentAPI.reducer,
     [categorydepartmentAPI.reducerPath]: categorydepartmentAPI.reducer,
     [ExamSetting.reducerPath]: ExamSetting.reducer,
+    [loggersAPI.reducerPath]: loggersAPI.reducer,
     //toolkit
-    theme: themeReducer
+    theme: themeReducer,
+    loggers: loggersReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -36,6 +40,7 @@ export const store = configureStore({
       DepartmentAPI.middleware,
       categorydepartmentAPI.middleware,
       ExamSetting.middleware,
+      loggersAPI.middleware,
       rtkQueryErrorLogger
     )
 })

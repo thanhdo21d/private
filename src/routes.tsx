@@ -41,6 +41,7 @@ import ExamsQuestion from './pages/bo-de-thi/detailExamsQuestion/ExamsQuestion'
 import CheckLog from './pages/check-log/CheckLog'
 import DashBoardOtherAdmin from './layouts/otherAdmin/DashBoardOtherAdmin'
 import CreateExams from './pages/bo-de-thi/qlTree/CreateExams'
+import DetailsExamsQuestion from './pages/bo-de-thi/detailExamsQuestion/DetailsExamsQuestion'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -85,6 +86,7 @@ export const routers = createBrowserRouter([
           { path: 'details-exams/:id', element: <DetailsExams /> },
           { path: 'settings/ki-thi', element: <ExamConfiguration /> },
           { path: 'settings/ki-thi/bai-thi/:id', element: <ExamsQuestion /> },
+          { path: 'settings/ki-thi/bai-thi/:id/:id/details-exams', element: <DetailsExamsQuestion /> },
           { path: 'settings/ki-thi/bai-thi/:id/create-exams', element: <CreateExams /> }
         ]
       }

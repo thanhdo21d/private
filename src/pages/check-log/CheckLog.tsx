@@ -37,7 +37,6 @@ const CheckLog = () => {
       endDate: loggerDate.endDate
     }))
   }, [loggerDate])
-
   useEffect(() => {}, [loggerDate, memoOptions, options])
   console.log(loggerDate, 'day nay')
   const {
@@ -55,7 +54,6 @@ const CheckLog = () => {
     console.log('Success:', values)
   }
   const onFinishRemoveLoger = ({ days }: { days: any }) => {
-    console.log(Number(days))
     removeLogger({
       time: Number(days)
     })

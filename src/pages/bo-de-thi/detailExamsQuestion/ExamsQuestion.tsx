@@ -91,13 +91,13 @@ const ExamsQuestion = () => {
       render: ({ key: id }: { key: string }) => {
         return (
           <div className='flex items-center justify-center gap-3'>
-            <Button
+            <Link
+              to={`${id}/details-exams`}
               id='buttonmodal'
-              styleClass='focus:outline-none !p-2 w-[70px]  bg-success hover:bg-warning text-white '
-              type='button'
+              className='focus:outline-none !p-2 w-[70px] rounded-md  bg-success hover:bg-warning text-white '
             >
               Chi Tiết
-            </Button>
+            </Link>
             <Button styleClass='p-2 w-[80px] flex items-center focus:outline-none hover:bg-warning'>
               <span>
                 <AiFillEdit />

@@ -27,10 +27,9 @@ const AcceptUserDipament = () => {
   console.log(dataExamsCategories)
   const { t } = useTranslation(['header'])
   const { profile } = useContext(AppContext)
-  const dataSearchQuery: string | null = queryParameters.get('department')
   const navigate = useNavigate()
   const handelGoon = () => {
-    if (dataSearchQuery != null) {
+    if (dataPageQuery != null) {
       setCheckConcept(!checkConcept)
     } else {
       alert('Vui Lòng Chọn Phòng Ban')
@@ -42,6 +41,9 @@ const AcceptUserDipament = () => {
       <div>
         {checkConcept ? (
           <div>
+            <Button onClick={() => navigate('/')} styleClass='py-1'>
+              Quay Lại{' '}
+            </Button>
             <div className='h-full w-[50%] mx-auto rounded-sm shadow-md flex gap-15  justify-center items-center bg-black bg-opacity-30 from-indigo-600 via-indigo-700 to-indigo-700'>
               {dataExamsCategories?.exam?.examsKT.length > 0 ? (
                 dataExamsCategories?.exam?.examsKT?.map((data: any) => {
@@ -146,7 +148,9 @@ const AcceptUserDipament = () => {
                   )
                 })
               ) : (
-                <Empty className='bg-white bg-opacity-50' />
+                <>
+                  <Empty className='bg-white bg-opacity-50' />
+                </>
               )}
               {/* end */}
             </div>

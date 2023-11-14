@@ -16,7 +16,6 @@ interface SidebarProps {
   checkInfo?: boolean
 }
 // ...
-
 export function CategoryTreeItem({ category, level, bg }: any) {
   const location = useLocation()
   const navigate = useNavigate()
@@ -25,7 +24,6 @@ export function CategoryTreeItem({ category, level, bg }: any) {
     const openCategories = JSON.parse(sessionStorage.getItem('openCategories') || '{}')
     return !!openCategories[category._id]
   })
-
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     {
@@ -60,13 +58,11 @@ export function CategoryTreeItem({ category, level, bg }: any) {
 
   // Xác định xem mục danh mục hiện tại có phải là mục đang được chọn không
   const isActive = location.pathname.includes(`category/${category._id}`)
-
   // Style cho mục đang được chọn
   const activeStyle = {
     fontWeight: 'bold',
     color: '#4CAF50' // Màu xanh
   }
-
   return (
     <div>
       <div className={`${bg ? 'bg-white' : 'bg-[#000c17]'}`}>
@@ -160,8 +156,6 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         })
     }
   }, [id, uri]) // Bạn nên thêm `id` và `uri` vào dependencies array
-
-  // ...phần còn lại của component
 
   return (
     <div

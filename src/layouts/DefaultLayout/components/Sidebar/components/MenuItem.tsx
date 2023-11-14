@@ -63,5 +63,6 @@ export const settingsSystemLogs: MenuProps['items'] = [
 export const dashboardOther: MenuProps['items'] = [
   getItem('dashboard', 'Other', <AiOutlineDashboard />, [
     getItem(<NavLink to={`dashboard-other-admin`}>dashboard</NavLink>, 'Others', <BugOutlined />),
+    getItem(<NavLink to={`member`}>Thành Viên</NavLink>, 'member-other', <UserOutlined />)
   ])
 ]

@@ -1,8 +1,7 @@
 import { useContext } from 'react'
 import { AppContext } from '~/contexts/app.contexts'
-import imgLogo from '../../assets/images/logo/Ava_1__DXCB.jpg'
 const UserProfile = () => {
-  const { profile, reset } = useContext(AppContext)
+  const { profile } = useContext(AppContext)
   return (
     <main className='profile-page'>
       <section className='relative block h-500-px'>

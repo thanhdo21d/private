@@ -50,7 +50,7 @@ const options: ApexOptions = {
 }
 
 const AreaChart: React.FC = () => {
-  const [state, setState] = useState<AreaChartState>({
+  const [state] = useState<AreaChartState>({
     series: [65, 34, 12, 56]
   })
 

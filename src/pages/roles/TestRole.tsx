@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 
 const TestRole = () => {
   // const [task, setDataTask] = useState([])
@@ -6,7 +5,6 @@ const TestRole = () => {
   // const [selectedRole, setSelectedRole] = useState('')
   // const [assignedTasks, setAssignedTasks] = useState([])
   // useEffect(() => {
-  //   fetch('http://localhost:8282/role')
   //     .then((res) => res.json())
   //     .then((data: any) => {
   //       setRoles(data)

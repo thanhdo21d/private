@@ -14,6 +14,7 @@ function isPayloadErrorMessage(payload: unknown): payload is {
   )
 }
 export const rtkQueryErrorLogger: Middleware = (api: MiddlewareAPI) => (next) => (action: AnyAction) => {
+  console.log(api)
   if (isRejected(action)) {
     if (action.error.name === 'CustomError') {
       toast.warn(action.error.message)

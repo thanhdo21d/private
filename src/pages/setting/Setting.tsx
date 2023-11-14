@@ -1,8 +1,3 @@
-import { Select, Button } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { useGetAllCategoriesQuery } from '~/apis/category/categories'
-import { useGetIdRolesQuery } from '~/apis/roles/roles.api'
-
 const Setting = () => {
   return (
     <div>

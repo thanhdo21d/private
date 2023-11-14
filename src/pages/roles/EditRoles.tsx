@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { useAddTaskRoleMutation, useGetAllTaskRoleQuery, useRemoveTaskRoleMutation } from '~/apis/task/task.api'
 import { ItaskRole } from '~/types/task/task.type'
 import { MdOutlineAddCircleOutline } from 'react-icons/md'
-import { useChangeRoleOtherAdminMutation, useGetAllDepartmentQuery } from '~/apis/department/department'
+import { useChangeRoleOtherAdminMutation } from '~/apis/department/department'
 import { useGetAllCategoriesQuery } from '~/apis/category/categories'
 type FieldType = {
   name?: string
@@ -24,15 +24,15 @@ const EditRoles: React.FC = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const { data: taskRoleData, isFetching: taskRoleDataFetching } = useGetAllTaskRoleQuery()
-  const { data: roleData, error, isFetching: isGetRoleLoading } = useGetIdRolesQuery(id as string)
+  const { data: roleData,  isFetching: isGetRoleLoading } = useGetIdRolesQuery(id as string)
   console.log(roleData?.data.adminDepartMent, 'okl')
   const [addTaskRole] = useAddTaskRoleMutation()
   const [selectedOption, setSelectedOption] = useState('')
   const [updateRoles, { isLoading: isUpdateLoading }] = useUpdateRoleMutation()
   const [addRoles, { isLoading: isAddLoading }] = useAddRoleMutation()
-  const [removeLoad, { isLoading: isRemoveLoading }] = useRemoveTaskRoleMutation()
+  const [removeLoad] = useRemoveTaskRoleMutation()
   const [changeRoleOtherAmin] = useChangeRoleOtherAdminMutation()
-  const { data: dataAllCategories, isFetching: isGetCategoriesLoading } = useGetAllCategoriesQuery()
+  const { data: dataAllCategories } = useGetAllCategoriesQuery()
   const OPTIONS = dataAllCategories?.data
     ?.filter((items: any) => items.parentCheck !== '0')
     .map((data: any) => ({
@@ -40,7 +40,7 @@ const EditRoles: React.FC = () => {
       name: data.name
     }))
   const [selectedItems, setSelectedItems] = useState<any[]>([])
-  const [selectedItemIds, setSelectedItemIds] = useState([])
+  const [selectedItemIds, setSelectedItemIds] = useState<any[]>([])
   const filteredOptions = OPTIONS?.filter((o: any) => !selectedItemIds.includes(o.id))
   const handleSelectChange = (selectedValues: any) => {
     const selectedIds = selectedValues.map((value: any) => OPTIONS.find((option: any) => option.name === value).id)

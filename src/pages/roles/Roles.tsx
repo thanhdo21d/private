@@ -3,7 +3,7 @@ import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-ro
 import { Button } from '~/components'
 import { AiFillEdit, AiOutlineLoading3Quarters, AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai'
 import { useDeleteRoleMutation, useGetAllRolesQuery, useSearchRoleApiGETQuery } from '~/apis/roles/roles.api'
-import { IRole, IRoleDocs } from '~/types/roles/roles.type'
+import { IRole } from '~/types/roles/roles.type'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { useEffect, useState } from 'react'
 import { Footer } from 'antd/es/layout/layout'
@@ -51,7 +51,7 @@ const Roles = () => {
     })
     if (dataGetRole) setSearchResults(dataGetRole)
   }
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = () => {
     navigate({
       search: createSearchParams({
         content: ''

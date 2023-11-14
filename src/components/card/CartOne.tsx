@@ -8,7 +8,7 @@ import React from 'react'
 
 const CardOne = ({ member, departMent }: { member: boolean; departMent: boolean }) => {
   const { data } = useGetAllUserQuery()
-  const { data: dataAllCategories, isFetching: isGetCategoriesLoading } = useGetAllCategoriesQuery()
+  const { data: dataAllCategories } = useGetAllCategoriesQuery()
   console.log(dataAllCategories?.data.filter((items: category) => items.parentCheck !== '0').length)
   return (
     <div className='rounded-md border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>

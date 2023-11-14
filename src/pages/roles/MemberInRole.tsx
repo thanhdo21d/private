@@ -10,7 +10,7 @@
 // }
 
 // export default MemberInRole
-import { SearchOutlined, UserOutlined } from '@ant-design/icons'
+import { SearchOutlined } from '@ant-design/icons'
 import React, { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import type { InputRef } from 'antd'
@@ -165,6 +165,7 @@ const MemberInRole: React.FC = () => {
         const name = text.split('@')
         const userName = name[0].split('.')
         const checkName = userName.pop()
+        console.log(checkName)
         return <p className='font-medium text-md'>{userName}</p>
       }
     },

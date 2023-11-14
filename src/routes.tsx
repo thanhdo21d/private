@@ -1,5 +1,5 @@
 import { Navigate, Outlet, createBrowserRouter, useNavigate } from 'react-router-dom'
-import { Suspense, lazy, useContext, useEffect, useState } from 'react'
+import { Suspense, lazy, useContext, useEffect } from 'react'
 import { Dashboard } from './pages'
 const NotFound = lazy(() => import('./pages').then((module) => ({ default: module.NotFound })))
 import DefaultLayout from './layouts/DefaultLayout'
@@ -52,9 +52,9 @@ const CheckCookieUserLogin = () => {
   }, [cookie, navigate])
   return cookie ? <Outlet /> : <Navigate to='/login' />
 }
-const PrivateRoute = () => {
+export const PrivateRoute = () => {
   const cookie = Cookies.get('token')
-  const { profile, reset } = useContext(AppContext)
+  const { profile } = useContext(AppContext)
   const navigate = useNavigate()
   useEffect(() => {
     if (profile?.role.name === '') {

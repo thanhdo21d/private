@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Link, createSearchParams, useSearchParams } from 'react-router-dom'
+import { Link, createSearchParams } from 'react-router-dom'
 import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from 'react-icons/tb'
 interface Props {
   queryConfig?: any

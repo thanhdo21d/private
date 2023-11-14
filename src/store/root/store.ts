@@ -11,7 +11,7 @@ import DepartmentAPI from '~/apis/department/department'
 import categorydepartmentAPI from '~/apis/category/categories'
 import { themeReducer } from '../slice/theme.slice'
 import ExamSetting from '~/apis/examSetting/examSetting'
-import loggersAPI from '~/apis/logs/loggersAPi'
+import loggersAPI from '~/apis/checklogs/loggersAPi'
 import { loggersReducer } from '../slice/dateLogger.slice'
 export const store = configureStore({
   reducer: {

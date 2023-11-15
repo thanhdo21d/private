@@ -15,7 +15,6 @@ const SetttingTree = () => {
   const uri = import.meta.env.VITE_API
 
   const navigate = useNavigate()
-  const [checkCate, setCheckCate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
   const [categories, setCategories] = useState<any[]>([])
   const [createCategories, { isLoading: isCreateCategoriesLoading }] = useCreateCategoriesMutation()
@@ -44,6 +43,9 @@ const SetttingTree = () => {
       .then(() => {
         toastService.success('Successfully created categories')
         setOpen(false)
+        setTimeout(() => {
+          window.location.reload()
+        }, 400)
       })
   }
   return (
@@ -73,9 +75,8 @@ const SetttingTree = () => {
               </Col>
             </Row>
           </div>
-          <p className='my-5 font-bold text-xl'> {checkCate ? 'Categoies thuộc' : ''} </p>
           {categories.map((category: any) => (
-            <CategoryTreeItem key={category._id} category={category} level={0} bg={true} />
+            <CategoryTreeItem key={category._id} category={category} level={0} bg={true} button={false} />
           ))}
           <button
             type='submit'
@@ -117,5 +118,4 @@ const SetttingTree = () => {
     </>
   )
 }
-
 export default SetttingTree

@@ -59,6 +59,28 @@ const categorydepartmentAPI = createApi({
         }
       },
       providesTags: ['Category']
+    }),
+    removeCategoriesTree: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/remove/category/${id}`,
+          method: 'DELETE'
+        }
+      },
+      invalidatesTags: ['Category']
+    }),
+    editCategoriesTree: builder.mutation({
+      query: ({ id, parentId, name }: { id: string; parentId: string; name: string }) => {
+        return {
+          url: `/edit/category/${id}`,
+          method: 'PUT',
+          body: {
+            name: name,
+            parentId: parentId
+          }
+        }
+      },
+      invalidatesTags: ['Category']
     })
   })
 })
@@ -67,6 +89,8 @@ export const {
   useCreateCategoriesMutation,
   useGetIDcategoriesQuery,
   useRemoveExamsDepartmentMutation,
-  useGetCategoriesDepartmentsQuery
+  useGetCategoriesDepartmentsQuery,
+  useRemoveCategoriesTreeMutation,
+  useEditCategoriesTreeMutation
 } = categorydepartmentAPI
 export default categorydepartmentAPI

@@ -25,7 +25,6 @@ const EditRoles: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { data: taskRoleData, isFetching: taskRoleDataFetching } = useGetAllTaskRoleQuery()
   const { data: roleData,  isFetching: isGetRoleLoading } = useGetIdRolesQuery(id as string)
-  console.log(roleData?.data.adminDepartMent, 'okl')
   const [addTaskRole] = useAddTaskRoleMutation()
   const [selectedOption, setSelectedOption] = useState('')
   const [updateRoles, { isLoading: isUpdateLoading }] = useUpdateRoleMutation()

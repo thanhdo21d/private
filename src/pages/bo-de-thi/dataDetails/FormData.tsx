@@ -253,7 +253,7 @@ const FormData = () => {
             autoComplete='off'
           >
             <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your keyword!' }]}>
-              <Input className='h-[40px] w-[600px]' placeholder='Tìm Kiếm Theo đề thi ....' />
+              <Input className='h-[40px] w-[600px] border border-[#ccc]' placeholder='Tìm Kiếm Theo đề thi ....' />
             </Form.Item>
             <Button type='submit' id='keycode13' styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'>
               Tìm Kiếm

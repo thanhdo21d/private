@@ -2,28 +2,53 @@
 
 import { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon, Button } from '~/components'
-import { Menu, Skeleton, Tooltip } from 'antd'
-import { Link, NavLink, createSearchParams, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Drawer, Form, Input, Menu, Popconfirm, Select, Skeleton, Table, Tooltip } from 'antd'
+import {
+  Link,
+  NavLink,
+  createSearchParams,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams
+} from 'react-router-dom'
 import { AiFillHome, AiFillSetting, AiOutlineDashboard } from 'react-icons/ai'
-import { AppContext } from '~/contexts/app.contexts'
 import axios from 'axios'
 import { dashboardOther, settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
-import { useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
+import {
+  useEditCategoriesTreeMutation,
+  useGetCategoriesDepartmentsQuery,
+  useRemoveCategoriesTreeMutation
+} from '~/apis/category/categories'
+import { toastService } from '~/utils/toask/toaskMessage'
 interface SidebarProps {
   sidebarOpen: boolean
   setSidebarOpen: (arg: boolean) => void
   textUi: string
   checkInfo?: boolean
 }
-// ...
-export function CategoryTreeItem({ category, level, bg }: any) {
+export function CategoryTreeItem({ category, level, bg, button }: any) {
   const location = useLocation()
+  const { id } = useParams()
+  const [removeCategoriTree] = useRemoveCategoriesTreeMutation()
+  const [editCategoriTree] = useEditCategoriesTreeMutation()
+  const [open, setOpen] = useState(false)
+  const [dataTree, setDataTree] = useState<any[]>([])
+  const [queryParameters] = useSearchParams()
+  const parentId: string | null = queryParameters.get('parentId')
   const navigate = useNavigate()
-  // Khởi tạo state isOpen dựa vào sessionStorage
   const [isOpen, setIsOpen] = useState(() => {
     const openCategories = JSON.parse(sessionStorage.getItem('openCategories') || '{}')
     return !!openCategories[category._id]
   })
+  const showDrawer = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setOpen(true)
+    console.log(category?._id)
+  }
+  const onClose = () => {
+    setOpen(false)
+  }
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     {
@@ -41,7 +66,6 @@ export function CategoryTreeItem({ category, level, bg }: any) {
           })
     }
   }
-
   const toggleOpen = () => {
     setIsOpen((prevState) => {
       const newState = !prevState
@@ -55,17 +79,137 @@ export function CategoryTreeItem({ category, level, bg }: any) {
       return newState
     })
   }
-
-  // Xác định xem mục danh mục hiện tại có phải là mục đang được chọn không
   const isActive = location.pathname.includes(`category/${category._id}`)
-  // Style cho mục đang được chọn
   const activeStyle = {
     fontWeight: 'bold',
-    color: '#4CAF50' // Màu xanh
+    color: '#4CAF50'
   }
+  const handelRemoveCategori = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const checkCofirm = window.confirm('Are you sure you want to remove')
+    if (checkCofirm)
+      removeCategoriTree(category._id)
+        .unwrap()
+        .then(() => {
+          toastService.success('Removed')
+          sessionStorage.removeItem('category')
+          setTimeout(() => window.location.reload(), 300)
+        })
+        .catch(() => toastService.error('Error removing'))
+  }
+  const onFinish = (values: any) => {
+    console.log(values)
+    editCategoriTree({
+      id: category._id as string,
+      parentId: parentId || '',
+      name: values.name
+    })
+      .unwrap()
+      .then(() => {
+        toastService.success('categories updated successfully')
+        sessionStorage.removeItem('category')
+        setTimeout(() => window.location.reload())
+      })
+  }
+  useEffect(() => {
+    const fetchDataTree = async () => {
+      const { data } = await axios.get(`http://localhost:8282/category-tree/${id}`)
+      logChildrenNames(data)
+    }
+    fetchDataTree()
+  }, [id])
+  const logChildrenNames = (node: any, accumulatedData: any[] = []) => {
+    accumulatedData.push(node)
+    if (node.children && node.children.length > 0) {
+      node.children.forEach((child: any) => {
+        logChildrenNames(child, accumulatedData)
+      })
+    }
+    setDataTree(accumulatedData)
+  }
+  const confirm = (id: string) => {
+    navigate({
+      search: createSearchParams({
+        parentId: id
+      }).toString()
+    })
+  }
+  const dataSource = dataTree.map(({ _id, name }: { _id: string; name: string }) => ({
+    key: _id,
+    name: name
+  }))
+  const columns = [
+    {
+      title: 'Tên Categories',
+      dataIndex: 'name',
+      key: 'name'
+    },
+    {
+      title: <p className='flex justify-center'>hành động</p>,
+      render: ({ key: id }: { key: string }) => {
+        return (
+          <div className='flex justify-center'>
+            <Popconfirm
+              okButtonProps={{
+                style: { backgroundColor: 'blue', marginRight: '20px' }
+              }}
+              title='Dịch Chuyển Categories'
+              description='Are you sure to delete this task?'
+              onConfirm={() => confirm(id)}
+              okText='Yes'
+              cancelText='No'
+            >
+              <Button styleClass='py-1 '>Chọn</Button>
+            </Popconfirm>
+          </div>
+        )
+      }
+    }
+  ]
   return (
-    <div>
-      <div className={`${bg ? 'bg-white' : 'bg-[#000c17]'}`}>
+    <div className=''>
+      <Drawer
+        title='cấu hình categories'
+        placement={'right'}
+        width={500}
+        onClose={onClose}
+        open={open}
+        extra={<Button onClick={onClose}>Cancel</Button>}
+      >
+        <p className='mb-3'>Nhập Tên Categories Mới</p>
+        <Form
+          name='basic'
+          style={{ minWidth: '100%' }}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: '100%' }}
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          autoComplete='off'
+        >
+          <Form.Item
+            className='min-w-full'
+            name='name'
+            rules={[{ required: true, message: 'Please input your Categories name!' }]}
+          >
+            <Input className='border border-[#ccc] min-w-full' />
+          </Form.Item>
+          <p>Categories Thuộc</p>
+          <Form.Item
+            className='min-w-full'
+            rules={[{ required: false, message: 'Please input your Categories name!' }]}
+          >
+            <div className='mt-2'>
+              <Table dataSource={dataSource} columns={columns} pagination={false} />
+            </div>
+          </Form.Item>
+          <Form.Item className='min-w-full'>
+            <Button type='submit' styleClass='w-full'>
+              Xác Nhận
+            </Button>
+          </Form.Item>
+        </Form>
+      </Drawer>
+      <div className={`${bg ? 'bg-white' : 'bg-[#000c17]'} rounded-md`}>
         <div onClick={toggleOpen} className='cursor-pointer px-3 py-2'>
           <div className='category-item relative flex justify-between gap-5'>
             <div>
@@ -73,7 +217,7 @@ export function CategoryTreeItem({ category, level, bg }: any) {
                 <span className='mr-3'>{isOpen ? '-' : '+'}</span>
               ) : null}
               <span
-                className={`category-name hover:text-md ${
+                className={`category-name   hover:text-md ${
                   bg ? 'hover:text-black' : 'hover:text-white'
                 } hover:font-semibold`}
                 onClick={handleCategoryClick}
@@ -82,13 +226,31 @@ export function CategoryTreeItem({ category, level, bg }: any) {
                 {category.name}
               </span>
             </div>
+            <div>
+              {button && category.children && (
+                <div className='space-x-5 py-2'>
+                  <button onClick={showDrawer} className='font-bold text-success underline'>
+                    Edit
+                  </button>
+                  <button onClick={handelRemoveCategori} className='font-bold text-danger underline'>
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         {isOpen && (
-          <div className={`ml-5 space-y-1 transition-all opacity-100 max-h-96`}>
+          <div className={`ml-5 space-y-1 transition-all opacity-100 `}>
             {category.children &&
               category.children.map((child: any) => (
-                <CategoryTreeItem key={child._id} category={child} level={level + 1} bg={bg} />
+                <CategoryTreeItem
+                  key={child._id}
+                  category={child}
+                  level={level + 1}
+                  bg={bg}
+                  button={button ? true : false}
+                />
               ))}
           </div>
         )}
@@ -96,9 +258,7 @@ export function CategoryTreeItem({ category, level, bg }: any) {
     </div>
   )
 }
-
 // ...
-
 const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
   const [categories, setCategories] = useState<any[]>([])
   const navigate = useNavigate()
@@ -156,7 +316,11 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         })
     }
   }, [id, uri]) // Bạn nên thêm `id` và `uri` vào dependencies array
-
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('categories')
+    }
+  }, [])
   return (
     <div
       ref={sidebar}
@@ -209,7 +373,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
             <div className='select-none'>
               <h3 className='text-bodydark2 mb-4 ml-4 text-sm font-semibold select-none'>categories</h3>
               {categories.map((category: any) => (
-                <CategoryTreeItem key={category._id} category={category} level={0} />
+                <CategoryTreeItem key={category._id} category={category} level={0} button={false} />
               ))}
             </div>
           </nav>

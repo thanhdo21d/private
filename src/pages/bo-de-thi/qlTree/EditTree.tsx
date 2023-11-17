@@ -19,7 +19,6 @@ const EditTree = () => {
         console.error('Error fetching categories', error)
       })
   }, [id, uri])
- 
 
   return (
     <div className='min-h-screen '>

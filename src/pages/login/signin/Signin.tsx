@@ -59,7 +59,7 @@ const Signin = () => {
     toastService.error(t('product.login_error'))
     Cookies.remove('token')
     setTimeout(() => {
-      window.location.reload()
+      // window.location.reload()
     }, 500)
   }
   if (isSuccess) {

@@ -47,7 +47,7 @@ export const itemsUser: MenuProps['items'] = [
   ]),
   getItem('Xếp Hạng Bản Thân', 'users', <AppstoreOutlined />, [
     getItem(<NavLink to={`/user-info/thanh-tich`}>Thành Tích</NavLink>, 'Thành Tích')
-  ])
+  ]),
   // SettingOutlined
 ]
 export const settingsSystem: MenuProps['items'] = [

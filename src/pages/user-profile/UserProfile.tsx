@@ -1,65 +1,127 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { AppContext } from '~/contexts/app.contexts'
+import heloUser from '../../assets/hello (1).png'
+import { Avatar, Button, Modal, UploadFile, UploadProps } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import useGreetings from '~/hooks/useGretting'
+import Upload, { RcFile } from 'antd/es/upload'
+import UserUpload from '~/components/upload/UploadImage'
+import { useUploadImageAvatarUserMutation } from '~/apis/user/user.api'
+const getBase64 = (file: RcFile): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = (error) => reject(error)
+  })
 const UserProfile = () => {
   const { profile } = useContext(AppContext)
+  const greeting = useGreetings()
+  const [urlAvatar, setUrlAvatar] = useState({} as any)
+  const [upLoadAvartaUser, { isLoading: isUploadImageLoading }] = useUploadImageAvatarUserMutation()
+  console.log(profile)
+
   return (
     <main className='profile-page'>
-      <section className='relative block h-500-px'>
-        <div
-          className='absolute top-0 w-full h-full bg-center bg-cover'
-          style={{
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80")'
-          }}
-        >
-          <span id='blackOverlay' className='w-full h-full absolute opacity-50 bg-black' />
-        </div>
-        <div
-          className='top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px'
-          style={{ transform: 'translateZ(0px)' }}
-        >
-          <svg
-            className='absolute bottom-0 overflow-hidden'
-            xmlns='http://www.w3.org/2000/svg'
-            preserveAspectRatio='none'
-            version='1.1'
-            viewBox='0 0 2560 100'
-            x={0}
-            y={0}
-          >
-            <polygon className='text-blueGray-200 fill-current' points='2560 0 2560 100 0 100' />
-          </svg>
-        </div>
-      </section>
-      <section className='relative py-16 bg-blueGray-200'>
-        <div className='container mx-auto px-4'>
-          <div className='relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64'>
-            <div className='px-6'>
-              <div className='flex flex-wrap justify-center'>
-                <div className='w-full lg:w-3/12 px-4 lg:order-2 flex justify-center'>
-                  <div className='relative'>
-                    <img
-                      alt='...'
-                      src='https://media.istockphoto.com/vectors/user-icon-flat-isolated-on-white-background-user-symbol-vector-vector-id1300845620?k=20&m=1300845620&s=612x612&w=0&h=f4XTZDAv7NPuZbG0habSpU0sNgECM0X7nbKzTUta3n8='
-                      className='shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px'
+      <section className='relative block '>
+        <div className='h-full'>
+          <div className='border-b-2 block md:flex'>
+            <div className='w-full md:w-2/5 p-4 sm:p-6 lg:p-8 bg-white shadow-md'>
+              <div className='flex justify-between items-center'>
+                <div className='flex items-center gap-5'>
+                  <span className='text-xl font-semibold block'>Xin Chào {profile?.username}</span>
+                  <img className='w-[50px] waving-image' src={`${heloUser}`} />
+                </div>
+                <p className='text-sm font-semibold block'>{greeting}</p>
+              </div>
+              <span className='text-gray-600'>This information is secret so be careful</span>
+              <div className='w-full p-8 mx-2 flex justify-center'>
+                <Avatar size={224} icon={<img src={`${profile?.avatar}`} />} />
+              </div>
+              <form className='flex justify-center'>
+                <label
+                  htmlFor='fileInput'
+                  className='flex items-center w-1/2 justify-center  mx-2 bg-[#D7B978] group rounded-md shadow-lg cursor-pointer hover:text-white text-white hover:font-bold transition-all'
+                >
+                  <input type='file' />
+                </label>
+                <button type='submit'>Upload</button>
+              </form>
+            </div>
+            <div className='w-full md:w-3/5 p-8 bg-white lg:ml-4 shadow-md'>
+              <div className='rounded  shadow p-6'>
+                <div className='pb-6'>
+                  <label htmlFor='name' className='font-semibold text-gray-700 block pb-1'>
+                    Name
+                  </label>
+                  <div className='flex'>
+                    <input
+                      disabled
+                      id='username'
+                      className='border-1 border-[#ccc] rounded-r px-4 py-2 w-full'
+                      type='text'
+                      defaultValue={profile?.username}
                     />
                   </div>
                 </div>
-                <div className='w-full lg:w-4/12 px-4  lg:order-3 lg:text-right lg:self-center'></div>
-                <div className='w-full  lg:w-4/12  lg:order-1'></div>
-              </div>
-              <div className='text-center '>
-                <h3 className='text-4xl font-semibold leading-normal  text-blueGray-700 mt-25'>{profile?.username}</h3>
-                <div className='text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase'>
-                  <i className='fas fa-map-marker-alt mr-2 text-lg text-blueGray-400' />
-                  {profile?.code}
+                <div className='pb-4'>
+                  <label htmlFor='about' className='font-semibold text-gray-700 block pb-1'>
+                    Email
+                  </label>
+                  <input
+                    disabled
+                    id='email'
+                    className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full'
+                    type='email'
+                    defaultValue={profile?.email}
+                  />
+                </div>
+                <div className='pb-4'>
+                  <label htmlFor='about' className='font-semibold text-gray-700 block pb-1'>
+                    code
+                  </label>
+                  <input
+                    disabled
+                    id='email'
+                    className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full'
+                    type='email'
+                    defaultValue={profile?.code}
+                  />
+                </div>
+                <div className='pb-4'>
+                  <label htmlFor='about' className='font-semibold text-gray-700 block pb-1'>
+                    address
+                  </label>
+                  <input
+                    disabled
+                    id='email'
+                    className='border-1 border-[#ccc]   rounded-r px-4 py-2 w-full'
+                    type='email'
+                    defaultValue={profile?.address}
+                  />
+                </div>
+
+                <div className='pb-4'>
+                  <label htmlFor='about' className='font-semibold text-gray-700 block pb-1'>
+                    role
+                  </label>
+                  <input
+                    disabled
+                    id='email'
+                    className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full'
+                    type='email'
+                    defaultValue={profile?.role?.name}
+                  />
+                  <span className='text-gray-600 pt-4 block opacity-70'>
+                    Personal login information of your account
+                  </span>
                 </div>
               </div>
-              <div className='mt-10 py-10 border-t border-blueGray-200 text-center'></div>
             </div>
           </div>
         </div>
-        <footer className='relative bg-blueGray-200 pt-8 pb-6 mt-8'>
+
+        <footer className='relative bg-blueGray-200 pt-8 pb-6 bottom-0 mt-8'>
           <div className='container mx-auto px-4'>
             <div className='flex flex-wrap items-center md:justify-between justify-center'>
               <div className='w-full md:w-6/12 px-4 mx-auto text-center'>

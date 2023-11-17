@@ -1,17 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon, Button } from '~/components'
 import { Drawer, Form, Input, Menu, Popconfirm, Select, Skeleton, Table, Tooltip } from 'antd'
-import {
-  Link,
-  NavLink,
-  createSearchParams,
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams
-} from 'react-router-dom'
+import { NavLink, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AiFillHome, AiFillSetting, AiOutlineDashboard } from 'react-icons/ai'
 import axios from 'axios'
 import { dashboardOther, settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
@@ -92,7 +84,7 @@ export function CategoryTreeItem({ category, level, bg, button }: any) {
         .unwrap()
         .then(() => {
           toastService.success('Removed')
-          sessionStorage.removeItem('category')
+          sessionStorage.removeItem('categories')
           setTimeout(() => window.location.reload(), 300)
         })
         .catch(() => toastService.error('Error removing'))
@@ -107,7 +99,7 @@ export function CategoryTreeItem({ category, level, bg, button }: any) {
       .unwrap()
       .then(() => {
         toastService.success('categories updated successfully')
-        sessionStorage.removeItem('category')
+        sessionStorage.removeItem('categories')
         setTimeout(() => window.location.reload())
       })
   }
@@ -117,7 +109,7 @@ export function CategoryTreeItem({ category, level, bg, button }: any) {
       logChildrenNames(data)
     }
     fetchDataTree()
-  }, [id])
+  }, [])
   const logChildrenNames = (node: any, accumulatedData: any[] = []) => {
     accumulatedData.push(node)
     if (node.children && node.children.length > 0) {
@@ -315,12 +307,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
           console.error('Error fetching categories', error)
         })
     }
-  }, [id, uri]) // Bạn nên thêm `id` và `uri` vào dependencies array
-  useEffect(() => {
-    return () => {
-      sessionStorage.removeItem('categories')
-    }
-  }, [])
+  }, []) // Bạn nên thêm `id` và `uri` vào dependencies array
   return (
     <div
       ref={sidebar}
@@ -391,4 +378,4 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
     </div>
   )
 }
-export default SidebarTree
+export default React.memo(SidebarTree)

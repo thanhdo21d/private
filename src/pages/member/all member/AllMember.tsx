@@ -1,14 +1,17 @@
 import React from 'react'
-import { Input, Pagination, Popconfirm, Table } from 'antd'
+import { Input, Popconfirm, Table } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, EmailIcon } from '~/components'
 import { useDeleteUserMutation, useGetAllUserQuery } from '~/apis/user/user.api'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
 import { AiFillEdit } from 'react-icons/ai'
 import { toastService } from '~/utils/toask/toaskMessage'
+import Pagination from '~/pages/roles/Pagination'
+import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 const AllMember = () => {
   const navigate = useNavigate()
   const [removeMember, { isLoading }] = useDeleteUserMutation()
+  const queryConfig = useQueryConfig()
   const confirm = (id: string) => {
     removeMember(id)
       .unwrap()
@@ -85,7 +88,7 @@ const AllMember = () => {
     {
       title: <p className='flex justify-center'>Tác Vụ</p>,
       render: ({ key: id }: { key: string }) => (
-        <div className='flex space-x-2'>
+        <div className=' 2xl:flex grid grid-cols-1 gap-2'>
           <Popconfirm
             title='Delete the task'
             description='Are you sure to delete this task?'
@@ -97,20 +100,23 @@ const AllMember = () => {
             cancelText='No'
             placement='rightBottom'
           >
-            <Button styleClass='bg-danger flex items-center w-fit w-[100px]'>
+            <Button styleClass='bg-danger flex items-center  w-[80px] xl:w-[100px]'>
               <span>
                 <DeleteIcon />
               </span>
               <span className='font-medium'> Xóa</span>
             </Button>
           </Popconfirm>
-          <Button styleClass='flex items-center w-[100px]' onClick={() => navigate(`/admin/member/${id}/edit`)}>
+          <Button
+            styleClass='flex items-center w-[80px] xl:w-[100px]'
+            onClick={() => navigate(`/admin/member/${id}/edit`)}
+          >
             <span>
               <AiFillEdit />
             </span>
             <span>Sửa</span>
           </Button>
-          <Button styleClass='flex items-center w-[100px]'>
+          <Button styleClass='flex items-center  w-[80px] xl:w-[100px]'>
             <span>
               <EmailIcon />
             </span>
@@ -133,7 +139,9 @@ const AllMember = () => {
       <div className='mt-2'>
         <Table dataSource={dataSource} pagination={false} columns={columns} />
         <div className='mt-5 float-right'>
-          <Pagination defaultCurrent={1} total={50} />
+          <div>
+            <Pagination pageSize={data?.totalPages} queryConfig={queryConfig} />
+          </div>
         </div>
       </div>
       <div className='absolute bottom-0 text-center'>Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.</div>

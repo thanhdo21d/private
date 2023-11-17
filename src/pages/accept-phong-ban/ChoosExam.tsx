@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGetIdExamsCategoriesQuery } from '~/apis/examSetting/examSetting'
+import { IoMdReturnLeft } from 'react-icons/io'
 const ChoosExam = () => {
   const navigate = useNavigate()
   const [isScrolled, setIsScrolled] = useState(false)
@@ -26,6 +27,7 @@ const ChoosExam = () => {
           </div>
         ) : (
           dataIdExmas?.data?.topicExams.map((data: any) => {
+            console.log(data)
             return (
               <div
                 key={data?._id}
@@ -115,6 +117,15 @@ const ChoosExam = () => {
                       onClick={() => navigate(`/action-bai-thi`)}
                     >
                       Bắt Đầu Ôn Thi
+                    </button>
+                    <button
+                      className='rounded hover:bg-warning bg-teal-500 w-full py-3 mt-5 flex items-center gap-3 justify-around'
+                      onClick={() => navigate('/')}
+                    >
+                      <span>Quay Lại</span>
+                      <span>
+                        <IoMdReturnLeft className='text-white font-bold text-2xl' />
+                      </span>
                     </button>
                   </div>
                 </div>

@@ -10,6 +10,7 @@ import { Footer } from 'antd/es/layout/layout'
 import Pagination from './Pagination'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
 import { FcViewDetails } from 'react-icons/fc'
+import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 type FieldType = {
   keyword?: string
 }
@@ -18,9 +19,10 @@ const Roles = () => {
   const [queryParameters] = useSearchParams()
   const dataSearchQuery: string | null = queryParameters.get('content')
   const dataSortQuery: string | null = queryParameters.get('sort')
+  const queryConfig = useQueryConfig()
   const dataPageQuery: string | null = queryParameters.get('page')
   const { data: dataGetRole } = useSearchRoleApiGETQuery(dataSearchQuery)
- 
+
   const [searchResults, setSearchResults] = useState<any[]>([])
   const navigate = useNavigate()
   const confirm = (id: string) => {
@@ -156,14 +158,17 @@ const Roles = () => {
             cancelText='No'
             placement='rightBottom'
           >
-            <Button styleClass='bg-danger flex items-center w-[100px]'>
+            <Button styleClass='bg-danger flex items-center  w-[80px] xl:w-[100px]'>
               <span>
                 <DeleteIcon />
               </span>
               <span> {isLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'Xóa'}</span>
             </Button>
           </Popconfirm>
-          <Button styleClass='flex items-center w-[100px]' onClick={() => navigate(`/admin/roles/edit/${_id}`)}>
+          <Button
+            styleClass='flex items-center w-[80px] xl:w-[100px]'
+            onClick={() => navigate(`/admin/roles/edit/${_id}`)}
+          >
             <span>
               <AiFillEdit />
             </span>
@@ -171,7 +176,7 @@ const Roles = () => {
           </Button>
           <Button
             onClick={() => navigate(`/admin/roles/${_id}/memRole`)}
-            styleClass='bg-warning flex items-center w-[120px] !px-0'
+            styleClass='bg-warning flex items-center w-[80px] xl:w-[120px] !px-0'
           >
             <span>
               <FcViewDetails />
@@ -198,7 +203,10 @@ const Roles = () => {
           autoComplete='off'
         >
           <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your keyword!' }]}>
-            <Input className='h-[50px] w-[600px]' placeholder='Tìm Kiếm Theo Roles ....' />
+            <Input
+              className='h-[50px] w-[500px] xl:w-[600px] border border-[#ccc]'
+              placeholder='Tìm Kiếm Theo Roles ....'
+            />
           </Form.Item>
           <Button type='submit' id='keycode13' styleClass='w-[150px] h-[50px] bg-graydark'>
             Tìm Kiếm
@@ -212,7 +220,7 @@ const Roles = () => {
             Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
           </div>
           <div>
-            <Pagination pageSize={data?.totalPages} queryConfig={dataPageQuery} />
+            <Pagination pageSize={data?.totalPages} queryConfig={queryConfig} />
           </div>
         </Footer>
       </div>

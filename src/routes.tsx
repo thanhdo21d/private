@@ -43,6 +43,7 @@ import DashBoardOtherAdmin from './layouts/otherAdmin/DashBoardOtherAdmin'
 import CreateExams from './pages/bo-de-thi/qlTree/CreateExams'
 import DetailsExamsQuestion from './pages/bo-de-thi/detailExamsQuestion/DetailsExamsQuestion'
 import MemberDepartment from './layouts/otherAdmin/MemberDepartment'
+import EditQuestionExams from './pages/bo-de-thi/dataDetails/EditQuestionExams'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -84,6 +85,7 @@ export const routers = createBrowserRouter([
           { path: 'dashboard-other-admin', element: <DashBoardOtherAdmin /> },
           { path: 'member', element: <MemberDepartment /> },
           { path: 'settings/edit', element: <EditTree /> },
+          { path: 'question/edit/:id', element: <EditQuestionExams /> },
           { path: 'category/:id', element: <FormData /> },
           { path: 'details-exams/:id', element: <DetailsExams /> },
           { path: 'settings/ki-thi', element: <ExamConfiguration /> },

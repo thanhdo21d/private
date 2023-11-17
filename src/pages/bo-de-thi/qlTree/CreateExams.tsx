@@ -21,14 +21,15 @@ const CreateExams = () => {
   const onChange = (value: number | null) => {
     console.log('changed', value)
   }
-  const [inputFields, setInputFields] = useState([{ value: '' }])
+  const [inputFields, setInputFields] = useState<any>([{ x: '', y: '' }])
   const handleInputChange = (index: any, event: any) => {
+    const { name, value } = event.target
     const values = [...inputFields]
-    values[index].value = event.target.value
+    values[index][name] = value
     setInputFields(values)
   }
   const handleAddFields = () => {
-    setInputFields([...inputFields, { value: '' }])
+    setInputFields([...inputFields, { x: '', y: '' }])
   }
   const handleRemoveFields = (index: any) => {
     const values = [...inputFields]
@@ -57,7 +58,7 @@ const CreateExams = () => {
           </div>
           <div>
             <p>Thời Gian </p>
-            <InputNumber className='h-[32px] mt-2 rounded-md' size='large'  />
+            <InputNumber className='h-[32px] mt-2 rounded-md' size='large' />
           </div>
         </div>
 
@@ -112,45 +113,51 @@ const CreateExams = () => {
       >
         <div className='bg-[#D9D9D9] w-full rounded-md h-screen relative'>
           <h3 className='text-center pt-4 text-xl text-black underline'>Details Questions</h3>
-          {inputFields.map((inputField, index) => (
-            <div
-              key={index}
-              className='bg-white w-11/12 h-[60px] mx-auto rounded-md border mt-5 flex justify-between items-center'
-            >
-              <div className='mx-5 flex items-center gap-3'>
-                <p className='text-xl text-black'>Points</p>
-                <input
-                  className='rounded-md'
-                  placeholder='points'
-                  type='text'
-                  value={inputField.value}
-                  onChange={(event) => handleInputChange(index, event)}
-                />
-              </div>
-              <div className='flex items-center gap-5'>
-                <div className='flex items-center gap-3'>
-                  <p className='text-xl text-black'>Count</p>
+          {inputFields.map((inputField: any, index: any) => {
+            console.log(inputField)
+            console.log(inputFields)
+            return (
+              <div
+                key={index}
+                className='bg-white w-11/12 h-[60px] mx-auto rounded-md border mt-5 flex justify-between items-center'
+              >
+                <div className='mx-5 flex items-center gap-3'>
+                  <p className='text-xl text-black'>Points</p>
                   <input
                     className='rounded-md'
-                    placeholder='Count'
+                    placeholder='points'
                     type='text'
-                    value={inputField.value}
+                    name='x'
+                    value={inputField.x}
                     onChange={(event) => handleInputChange(index, event)}
                   />
                 </div>
-                <div className='mx-5'>
-                  {index !== 0 && (
-                    <img
-                      className='w-[30px] hover:scale-110 cursor-pointer'
-                      src={closeIcons}
-                      alt='close'
-                      onClick={() => handleRemoveFields(index)}
+                <div className='flex items-center gap-5'>
+                  <div className='flex items-center gap-3'>
+                    <p className='text-xl text-black'>Count</p>
+                    <input
+                      className='rounded-md'
+                      placeholder='Count'
+                      type='text'
+                      name='y'
+                      value={inputField.y}
+                      onChange={(event) => handleInputChange(index, event)}
                     />
-                  )}
+                  </div>
+                  <div className='mx-5'>
+                    {index !== 0 && (
+                      <img
+                        className='w-[30px] hover:scale-110 cursor-pointer'
+                        src={closeIcons}
+                        alt='close'
+                        onClick={() => handleRemoveFields(index)}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
           <div className='w-fit h-fit mx-auto rounded-md mt-5'>
             <img
               className='w-[40px] hover:scale-110 cursor-pointer'

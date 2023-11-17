@@ -1,4 +1,4 @@
-import { Col, Drawer, Form, Input, Row, Select, Space } from 'antd'
+import { Breadcrumb, Col, Drawer, Form, Input, Row, Select, Space } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '~/components'
@@ -13,7 +13,6 @@ const SetttingTree = () => {
   const dataExamsQuery: any = queryParameters.get('category')
   const { id } = useParams()
   const uri = import.meta.env.VITE_API
-
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [categories, setCategories] = useState<any[]>([])
@@ -42,6 +41,7 @@ const SetttingTree = () => {
       .unwrap()
       .then(() => {
         toastService.success('Successfully created categories')
+        sessionStorage.removeItem('categories')
         setOpen(false)
         setTimeout(() => {
           window.location.reload()
@@ -50,6 +50,16 @@ const SetttingTree = () => {
   }
   return (
     <>
+      <Breadcrumb
+        items={[
+          {
+            title: 'Trang Quản Trị'
+          },
+          {
+            title: 'Cài Đặt'
+          }
+        ]}
+      />
       <Drawer
         title='Cấu Hình Categories'
         width={720}
@@ -63,17 +73,13 @@ const SetttingTree = () => {
       >
         <Form onFinish={onFinish} layout='vertical' hideRequiredMark>
           <div>
-            <Row gutter={22}>
-              <Col span={22}>
-                <Form.Item
-                  name='name'
-                  label={<p className='font-bold text-xl'>Tên categories</p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Tên categories ...!' }]}
-                >
-                  <Input className='ml-7 rounded-md' placeholder='vui lòng nhập Tên categories ...!' />
-                </Form.Item>
-              </Col>
-            </Row>
+            <Form.Item
+              name='name'
+              label={<p className='font-bold text-xl'>Tên categories</p>}
+              rules={[{ required: true, message: 'vui lòng nhập Tên categories ...!' }]}
+            >
+              <Input className=' border border-[#ccc]' placeholder='vui lòng nhập Tên categories ...!' />
+            </Form.Item>
           </div>
           {categories.map((category: any) => (
             <CategoryTreeItem key={category._id} category={category} level={0} bg={true} button={false} />
@@ -92,7 +98,7 @@ const SetttingTree = () => {
           initial='hidden'
           whileInView={'show'}
           viewport={{ once: false, amount: 0.7 }}
-          className='w-full h-[60px] flex justify-between cursor-pointer  items-center dark:bg-black rounded-md bg-white'
+          className='w-full h-[60px] mt-10 flex justify-between cursor-pointer  items-center dark:bg-black rounded-md bg-white'
         >
           <p className='text-left items-center pl-5'>Cấu Hình Categoies</p>
           <div className='flex items-center mr-10'>

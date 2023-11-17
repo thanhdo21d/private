@@ -39,6 +39,18 @@ const UserApi = createApi({
         }
       },
       invalidatesTags: ['Users']
+    }),
+    uploadImageAvatarUser: builder.mutation<any, any>({
+      query: ({ id, image }: any) => {
+        return {
+          url: `/users/${id}`,
+          method: 'PATCH',
+          body: {
+            avatar: image
+          }
+        }
+      },
+      invalidatesTags: ['Users']
     })
   })
 })
@@ -47,6 +59,7 @@ export const {
   useGetIdUserQuery,
   useGetAllUserQuery,
   useUpdateUserMutation,
-  useDeleteUserMutation
+  useDeleteUserMutation,
+  useUploadImageAvatarUserMutation
 } = UserApi
 export default UserApi

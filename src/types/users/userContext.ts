@@ -6,6 +6,7 @@ export interface IuserContext {
   email: string
   username : string
   code : string
+  address : string
   role: {
     name: string
     status: string

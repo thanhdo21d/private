@@ -5,7 +5,7 @@ import { Button } from '~/components'
 import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
 import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
-import { toastService } from '~/utils/toask/toaskMessage'
+import { IoMdReturnLeft } from 'react-icons/io'
 import { AppContext } from '~/contexts/app.contexts'
 import { Empty, Radio } from 'antd'
 import logoAction from '../../assets/hello.png'
@@ -41,9 +41,6 @@ const AcceptUserDipament = () => {
       <div>
         {checkConcept ? (
           <div>
-            <Button onClick={() => navigate('/')} styleClass='py-1'>
-              Quay Lại{' '}
-            </Button>
             <div className='h-full w-[50%] mx-auto rounded-sm shadow-md flex gap-15  justify-center items-center bg-black bg-opacity-30 from-indigo-600 via-indigo-700 to-indigo-700'>
               {dataExamsCategories?.exam?.examsKT.length > 0 ? (
                 dataExamsCategories?.exam?.examsKT?.map((data: any) => {
@@ -135,12 +132,21 @@ const AcceptUserDipament = () => {
                           Lưu ý : Không tự ý thoát khi làm bài
                         </div>
                         {/* CTA Button */}
-                        <div className='col-span-12 mt-20 mb-5 text-gray-100'>
+                        <div className='col-span-12 mt-5 mb-5 text-gray-100'>
                           <button
                             className='rounded hover:bg-success bg-teal-500 w-full py-3'
                             onClick={() => navigate(`/ChoosExam/${data?._id}`)}
                           >
                             Bắt Đầu Ôn Thi
+                          </button>
+                          <button
+                            className='rounded hover:bg-warning bg-teal-500 w-full py-3 mt-5 flex items-center gap-3 justify-around'
+                            onClick={() => navigate(`/`)}
+                          >
+                            <span>Quay Lại</span>
+                            <span>
+                              <IoMdReturnLeft className='text-white font-bold text-2xl' />
+                            </span>
                           </button>
                         </div>
                       </div>
@@ -222,7 +228,7 @@ const AcceptUserDipament = () => {
           </div>
         )}
       </div>
-      {profile?.role.name !== 'Staff' && (
+      {profile?.role.name !== 'Staff' && dataPageQuery == null && (
         <div className='absolute right-15 -bottom-[15rem] flex '>
           <div className='w-[300px] h-[99px] shadow-xl rounded-md bg-white'>
             <p className='text-black font-medium text-left pl-5 pt-3'>

@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from '~/store/root/hook'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { setLoggerDate } from '~/store/slice/dateLogger.slice'
 import { ClientSocket } from '~/socket/socket'
+import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 const CheckLog = () => {
   const [queryParameters] = useSearchParams()
   const [removeLogger] = useRemoveLoggersMutation()
@@ -24,21 +25,8 @@ const CheckLog = () => {
   const [open, setOpen] = useState(false)
   const { loggerDate } = useAppSelector((state) => state.loggers)
   console.log(loggerDate)
-  const [options, setoptions] = useState({
-    page: 1,
-    limit: 30,
-    startDate: '',
-    endDate: ''
-  })
-  const memoOptions = useMemo(() => {
-    setoptions((prev) => ({
-      ...prev,
-      startDate: loggerDate.startDate,
-      endDate: loggerDate.endDate
-    }))
-  }, [loggerDate])
-  useEffect(() => {}, [loggerDate, memoOptions, options])
-  console.log(loggerDate, 'day nay')
+  const queryConfig = useQueryConfig()
+  console.log(queryConfig, 'day nay')
   const {
     data: dataLoggers,
     isFetching,
@@ -71,6 +59,7 @@ const CheckLog = () => {
     }
     navigate({
       search: createSearchParams({
+        ...queryConfig,
         limit: datalimitQuery
       }).toString()
     })
@@ -94,6 +83,7 @@ const CheckLog = () => {
     dispatch(setLoggerDate({ startDate: dateString[0], endDate: dateString[1] }))
     navigate({
       search: createSearchParams({
+        ...queryConfig,
         startDate: dateString[0],
         endDate: dateString[1]
       }).toString()
@@ -199,9 +189,9 @@ const CheckLog = () => {
       <Divider orientation='left'>Bộ Lọc</Divider>
       <Form
         name='basic'
-        labelCol={{ span: 8 }}
+        labelCol={{ span: 5 }}
         wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 900, display: 'flex', justifyContent: 'space-between' }}
+        style={{ maxWidth: 900, display: 'flex', justifyContent: 'start' }}
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -211,7 +201,7 @@ const CheckLog = () => {
           <DatePicker.RangePicker onChange={onDateChange} />
         </Form.Item>
         <Form.Item<FieldType>
-          label='Author Code'
+          label=' Code'
           name='password'
           rules={[{ required: true, message: 'Please input your Author Code!' }]}
         >
@@ -265,7 +255,7 @@ const CheckLog = () => {
             Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
           </div>
           <div>
-            <Pagination pageSize={dataLoggers?.totalPages} queryConfig={dataPageQuery} limit={datalimitQueryChange} />
+            <Pagination pageSize={dataLoggers?.totalPages} queryConfig={queryConfig} />
           </div>
         </Footer>
       </div>

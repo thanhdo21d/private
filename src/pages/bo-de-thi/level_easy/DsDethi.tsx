@@ -77,7 +77,7 @@ const DsDethi = () => {
   ]
   return (
     <div>
-      <div className='flex justify-between mb-5'>
+      <div className=' xl:flex justify-between mb-5'>
         <div>
           <Form className='flex gap-5' onFinish={onFinish} layout='vertical' hideRequiredMark>
             <Form.Item
@@ -85,7 +85,10 @@ const DsDethi = () => {
               className=''
               rules={[{ required: true, message: 'vui lòng nhập Tên Phòng Ban ...!' }]}
             >
-              <Input className='w-[330px] border border-[#ccc]' placeholder='vui lòng nhập Tên Phòng Ban ...!' />
+              <Input
+                className='w-[250px] xl:w-[330px] border border-[#ccc]'
+                placeholder='vui lòng nhập Tên Phòng Ban ...!'
+              />
             </Form.Item>
             <Form.Item
               name='name'

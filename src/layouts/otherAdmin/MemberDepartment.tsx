@@ -98,23 +98,16 @@ const MemberDepartment = () => {
         }
       >
         <Form layout='vertical' hideRequiredMark>
-          <Row gutter={22}>
-            <Col span={22}>
-              <Form.Item
-                name='name'
-                label={<p className='font-bold text-xl'>tên nhân viên</p>}
-                rules={[{ required: true, message: 'vui lòng nhập tên nhân viên ...!' }]}
-              >
-                <Input className='ml-7 rounded-md ' placeholder='vui lòng nhập tên nhân viên ...!' />
-              </Form.Item>
-            </Col>
-          </Row>
-          <button
-            type='submit'
-            className='  w-full btn flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl text-white  rounded-full tracking-wide bg-secondary  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg  transition ease-in duration-300'
+          <Form.Item
+            name='name'
+            label={<p className='font-bold text-xl'>tên nhân viên</p>}
+            rules={[{ required: true, message: 'vui lòng nhập tên nhân viên ...!' }]}
           >
+            <Input className=' rounded-sm border border-[#ccc]' placeholder='vui lòng nhập tên nhân viên ...!' />
+          </Form.Item>
+          <Button type='submit' styleClass=' w-full '>
             Submit
-          </button>
+          </Button>
         </Form>
       </Drawer>
       <Button styleClass='bg-warning' onClick={showDrawer}>

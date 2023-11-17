@@ -1,4 +1,4 @@
-import { Badge, Button, Descriptions, DescriptionsProps, Skeleton, Tooltip } from 'antd'
+import { Badge, Breadcrumb, Button, Descriptions, DescriptionsProps, Skeleton, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { PiKeyReturn } from 'react-icons/pi'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -92,6 +92,16 @@ const DetailsExams = () => {
   ]
   return (
     <div className='relative'>
+      <Breadcrumb
+        items={[
+          {
+            title: 'Trang Quản Trị'
+          },
+          {
+            title: 'Chi Tiết Câu Hỏi'
+          }
+        ]}
+      />
       {showImage && (
         <div
           onClick={() => setShowImage(false)}
@@ -103,7 +113,10 @@ const DetailsExams = () => {
         </div>
       )}
       <div>
-        <Button className='flex hover:bg-warning hover:text-white  items-center gap-3' onClick={() => navigate(-1)}>
+        <Button
+          className='flex hover:bg-warning hover:text-white  items-center gap-3 mt-10'
+          onClick={() => navigate(-1)}
+        >
           <span>
             <PiKeyReturn className='bg-success' />
           </span>

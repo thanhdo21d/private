@@ -1,9 +1,11 @@
 import { Table } from 'antd'
 import { Footer } from 'antd/es/layout/layout'
 import React from 'react'
+import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 import Pagination from '~/pages/roles/Pagination'
 
 const DsCHDetailsNormal = () => {
+  const queryConfig = useQueryConfig()
   const dataSource = [
     {
       key: '1',
@@ -134,7 +136,7 @@ const DsCHDetailsNormal = () => {
           Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
         </div>
         <div>
-          <Pagination pageSize={2} />
+          <Pagination pageSize={2} queryConfig={queryConfig}/>
         </div>
       </Footer>
     </div>

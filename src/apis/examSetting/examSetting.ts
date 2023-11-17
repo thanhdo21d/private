@@ -34,6 +34,10 @@ const ExamSetting = createApi({
       query: (id: string) => `/examsktRoutes/get/${id}`,
       providesTags: ['ExamSetting']
     }),
+    getTopicExamsID: builder.query<any, string>({
+      query: (id: string) => `/topicExams/get/${id}`,
+      providesTags: ['ExamSetting']
+    }),
     getIdExamsCategories: builder.query<any, string>({
       query: (id: string) => `/examsk/getId/${id}`,
       providesTags: ['ExamSetting']
@@ -65,6 +69,7 @@ export const {
   useRemoveExamsCategoriesMutation,
   useGetIdExamsCategoriesQuery,
   useRemoveTopicExamsMutation,
-  useCreateTopicExamsMutation
+  useCreateTopicExamsMutation,
+  useGetTopicExamsIDQuery
 } = ExamSetting
 export default ExamSetting

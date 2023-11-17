@@ -1,4 +1,18 @@
-import { Col, Drawer, DrawerProps, Form, Input, Popconfirm, Row, Skeleton, Space, Table, Tooltip } from 'antd'
+import {
+  Col,
+  Divider,
+  Drawer,
+  DrawerProps,
+  Form,
+  Input,
+  Popconfirm,
+  Row,
+  Skeleton,
+  Space,
+  Table,
+  Tooltip,
+  Upload
+} from 'antd'
 import { SelectCommonPlacement } from 'antd/es/_util/motion'
 import { Footer } from 'antd/es/layout/layout'
 import { useEffect, useState, useMemo } from 'react'
@@ -10,14 +24,18 @@ import { toastService } from '~/utils/toask/toaskMessage'
 import { PiKeyReturnThin } from 'react-icons/pi'
 import logoBacktop from '../../../assets/images/logo/top.png'
 import { AiFillEdit, AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { PlusOutlined } from '@ant-design/icons'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
 import DetailsDsEasy from '../level_easy/DetailsDsEasy'
 import { useGetIDcategoriesQuery, useRemoveExamsDepartmentMutation } from '~/apis/category/categories'
 import InputNumber from '~/components/inputNumber'
+import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 type FieldType = {
   keyword?: string
 }
+const { TextArea } = Input
 const FormData = () => {
+  const queryConfig = useQueryConfig()
   const url = import.meta.env.VITE_API
   const { id } = useParams()
   const [open, setOpen] = useState(false)
@@ -57,10 +75,22 @@ const FormData = () => {
   const cancel = () => {
     toastService.error('Click on No')
   }
-  const handelGetDetailsExams = (idExams: string) => {
-    navigate({
-      pathname: `/tree-menu/${id}/details-exams/${idExams}`
-    })
+  const handelGetDetailsExams = ({ idExams, idQuestion }: any) => {
+    console.log(typeof idExams, typeof idQuestion)
+    if (idExams) {
+      navigate({
+        pathname: `/tree-menu/${id}/details-exams/${idExams}`
+      })
+      return
+    }
+    if (idQuestion) {
+      navigate({
+        pathname: `/tree-menu/${id}/question/edit/${idQuestion}`
+      })
+      return
+    }
+
+    //() => navigate(`/tree-menu/${id}/question/edit/${id}`)
   }
   const [handelDropExasm] = useDropDbExamsMutation()
   const handelDropDbExmams = () => {
@@ -136,7 +166,7 @@ const FormData = () => {
         return (
           <div className='flex items-center justify-center gap-3'>
             <Button
-              onClick={() => handelGetDetailsExams(id)}
+              onClick={() => handelGetDetailsExams({ idExams: id })}
               id='buttonmodal'
               styleClass='focus:outline-none !p-2 w-[70px]  bg-success hover:bg-warning text-white '
               type='button'
@@ -145,7 +175,7 @@ const FormData = () => {
             </Button>
             <Button
               styleClass='p-2 w-[80px] flex items-center focus:outline-none hover:bg-warning'
-              onClick={() => navigate(`/admin/details/dethi/edit/${id}`)}
+              onClick={() => handelGetDetailsExams({ idQuestion: id })}
             >
               <span>
                 <AiFillEdit />
@@ -197,12 +227,14 @@ const FormData = () => {
       <>
         <Drawer
           title='Create a new exams'
-          width={820}
+          width={920}
           onClose={onClose}
           open={open}
           extra={
             <Space>
-              <Button onClick={() => setShowExcel(!showExcel)}>{showExcel ? 'Add Exams' : 'import excels'}</Button>
+              <Button onClick={() => setShowExcel(!showExcel)}>
+                {showExcel ? 'Thêm Bằng input' : 'Thêm Bằng Excels'}
+              </Button>
               <Button onClick={onClose}>Cancel</Button>
             </Space>
           }
@@ -211,23 +243,164 @@ const FormData = () => {
             <DetailsDsEasy />
           ) : (
             <Form layout='vertical' hideRequiredMark>
-              <Row gutter={22}>
-                <Col span={22}>
-                  <Form.Item
-                    name='name'
-                    label={<p className='font-bold text-xl'>Tên Phòng Ban</p>}
-                    rules={[{ required: true, message: 'vui lòng nhập Tên Phòng Ban ...!' }]}
-                  >
-                    <Input className='ml-7 rounded-md ' placeholder='vui lòng nhập Tên Phòng Ban ...!' />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <button
-                type='submit'
-                className='  w-full btn flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl text-white  rounded-full tracking-wide bg-secondary  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg  transition ease-in duration-300'
+              <Divider orientation='left'>Chi Tiết Câu Hỏi</Divider>
+              <Form.Item
+                name='name'
+                label={<p className='font-bold text-xl'>Câu Hỏi</p>}
+                rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
               >
+                <TextArea className='rounded-md border border-[#ccc] ' placeholder='vui lòng nhập Thêm Câu Hỏi ...!' />
+              </Form.Item>
+              <Divider></Divider>
+
+              <Form.Item
+                name='name'
+                label={<p className='font-bold text-xl'>Ảnh (Nếu có )</p>}
+                rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+              >
+                <Upload listType='picture-card'>
+                  <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                </Upload>
+              </Form.Item>
+              <Divider orientation='left'>Chi Tiết đáp án</Divider>
+
+              <div className='grid grid-cols-2 gap-5 items-center'>
+                <Form.Item
+                  name='name'
+                  label={<p className='font-bold text-xl'>Đáp án A </p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+                >
+                  <Input
+                    className='rounded-md border w-full  border-[#ccc] '
+                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
+                  />
+                </Form.Item>
+                <Form.Item
+                  name='name'
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                  label={<p className='font-bold text-xl'>Ảnh Đáp án A (Nếu Có )</p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+                >
+                  <Upload listType='picture-card'>
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </Form.Item>
+              </div>
+              <Divider></Divider>
+
+              <div className='grid grid-cols-2 gap-5 items-center'>
+                <Form.Item
+                  name='name'
+                  label={<p className='font-bold text-xl'>Đáp án B </p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+                >
+                  <Input
+                    className='rounded-md border w-full  border-[#ccc] '
+                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
+                  />
+                </Form.Item>
+                <Form.Item
+                  name='name'
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                  label={<p className='font-bold text-xl'>Ảnh Đáp án B (Nếu Có )</p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+                >
+                  <Upload listType='picture-card'>
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </Form.Item>
+              </div>
+              <Divider></Divider>
+
+              <div className='grid grid-cols-2 gap-5 items-center'>
+                <Form.Item
+                  name='name'
+                  label={<p className='font-bold text-xl'>Đáp án C </p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+                >
+                  <Input
+                    className='rounded-md border w-full  border-[#ccc] '
+                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
+                  />
+                </Form.Item>
+                <Form.Item
+                  name='name'
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                  label={<p className='font-bold text-xl'>Ảnh Đáp án D (Nếu Có )</p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+                >
+                  <Upload listType='picture-card'>
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </Form.Item>
+              </div>
+              <Divider></Divider>
+
+              <div className='grid grid-cols-2 gap-5 items-center'>
+                <Form.Item
+                  name='name'
+                  label={<p className='font-bold text-xl'>Đáp án D </p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+                >
+                  <Input
+                    className='rounded-md border w-full  border-[#ccc] '
+                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
+                  />
+                </Form.Item>
+                <Form.Item
+                  name='name'
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                  label={<p className='font-bold text-xl'>Ảnh Đáp án D (Nếu Có )</p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+                >
+                  <Upload listType='picture-card'>
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </Form.Item>
+              </div>
+              <Divider></Divider>
+
+              <div className='grid grid-cols-2 gap-10'>
+                <Form.Item
+                  name='name'
+                  label={<p className='font-bold text-xl'>Đáp án Đúng </p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+                >
+                  <Input
+                    className='rounded-md border w-full  border-[#ccc] '
+                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
+                  />
+                </Form.Item>
+                <Form.Item
+                  name='name'
+                  label={<p className='font-bold text-xl'>Điểm</p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
+                >
+                  <Input
+                    className='rounded-md border w-full  border-[#ccc] '
+                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
+                  />
+                </Form.Item>
+              </div>
+
+              <Button type='submit' styleClass='  w-full '>
                 Submit
-              </button>
+              </Button>
             </Form>
           )}
         </Drawer>
@@ -241,6 +414,7 @@ const FormData = () => {
           {/* {data?.data.name} */}
         </button>
       </div>
+
       <div className='flex items-center justify-between'>
         <div className=''>
           <Form
@@ -253,72 +427,26 @@ const FormData = () => {
             autoComplete='off'
           >
             <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your keyword!' }]}>
-              <Input className='h-[40px] w-[600px] border border-[#ccc]' placeholder='Tìm Kiếm Theo đề thi ....' />
+              <Input
+                className='h-[40px] w-[500px] xl:w-[600px] border border-[#ccc]'
+                placeholder='Tìm Kiếm Theo câu hỏi ....'
+              />
             </Form.Item>
             <Button type='submit' id='keycode13' styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'>
               Tìm Kiếm
             </Button>
           </Form>
         </div>
-        <div className='flex items-center justify-end gap-5 '>
-          <div
-            className={` bg-danger cursor-pointer h-[40px] flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
-          >
-            <Popconfirm
-              title='Delete the task'
-              description='Xóa tất cả sẽ không thể khôi phục , bạn đã chắc ?'
-              onConfirm={handelDropDbExmams}
-              okButtonProps={{
-                style: { backgroundColor: 'blue', marginRight: '20px' }
-              }}
-              okText='Yes'
-              cancelText='No'
-            >
-              <Tooltip title='Trở Về'>
-                <p className='text-base font-medium text-black  flex items-center gap-4'>
-                  <span>
-                    <DeleteIcon />
-                  </span>
-                  <span className='text-white '> Xóa Tất Cả</span>
-                </p>
-              </Tooltip>
-            </Popconfirm>
-          </div>
-          {/*  */}
-          {showImage && (
-            <div
-              onClick={() => setShowImage(false)}
-              className='fixed inset-0 w-full z-10   h-screen bg-black bg-opacity-5 flex mx-auto justify-center items-center'
-            >
-              <div className='w-1/3 flex mx-auto justify-center items-center'>
-                <img className='w-full h-full shadow-2xl' src={Image} />
-              </div>
-            </div>
-          )}
-          <div
-            onClick={showDrawer}
-            className={` bg-white h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide cursor-pointer  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
-          >
-            <Tooltip title='Thêm Câu Hỏi'>
-              <div className='text-base font-medium text-black  flex items-center gap-4'>
-                <span>
-                  <PiKeyReturnThin className='text-xl text-danger' />
-                </span>
-                <span> Thêm Câu Hỏi</span>
-              </div>
-            </Tooltip>
-          </div>
-        </div>
       </div>
-      <div className='flex items-center gap-5 mt-4'>
-        <div style={{ textDecoration: 'underline' }} className='text-md'>
-          số bản ghi
-        </div>
+      <div className='flex items-center gap-5 mt-4 justify-between'>
         <div className='flex items-center gap-5 mt-4'>
+          <div style={{ textDecoration: 'underline' }} className='text-md'>
+            số bản ghi
+          </div>
           <InputNumber
             className=''
             classNameError='hidden'
-            classNameInput='h-8 w-50 border-t border-b border-gray-300 p-1 text-center outline-none'
+            classNameInput='h-8 w-20 xl:w-50 border-t border-b border-gray-300 p-1 text-center outline-none'
             onChange={handleChange}
             value={datalimitQuery}
           />
@@ -326,12 +454,64 @@ const FormData = () => {
             Áp dụng
           </Button>
         </div>
+        <div>
+          {/*  */}
+          <div className='flex items-center justify-end gap-5 '>
+            <div
+              className={` bg-danger cursor-pointer h-[40px] flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
+            >
+              <Popconfirm
+                title='Delete the task'
+                description='Xóa tất cả sẽ không thể khôi phục , bạn đã chắc ?'
+                onConfirm={handelDropDbExmams}
+                okButtonProps={{
+                  style: { backgroundColor: 'blue', marginRight: '20px' }
+                }}
+                okText='Yes'
+                cancelText='No'
+              >
+                <Tooltip title='Trở Về'>
+                  <p className='text-base font-medium text-black  flex items-center gap-4'>
+                    <span>
+                      <DeleteIcon />
+                    </span>
+                    <span className='text-white'> Xóa Tất Cả</span>
+                  </p>
+                </Tooltip>
+              </Popconfirm>
+            </div>
+            {/*  */}
+            {showImage && (
+              <div
+                onClick={() => setShowImage(false)}
+                className='fixed inset-0 w-full z-10   h-screen bg-black bg-opacity-5 flex mx-auto justify-center items-center'
+              >
+                <div className='w-1/3 flex mx-auto justify-center items-center'>
+                  <img className='w-full h-full shadow-2xl' src={Image} />
+                </div>
+              </div>
+            )}
+            <div
+              onClick={showDrawer}
+              className={` bg-white h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide cursor-pointer  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
+            >
+              <Tooltip title='Thêm Câu Hỏi'>
+                <div className='text-base font-medium text-black  flex items-center gap-4'>
+                  <span>
+                    <PiKeyReturnThin className='text-xl text-danger' />
+                  </span>
+                  <span> Thêm Câu Hỏi</span>
+                </div>
+              </Tooltip>
+            </div>
+          </div>
+        </div>
       </div>
       {/*  */}
       <div>
         <Tooltip title='back to top'>
           <img
-            className='w-[50px] fixed bottom-10 right-5 cursor-pointer p-1 hover:bg-secondary'
+            className='w-[50px] fixed bottom-10 z-10 right-1 cursor-pointer p-1 hover:bg-secondary'
             src={`${logoBacktop}`}
           />
         </Tooltip>
@@ -349,12 +529,12 @@ const FormData = () => {
         ) : (
           <Table dataSource={dataSource} columns={columns} pagination={false} className='dark:bg-black  mt-4 ' />
         )}
-        <Footer className='mt-5 flex justify-between dark:bg-black '>
+        <Footer className='mt-5 2xl:flex justify-between dark:bg-black '>
           <div className='text-md font-semibold text-center dark:text-white'>
             Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
           </div>
           <div>
-            <Pagination pageSize={getDetailsExams?.totalPages} queryConfig={dataPageQuery} />
+            <Pagination pageSize={getDetailsExams?.totalPages} queryConfig={queryConfig} />
           </div>
         </Footer>
       </div>

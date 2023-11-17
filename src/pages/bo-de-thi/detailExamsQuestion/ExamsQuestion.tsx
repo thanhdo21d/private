@@ -12,6 +12,7 @@ import {
 import { Button } from '~/components'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
 import InputNumber from '~/components/inputNumber'
+import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 import Pagination from '~/pages/roles/Pagination'
 import { toastService } from '~/utils/toask/toaskMessage'
 type FieldType = {
@@ -21,6 +22,7 @@ const ExamsQuestion = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const { data: dataIdExmas, isLoading, isFetching } = useGetIdExamsCategoriesQuery(id as string)
+  const queryConfig = useQueryConfig()
   const [addTopicQuestion] = useCreateTopicExamsMutation()
   const [removeTopic, { isLoading: isRemoveTopicLoading }] = useRemoveTopicExamsMutation()
   console.log(dataIdExmas?.data?.topicExams)
@@ -213,7 +215,7 @@ const ExamsQuestion = () => {
             Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
           </div>
           <div>
-            <Pagination pageSize={5} />
+            <Pagination pageSize={5} queryConfig={queryConfig} />
             <div className='flex items-center gap-5 mt-4'>
               <div style={{ textDecoration: 'underline' }} className='text-md'>
                 số bản ghi

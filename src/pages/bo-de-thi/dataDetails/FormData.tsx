@@ -1,12 +1,9 @@
 import {
-  Col,
   Divider,
   Drawer,
-  DrawerProps,
   Form,
   Input,
   Popconfirm,
-  Row,
   Skeleton,
   Space,
   Table,
@@ -56,7 +53,8 @@ const FormData = () => {
   } = useGetIDcategoriesQuery({
     id: id,
     page: dataPageQuery || 1,
-    limit: datalimitQueryChange
+    limit: datalimitQueryChange || 30,
+    search : ""
   })
   const [
     removeExamsDepartment,
@@ -79,13 +77,13 @@ const FormData = () => {
     console.log(typeof idExams, typeof idQuestion)
     if (idExams) {
       navigate({
-        pathname: `/tree-menu/${id}/details-exams/${idExams}`
+        pathname: `/details-exams/${idExams}`
       })
       return
     }
     if (idQuestion) {
       navigate({
-        pathname: `/tree-menu/${id}/question/edit/${idQuestion}`
+        pathname: `/question/edit/${idQuestion}`
       })
       return
     }
@@ -416,7 +414,7 @@ const FormData = () => {
       </div>
 
       <div className='flex items-center justify-between'>
-        <div className=''>
+        <div className='flex items-center'>
           <Form
             className='flex gap-5  justify-center'
             name='basic'
@@ -504,6 +502,9 @@ const FormData = () => {
                 </div>
               </Tooltip>
             </div>
+            <Button  onClick={() => navigate(-1)} styleClass='py-2 bg-black'>
+              Quay Lại
+            </Button>
           </div>
         </div>
       </div>

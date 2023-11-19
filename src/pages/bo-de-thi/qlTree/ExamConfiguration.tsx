@@ -107,7 +107,7 @@ const ExamConfiguration = () => {
       dataIndex: 'start',
       key: 'start',
       render: (text: string) => {
-        return <p>{text.split('T')[0]}</p>
+        return <p>{text?.split('T')[0]}</p>
       }
     },
     {
@@ -115,7 +115,7 @@ const ExamConfiguration = () => {
       dataIndex: 'end',
       key: 'end',
       render: (text: string) => {
-        return <p>{text.split('T')[0]}</p>
+        return <p>{text?.split('T')[0]}</p>
       }
     },
     {

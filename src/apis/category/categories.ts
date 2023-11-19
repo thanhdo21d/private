@@ -28,13 +28,14 @@ const categorydepartmentAPI = createApi({
       invalidatesTags: ['Category']
     }),
     getIDcategories: builder.query<any[], any>({
-      query: ({ id, page, limit }) => {
+      query: ({ id, page, limit, search }) => {
         return {
           url: `/query-id/category/${id}`,
           method: 'GET',
           params: {
             page: page,
-            limit: limit
+            limit: limit,
+            search: search || ''
           }
         }
       },

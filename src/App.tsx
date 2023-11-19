@@ -10,7 +10,7 @@ import { useAppSelector } from './store/root/hook'
 const App = () => {
   const { theme: currentTheme } = useAppSelector((state) => state.theme)
   const [isLoading, setIsLoading] = useState(true)
-  pause(2000).then(() => {
+  pause(1000).then(() => {
     setIsLoading(false)
   })
   if (isLoading) return <Loader />

@@ -7,14 +7,14 @@ import { UnorderedListOutlined, AppstoreAddOutlined } from '@ant-design/icons'
 import { category } from '~/types/department/department.type'
 import { EyeOutlined } from '@ant-design/icons'
 import { Col, DatePicker, Drawer, Form, Input, Row, Select, Skeleton, Space, Table } from 'antd'
-import { useCreateCategoriesMutation, useGetAllCategoriesQuery } from '~/apis/category/categories'
+import { useCreateCategoriesMutation, useGetAllCategoriesQuery, useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { Footer } from 'antd/es/layout/layout'
 const DsDethi = () => {
   const navigate = useNavigate()
   const { data: dataAllCategories, isFetching: isGetCategoriesLoading } = useGetAllCategoriesQuery()
-  const [createCategories, { isLoading: isCreateCategoriesLoading }] = useCreateCategoriesMutation()
   console.log(dataAllCategories)
+  const [createCategories, { isLoading: isCreateCategoriesLoading }] = useCreateCategoriesMutation()
   const { profile, reset } = useContext(AppContext)
   console.log(profile)
   const { Option } = Select
@@ -37,7 +37,7 @@ const DsDethi = () => {
         setOpen(false)
       })
   }
-  const dataSource = profile?.role.adminDepartMent
+  const dataSource = dataAllCategories?.data
     .filter((items: category) => items.parentCheck !== '0')
     .map((data: category, index: number) => ({
       index: index,
@@ -62,7 +62,11 @@ const DsDethi = () => {
         return (
           <div className='flex justify-center'>
             <Button
-              onClick={() => navigate(`/tree-menu/${id}/category/${id}`)}
+              onClick={() => {
+                sessionStorage.removeItem('categories')
+                localStorage.setItem("idCategories",id)
+                return navigate(`/tree-menu/${id}/dashboard-other-admin`)
+              }}
               styleClass='bg-[#3d5ee1] flex items-center w-fit '
             >
               <span>
@@ -162,7 +166,6 @@ const DsDethi = () => {
               .filter((items: category) => items.parentCheck !== '0')
               .map((data: category) => {
                 console.log(data)
-                // return null
                 return (
                   <div key={data?._id}>
                     <div className='flex justify-center'>
@@ -194,7 +197,7 @@ const DsDethi = () => {
                             <div className='mt-5 mx-auto grid gap-y-4 '>
                               <div className='flex justify-center'>
                                 <button
-                                  onClick={() => navigate(`/tree-menu/${data?._id}/category/${data?._id}`)}
+                                  onClick={() => navigate(`/tree-menu/${data?._id}/dashboard-other-admin`)}
                                   className='p-3 bg-strokedark  hover:bg-success text-white w-[90%] rounded-md font-semibold'
                                 >
                                   Chi Tiết {data?.name}.

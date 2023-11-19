@@ -5,7 +5,7 @@ import { BarsIcon, Button } from '~/components'
 import { Drawer, Form, Input, Menu, Popconfirm, Select, Skeleton, Table, Tooltip } from 'antd'
 import { NavLink, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AiFillHome, AiFillSetting, AiOutlineDashboard } from 'react-icons/ai'
-import axios from 'axios'
+import { FaRegFolderOpen } from 'react-icons/fa'
 import { dashboardOther, settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
 import {
   useEditCategoriesTreeMutation,
@@ -19,7 +19,8 @@ interface SidebarProps {
   textUi: string
   checkInfo?: boolean
 }
-export function CategoryTreeItem({ category, level, bg, button }: any) {
+export const CategoryTreeItem = React.memo(({ category, level, bg, button }: any) => {
+  console.log(category,"category")
   const location = useLocation()
   const { id } = useParams()
   const [removeCategoriTree] = useRemoveCategoriesTreeMutation()
@@ -29,14 +30,14 @@ export function CategoryTreeItem({ category, level, bg, button }: any) {
   const [queryParameters] = useSearchParams()
   const parentId: string | null = queryParameters.get('parentId')
   const navigate = useNavigate()
+  const { data: dataCategoriTree, isLoading, isFetching } = useGetCategoriesDepartmentsQuery(id)
   const [isOpen, setIsOpen] = useState(() => {
     const openCategories = JSON.parse(sessionStorage.getItem('openCategories') || '{}')
-    return !!openCategories[category._id]
+    return !!openCategories[category?._id]
   })
   const showDrawer = (e: React.MouseEvent) => {
     e.stopPropagation()
     setOpen(true)
-    console.log(category?._id)
   }
   const onClose = () => {
     setOpen(false)
@@ -58,6 +59,15 @@ export function CategoryTreeItem({ category, level, bg, button }: any) {
           })
     }
   }
+  const handleCategoryClickDetails = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    navigate({
+      pathname: `category/${category._id}`,
+      search: createSearchParams({
+        category: category?._id
+      }).toString()
+    })
+  }
   const toggleOpen = () => {
     setIsOpen((prevState) => {
       const newState = !prevState
@@ -71,11 +81,6 @@ export function CategoryTreeItem({ category, level, bg, button }: any) {
       return newState
     })
   }
-  const isActive = location.pathname.includes(`category/${category._id}`)
-  const activeStyle = {
-    fontWeight: 'bold',
-    color: '#4CAF50'
-  }
   const handelRemoveCategori = (e: React.MouseEvent) => {
     e.stopPropagation()
     const checkCofirm = window.confirm('Are you sure you want to remove')
@@ -85,7 +90,6 @@ export function CategoryTreeItem({ category, level, bg, button }: any) {
         .then(() => {
           toastService.success('Removed')
           sessionStorage.removeItem('categories')
-          setTimeout(() => window.location.reload(), 300)
         })
         .catch(() => toastService.error('Error removing'))
   }
@@ -104,11 +108,7 @@ export function CategoryTreeItem({ category, level, bg, button }: any) {
       })
   }
   useEffect(() => {
-    const fetchDataTree = async () => {
-      const { data } = await axios.get(`http://localhost:8282/category-tree/${id}`)
-      logChildrenNames(data)
-    }
-    fetchDataTree()
+    logChildrenNames(dataCategoriTree)
   }, [])
   const logChildrenNames = (node: any, accumulatedData: any[] = []) => {
     accumulatedData.push(node)
@@ -201,113 +201,76 @@ export function CategoryTreeItem({ category, level, bg, button }: any) {
           </Form.Item>
         </Form>
       </Drawer>
-      <div className={`${bg ? 'bg-white' : 'bg-[#000c17]'} rounded-md`}>
-        <div onClick={toggleOpen} className='cursor-pointer px-3 py-2'>
-          <div className='category-item relative flex justify-between gap-5'>
-            <div>
-              {category.children && category.children.length > 0 ? (
-                <span className='mr-3'>{isOpen ? '-' : '+'}</span>
-              ) : null}
-              <span
-                className={`category-name   hover:text-md ${
-                  bg ? 'hover:text-black' : 'hover:text-white'
-                } hover:font-semibold`}
-                onClick={handleCategoryClick}
-                style={isActive ? activeStyle : {}}
-              >
-                {category.name}
-              </span>
-            </div>
-            <div>
-              {button && category.children && (
-                <div className='space-x-5 py-2'>
-                  <button onClick={showDrawer} className='font-bold text-success underline'>
-                    Edit
-                  </button>
-                  <button onClick={handelRemoveCategori} className='font-bold text-danger underline'>
-                    Delete
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+      {isLoading || isFetching ? (
+        <div>
+          <Skeleton />
         </div>
-        {isOpen && (
-          <div className={`ml-5 space-y-1 transition-all opacity-100 `}>
-            {category.children &&
-              category.children.map((child: any) => (
-                <CategoryTreeItem
-                  key={child._id}
-                  category={child}
-                  level={level + 1}
-                  bg={bg}
-                  button={button ? true : false}
-                />
-              ))}
+      ) : (
+        <div className={`${bg ? 'bg-white' : 'bg-[#000c17]'} rounded-md`}>
+          <div onClick={toggleOpen} className='cursor-pointer px-3 py-2 '>
+            <div className='category-item relative flex justify-between gap-5'>
+              <div className='flex gap-2 items-center  '>
+                {category?.children && category.children.length > 0 ? (
+                  <span className='mr-3'>{isOpen ? '-' : '+'}</span>
+                ) : null}
+                <span
+                  className={`category-name   hover:text-md ${
+                    bg ? 'hover:text-black' : 'hover:text-white'
+                  } hover:font-semibold flex gap-5 items-center`}
+                  onClick={handleCategoryClick}
+                >
+                  {category?.name} <FaRegFolderOpen className='text-2xl' />
+                </span>
+              </div>
+              <div>
+                {button && category?.children && (
+                  <div className='space-x-5 py-2'>
+                    <button onClick={showDrawer} className='font-bold text-success underline'>
+                      Edit
+                    </button>
+                    <button onClick={handleCategoryClickDetails} className='font-bold text-success underline'>
+                      Chi Tiết
+                    </button>
+                    <button onClick={handelRemoveCategori} className='font-bold text-danger underline'>
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        )}
-      </div>
+          {isOpen && (
+            <div className={`ml-5 space-y-1 transition-all opacity-100 `}>
+              {category.children &&
+                category.children.map((child: any) => (
+                  <CategoryTreeItem
+                    key={child._id}
+                    category={child}
+                    level={level + 1}
+                    bg={bg}
+                    button={button ? true : false}
+                  />
+                ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
-}
-// ...
+})
 const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
-  const [categories, setCategories] = useState<any[]>([])
   const navigate = useNavigate()
   const trigger = useRef<any>(null)
+  const idCate = localStorage.getItem('idCategories')
+  console.log(idCate)
   const { id } = useParams()
-  const uri = import.meta.env.VITE_API
   const sidebar = useRef<any>(null)
+  const isActive = location.pathname.includes(`all-folders`)
+  const isActiveKT = location.pathname.includes(`ki-thi`)
+
+  console.log(isActive)
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
-  const { data: dataCategoriTree, isLoading, isFetching } = useGetCategoriesDepartmentsQuery(id)
-  // close on click outside
-  useEffect(() => {
-    const clickHandler = ({ target }: MouseEvent) => {
-      if (!sidebar.current || !trigger.current) return
-      if (!sidebarOpen || sidebar.current.contains(target) || trigger.current.contains(target)) return
-      setSidebarOpen(false)
-    }
-    document.addEventListener('click', clickHandler)
-    return () => document.removeEventListener('click', clickHandler)
-  }, [])
-  // close if the esc key is pressed
-  useEffect(() => {
-    const keyHandler = ({ keyCode }: KeyboardEvent) => {
-      if (!sidebarOpen || keyCode !== 27) return
-      setSidebarOpen(false)
-    }
-    document.addEventListener('keydown', keyHandler)
-    return () => document.removeEventListener('keydown', keyHandler)
-  }, [])
-  useEffect(() => {
-    localStorage.setItem('sidebar-expanded', sidebarExpanded.toString())
-    if (sidebarExpanded) {
-      document.querySelector('body')?.classList.add('sidebar-expanded')
-    } else {
-      document.querySelector('body')?.classList.remove('sidebar-expanded')
-    }
-  }, [sidebarExpanded])
-  // Trong SidebarTree component
-
-  useEffect(() => {
-    // Kiểm tra trước khi thực hiện API call
-    const savedCategories = sessionStorage.getItem('categories')
-    if (savedCategories) {
-      setCategories(JSON.parse(savedCategories))
-    } else {
-      axios
-        .get(`${uri}category-tree/${id}`)
-        .then((response) => {
-          setCategories([response.data])
-          // Lưu kết quả vào sessionStorage
-          sessionStorage.setItem('categories', JSON.stringify([response.data]))
-        })
-        .catch((error) => {
-          console.error('Error fetching categories', error)
-        })
-    }
-  }, []) // Bạn nên thêm `id` và `uri` vào dependencies array
   return (
     <div
       ref={sidebar}
@@ -315,7 +278,6 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
-      {/* <!-- SIDEBAR HEADER --> */}
       <div className='lg:py-6 flex items-center justify-between gap-2 px-3 py-5'>
         <p style={{ color: 'red' }} className='pl-5 font-medium  text-xl font-mono'>
           {textUi}
@@ -337,43 +299,41 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
           <BarsIcon />
         </button>
       </div>
-      {/* <!-- SIDEBAR HEADER --> */}
-      {isLoading || isFetching ? (
-        <div>
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-        </div>
-      ) : (
-        <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
-          <Menu
-            theme='dark'
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            mode='inline'
-            items={dashboardOther}
-          />
-          {/* <!-- Sidebar Menu --> */}
-          <nav className='px-3 mt-5'>
-            <div className='select-none'>
-              <h3 className='text-bodydark2 mb-4 ml-4 text-sm font-semibold select-none'>categories</h3>
-              {categories.map((category: any) => (
-                <CategoryTreeItem key={category._id} category={category} level={0} button={false} />
-              ))}
-            </div>
-          </nav>
-        </div>
-      )}
+      <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
+        <Menu
+          theme='dark'
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['sub1']}
+          mode='inline'
+          items={dashboardOther}
+        />
+        <nav className='px-3 mt-5'>
+          <div className='select-none'>
+            <h3
+              onClick={() =>   navigate(`/tree-menu/${idCate}/all-folders`)
+              }
+              className={`${
+                isActive ? 'bg-success  pl-4' : ''
+              } text-white mb-4 flex items-center  cursor-pointer  ml-4  py-2 rounded-md   text-sm font-semibold select-none`}
+            >
+              <span className='pr-5'>
+                <FaRegFolderOpen className='text-2xl' />
+              </span>
+              <span> Thư Mục</span>
+            </h3>
+          </div>
+        </nav>
+      </div>
       <p
-        className='flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md'
-        onClick={() => navigate(`settings`)}
+        className={`${
+          isActiveKT ? 'bg-success ' : ''
+        }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
+        onClick={() => navigate(`/tree-menu/${idCate}/settings/ki-thi`)}
       >
         <span>
-          <AiFillSetting />
+          <AiFillSetting className='text-white text-2xl' />
         </span>
-        <span className='text-md text-bodydark1 font-medium'>Cài Đặt</span>
+        <span className='text-md text-bodydark1 font-medium'>Kì Thi</span>
       </p>
     </div>
   )

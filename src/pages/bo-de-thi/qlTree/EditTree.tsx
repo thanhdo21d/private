@@ -22,7 +22,7 @@ const EditTree = () => {
 
   return (
     <div className='min-h-screen '>
-      <Divider orientation='left'>Cấu Hình Categories</Divider>
+      <Divider orientation='left'>Cấu Hình Thư Mục</Divider>
       <div className='mt-15 min-h-screen'>
         {dataCategories?.map((category: any) => {
           console.log(category)

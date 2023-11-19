@@ -15,6 +15,7 @@ import 'react-quill/dist/quill.snow.css'
 import { Form } from 'antd'
 import { container, formats } from '~/utils/quill'
 import Spreadsheet from 'react-spreadsheet'
+import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<boolean>(false)
@@ -29,6 +30,8 @@ const QuesionStart = () => {
     setWidth((confetiRef.current = '1200px'))
   }, [])
   const reactQuillRef = useRef<ReactQuill>(null)
+  const queryConfig = useQueryConfig()
+
   const handelSubmit = () => {
     const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
     if (confirm) {
@@ -93,7 +96,7 @@ const QuesionStart = () => {
                 <div className='flex justify-center mx-auto !mt-10'>
                   <div className='grid-cols-1 cursor-pointer	mx-auto  gap-5 grid'>
                     <div
-                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
+                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start
         overflow-h-scroll min-h-[50px] transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
          hover:scale-80 hover:bg-indigo-500 duration-300 gap-2'
                     >
@@ -101,7 +104,7 @@ const QuesionStart = () => {
                       <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
                     </div>
                     <div
-                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
+                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start
         overflow-h-scroll min-h-[50px] transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
          hover:scale-80 hover:bg-indigo-500 duration-300 gap-2'
                     >
@@ -109,7 +112,7 @@ const QuesionStart = () => {
                       <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
                     </div>
                     <div
-                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
+                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start
         overflow-h-scroll min-h-[50px] transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
          hover:scale-80 hover:bg-indigo-500 duration-300 gap-2'
                     >
@@ -117,7 +120,7 @@ const QuesionStart = () => {
                       <span className='font-medium text-md'> Lorem ipsum dolor sit amet consectetur</span>
                     </div>
                     <div
-                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start  
+                      className='w-[800px] border border-body bg-bodydark rounded-md  flex items-center text-start
         overflow-h-scroll min-h-[50px] transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
          hover:scale-80 hover:bg-indigo-500 duration-300 gap-2'
                     >
@@ -195,7 +198,7 @@ const QuesionStart = () => {
             <div className='text-md flex  items-center font-bold text-black'>hoặc ấn ENTER</div>
           </div>
           <div className='absolute bottom-2 mx-auto flex justify-center'>
-            <Pagination pageSize={100} />
+            <Pagination queryConfig={queryConfig} pageSize={10}/>
           </div>
         </Footer>
       </div>

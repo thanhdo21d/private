@@ -1,11 +1,11 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Outlet, createSearchParams, useNavigate } from 'react-router-dom'
 import { Header, Sidebar } from '~/layouts/DefaultLayout/components'
 import SidebarTree from './Silbader'
 const TreeMenu = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
   return (
     <div className='dark:bg-boxdark-2 dark:text-bodydark'>
       <Helmet>
@@ -31,4 +31,4 @@ const TreeMenu = () => {
   )
 }
 
-export default TreeMenu
+export default memo(TreeMenu)

@@ -34,7 +34,6 @@ import MenuIten from './utils/Demol'
 import ChoosExam from './pages/accept-phong-ban/ChoosExam'
 import Setting from './pages/setting/Setting'
 import TreeMenu from './pages/bo-de-thi/qlTree/TreeMenu'
-import SetttingTree from './pages/bo-de-thi/qlTree/SetttingTree'
 import EditTree from './pages/bo-de-thi/qlTree/EditTree'
 import ExamConfiguration from './pages/bo-de-thi/qlTree/ExamConfiguration'
 import ExamsQuestion from './pages/bo-de-thi/detailExamsQuestion/ExamsQuestion'
@@ -44,6 +43,7 @@ import CreateExams from './pages/bo-de-thi/qlTree/CreateExams'
 import DetailsExamsQuestion from './pages/bo-de-thi/detailExamsQuestion/DetailsExamsQuestion'
 import MemberDepartment from './layouts/otherAdmin/MemberDepartment'
 import EditQuestionExams from './pages/bo-de-thi/dataDetails/EditQuestionExams'
+import FoldersCategories from './pages/bo-de-thi/qlTree/FoldersCategories'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -76,18 +76,16 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/tree-menu/:id',
-    element: <CheckCookieUserLogin />,
+    // element: <CheckCookieUserLogin />,
     children: [
       {
         element: <TreeMenu />,
         children: [
-          { path: 'settings', element: <SetttingTree /> },
+          { path: 'all-folders', element: <FoldersCategories /> },
           { path: 'dashboard-other-admin', element: <DashBoardOtherAdmin /> },
           { path: 'member', element: <MemberDepartment /> },
           { path: 'settings/edit', element: <EditTree /> },
-          { path: 'question/edit/:id', element: <EditQuestionExams /> },
-          { path: 'category/:id', element: <FormData /> },
-          { path: 'details-exams/:id', element: <DetailsExams /> },
+          { path: 'all-folders/category/:id', element: <FormData /> },
           { path: 'settings/ki-thi', element: <ExamConfiguration /> },
           { path: 'settings/ki-thi/bai-thi/:id', element: <ExamsQuestion /> },
           { path: 'settings/ki-thi/bai-thi/:id/:id/details-exams', element: <DetailsExamsQuestion /> },
@@ -96,6 +94,8 @@ export const routers = createBrowserRouter([
       }
     ]
   },
+  { path: 'details-exams/:id', element: <DetailsExams /> },
+  { path: 'question/edit/:id', element: <EditQuestionExams /> },
   {
     path: '/demo',
     element: (
@@ -107,7 +107,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/',
-    element: <CheckCookieUserLogin />,
+    // element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultLayoutTrangthi />,
@@ -131,7 +131,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/user-info',
-    element: <CheckCookieUserLogin />,
+    // element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultUserInfo />,
@@ -154,7 +154,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <CheckCookieUserLogin />,
+    // element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultLayout />,

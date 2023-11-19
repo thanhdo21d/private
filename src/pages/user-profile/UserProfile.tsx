@@ -4,23 +4,28 @@ import heloUser from '../../assets/hello (1).png'
 import { Avatar, Button, Modal, UploadFile, UploadProps } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import useGreetings from '~/hooks/useGretting'
-import Upload, { RcFile } from 'antd/es/upload'
-import UserUpload from '~/components/upload/UploadImage'
-import { useUploadImageAvatarUserMutation } from '~/apis/user/user.api'
-const getBase64 = (file: RcFile): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = (error) => reject(error)
-  })
+import { toastService } from '~/utils/toask/toaskMessage'
+import axios from 'axios'
 const UserProfile = () => {
   const { profile } = useContext(AppContext)
   const greeting = useGreetings()
-  const [urlAvatar, setUrlAvatar] = useState({} as any)
-  const [upLoadAvartaUser, { isLoading: isUploadImageLoading }] = useUploadImageAvatarUserMutation()
-  console.log(profile)
-
+  const [file, setFile] = useState<any>(null)
+  const handleSubmit = async (event: any) => {
+    event.preventDefault()
+    const formData = new FormData()
+    formData.append('avatar', file)
+    formData.append('userId', '652622af508cc22cee51ecc2')
+    try {
+      const response = await axios.post('http://localhost:8282/upload-avatar', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      console.log(response.data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
   return (
     <main className='profile-page'>
       <section className='relative block '>
@@ -38,15 +43,23 @@ const UserProfile = () => {
               <div className='w-full p-8 mx-2 flex justify-center'>
                 <Avatar size={224} icon={<img src={`${profile?.avatar}`} />} />
               </div>
-              <form className='flex justify-center'>
-                <label
-                  htmlFor='fileInput'
-                  className='flex items-center w-1/2 justify-center  mx-2 bg-[#D7B978] group rounded-md shadow-lg cursor-pointer hover:text-white text-white hover:font-bold transition-all'
-                >
-                  <input type='file' />
-                </label>
-                <button type='submit'>Upload</button>
-              </form>
+              <div>
+                <form onSubmit={handleSubmit} className='flex justify-center'>
+                  <label
+                    htmlFor='fileInput'
+                    className='flex items-center w-1/2 justify-center mx-2 bg-[#D7B978] group rounded-md shadow-lg cursor-pointer hover:text-white text-white hover:font-bold transition-all'
+                  >
+                    <input
+                      type='file'
+                      id='fileInput'
+                      onChange={(e : any) => setFile(e.target.files[0])}
+                      style={{ display: 'none' }}
+                    />
+                    Select Image
+                  </label>
+                  <button type='submit'>Upload</button>
+                </form>
+              </div>
             </div>
             <div className='w-full md:w-3/5 p-8 bg-white lg:ml-4 shadow-md'>
               <div className='rounded  shadow p-6'>

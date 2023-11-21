@@ -13,6 +13,7 @@ import { themeReducer } from '../slice/theme.slice'
 import ExamSetting from '~/apis/examSetting/examSetting'
 import loggersAPI from '~/apis/checklogs/loggersAPi'
 import { loggersReducer } from '../slice/dateLogger.slice'
+import UserDepartMentApi from '~/apis/userDepartMent/userDepartment'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -25,6 +26,7 @@ export const store = configureStore({
     [categorydepartmentAPI.reducerPath]: categorydepartmentAPI.reducer,
     [ExamSetting.reducerPath]: ExamSetting.reducer,
     [loggersAPI.reducerPath]: loggersAPI.reducer,
+    [UserDepartMentApi.reducerPath] : UserDepartMentApi.reducer,
     //toolkit
     theme: themeReducer,
     loggers: loggersReducer
@@ -41,6 +43,7 @@ export const store = configureStore({
       categorydepartmentAPI.middleware,
       ExamSetting.middleware,
       loggersAPI.middleware,
+      UserDepartMentApi.middleware,
       rtkQueryErrorLogger
     )
 })

@@ -20,7 +20,7 @@ interface SidebarProps {
   checkInfo?: boolean
 }
 export const CategoryTreeItem = React.memo(({ category, level, bg, button }: any) => {
-  console.log(category,"category")
+  console.log(category, 'category')
   const location = useLocation()
   const { id } = useParams()
   const [removeCategoriTree] = useRemoveCategoriesTreeMutation()
@@ -97,7 +97,7 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button }: any
     console.log(values)
     editCategoriTree({
       id: category._id as string,
-      parentId: parentId || '',
+      parentId: parentId || null,
       name: values.name
     })
       .unwrap()
@@ -310,8 +310,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         <nav className='px-3 mt-5'>
           <div className='select-none'>
             <h3
-              onClick={() =>   navigate(`/tree-menu/${idCate}/all-folders`)
-              }
+              onClick={() => navigate(`/tree-menu/${idCate}/all-folders`)}
               className={`${
                 isActive ? 'bg-success  pl-4' : ''
               } text-white mb-4 flex items-center  cursor-pointer  ml-4  py-2 rounded-md   text-sm font-semibold select-none`}

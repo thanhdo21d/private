@@ -52,7 +52,7 @@ const DetailsExamsQuestion = () => {
         </Button>
       </div>
       <Divider orientation='left'>Chi Tiết Đề Thi</Divider>
-      {isLoadingDetails? (
+      {isLoadingDetails ? (
         <div>
           <Skeleton />
           <Skeleton />
@@ -78,10 +78,10 @@ const DetailsExamsQuestion = () => {
               <DatePicker.RangePicker
                 className='mt-2'
                 onChange={onDateChange}
-                // defaultValue={[
-                //   dayjs(dataIdExmasDetails?.data?.startDate?.split('T')[0], dateFormat),
-                //   dayjs(dataIdExmasDetails?.data?.endDate?.split('T')[0], dateFormat)
-                // ]}
+                defaultValue={[
+                  dayjs(dataIdExmasDetails?.data?.startDate?.split('T')[0], dateFormat),
+                  dayjs(dataIdExmasDetails?.data?.endDate?.split('T')[0], dateFormat)
+                ]}
               />
             </div>
             <div>
@@ -239,7 +239,7 @@ const DetailsExamsQuestion = () => {
                         <a
                           onClick={() =>
                             navigate({
-                              pathname: `/tree-menu/${id}/details-exams/${id}`
+                              pathname: `/details-exams/${id}`
                             })
                           }
                           className='text-success font-medium underline '

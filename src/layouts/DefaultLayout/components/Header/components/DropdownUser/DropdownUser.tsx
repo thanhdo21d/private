@@ -5,10 +5,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AppContext } from '~/contexts/app.contexts'
 import { removeProfileFromLS } from '~/utils/utils'
 import imgLogo from '../../../../../../assets/images/logo/Ava_1__DXCB.jpg'
+import { useGetIdUserQuery } from '~/apis/user/user.api'
 const DropdownUser = () => {
   const navigate = useNavigate()
   const { profile, reset } = useContext(AppContext)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const { data: dataUser, isLoading, isFetching } = useGetIdUserQuery(profile?._id as string)
+  const uri = import.meta.env.VITE_API
   const trigger = useRef<any>(null)
   const dropdown = useRef<any>(null)
   // close on click outside
@@ -21,7 +24,6 @@ const DropdownUser = () => {
     document.addEventListener('click', clickHandler)
     return () => document.removeEventListener('click', clickHandler)
   }, [])
-  // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
       if (!dropdownOpen || keyCode !== 27) return
@@ -41,7 +43,7 @@ const DropdownUser = () => {
           </span>
         </span>
         <span className='w-12 h-12 rounded-full'>
-          <img src={` ${imgLogo}`} className='object-cover w-full h-full rounded-full' alt='User' />
+          <img src={`${uri}${dataUser?.user?.avatar}`} className='object-cover w-full h-full rounded-full' alt='User' />
         </span>
         <ArrowDown />
       </Link>
@@ -54,17 +56,17 @@ const DropdownUser = () => {
           dropdownOpen === true ? 'block' : 'hidden'
         }`}
       >
-        {/* <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark'>
+        <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark'>
           <li>
             <Link
-              to='/profile'
+              to='/user-info/profile'
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
             >
               <ProfileIcon />
               My Profile
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               to='#'
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
@@ -81,8 +83,8 @@ const DropdownUser = () => {
               <SettingIcon />
               Account Settings
             </Link>
-          </li>
-        </ul> */}
+          </li> */}
+        </ul>
         <button
           onClick={() => {
             removeProfileFromLS()

@@ -30,8 +30,18 @@ const ExamSetting = createApi({
       },
       invalidatesTags: ['ExamSetting']
     }),
-    getAllExamsCategories: builder.query<any, string>({
-      query: (id: string) => `/examsktRoutes/get/${id}`,
+    getAllExamsCategories: builder.query<any, any>({
+      query: ({ id, page, limit, search }: { id: string; page: string; limit: string; search: string }) => {
+        return {
+          url: `/examsktRoutes/get/${id}`,
+          method: 'GET',
+          params: {
+            page: page,
+            limit: limit,
+            search: search || ''
+          }
+        }
+      },
       providesTags: ['ExamSetting']
     }),
     getTopicExamsID: builder.query<any, string>({

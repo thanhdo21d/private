@@ -1,15 +1,4 @@
-import {
-  Divider,
-  Drawer,
-  Form,
-  Input,
-  Popconfirm,
-  Skeleton,
-  Space,
-  Table,
-  Tooltip,
-  Upload
-} from 'antd'
+import { Divider, Drawer, Form, Input, Popconfirm, Skeleton, Space, Table, Tooltip, Upload } from 'antd'
 import { SelectCommonPlacement } from 'antd/es/_util/motion'
 import { Footer } from 'antd/es/layout/layout'
 import { useEffect, useState, useMemo } from 'react'
@@ -41,6 +30,7 @@ const FormData = () => {
   const [queryParameters] = useSearchParams()
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const search: string | null = queryParameters.get('search')
   const [datalimitQuery, setDatalimitQuery] = useState('')
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDatalimitQuery(event.target.value)
@@ -54,7 +44,7 @@ const FormData = () => {
     id: id,
     page: dataPageQuery || 1,
     limit: datalimitQueryChange || 30,
-    search : ""
+    search: search || ''
   })
   const [
     removeExamsDepartment,
@@ -87,8 +77,6 @@ const FormData = () => {
       })
       return
     }
-
-    //() => navigate(`/tree-menu/${id}/question/edit/${id}`)
   }
   const [handelDropExasm] = useDropDbExamsMutation()
   const handelDropDbExmams = () => {
@@ -216,7 +204,18 @@ const FormData = () => {
     }
     navigate({
       search: createSearchParams({
+        ...queryConfig,
         limit: datalimitQuery
+      }).toString()
+    })
+  }
+  const onFinish = ({ keyword }: any) => {
+    const keywordSpace = keyword.trim()
+    console.log(keywordSpace)
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: keywordSpace
       }).toString()
     })
   }
@@ -418,6 +417,7 @@ const FormData = () => {
           <Form
             className='flex gap-5  justify-center'
             name='basic'
+            onFinish={onFinish}
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
             style={{ maxWidth: 900 }}
@@ -502,7 +502,7 @@ const FormData = () => {
                 </div>
               </Tooltip>
             </div>
-            <Button  onClick={() => navigate(-1)} styleClass='py-2 bg-black'>
+            <Button onClick={() => navigate(-1)} styleClass='py-2 bg-black'>
               Quay Lại
             </Button>
           </div>

@@ -64,7 +64,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
         //     if (pathname.includes('edit')) {
         //       const modifiedUrl = pathname.substring(0, lastSlashIndex)
         //     } else {
-
         //     }
         //     path.includes(pathname)
         //   }

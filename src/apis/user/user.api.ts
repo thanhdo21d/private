@@ -7,8 +7,17 @@ const UserApi = createApi({
   }),
   tagTypes: ['Users'],
   endpoints: (builder) => ({
-    getAllUser: builder.query<any, void>({
-      query: () => '/users',
+    getAllUser: builder.query<any, any>({
+      query: ({ limit, page, employeeCode }: { limit: string; page: string; employeeCode: string }) => {
+        return {
+          url: '/users',
+          params: {
+            limit: limit || 20,
+            page: page || 1,
+            employeeCode: employeeCode || ''
+          }
+        }
+      },
       providesTags: ['Users']
     }),
     getIdUser: builder.query<any, string>({

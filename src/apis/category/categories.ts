@@ -71,7 +71,7 @@ const categorydepartmentAPI = createApi({
       invalidatesTags: ['Category']
     }),
     editCategoriesTree: builder.mutation({
-      query: ({ id, parentId, name }: { id: string; parentId: string; name: string }) => {
+      query: ({ id, parentId, name }: { id: string; parentId: string | null; name: string }) => {
         return {
           url: `/edit/category/${id}`,
           method: 'PUT',

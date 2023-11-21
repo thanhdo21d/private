@@ -22,7 +22,6 @@ const Roles = () => {
   const queryConfig = useQueryConfig()
   const dataPageQuery: string | null = queryParameters.get('page')
   const { data: dataGetRole } = useSearchRoleApiGETQuery(dataSearchQuery)
-
   const [searchResults, setSearchResults] = useState<any[]>([])
   const navigate = useNavigate()
   const confirm = (id: string) => {
@@ -35,7 +34,6 @@ const Roles = () => {
     sort: dataSortQuery === 'updateAt' ? dataSortQuery : '',
     page: dataPageQuery || 1
   })
-  console.log(data)
   useEffect(() => {
     if (data) {
       setSearchResults(data)
@@ -57,7 +55,6 @@ const Roles = () => {
     navigate({
       search: createSearchParams({
         content: ''
-        //?sort=updateAt
       }).toString()
     })
   }

@@ -7,7 +7,7 @@ import { category } from '~/types/department/department.type'
 import React from 'react'
 
 const CardOne = ({ member, departMent }: { member: boolean; departMent: boolean }) => {
-  const { data } = useGetAllUserQuery()
+  const { data } = useGetAllUserQuery({})
   const { data: dataAllCategories } = useGetAllCategoriesQuery()
   console.log(dataAllCategories?.data.filter((items: category) => items.parentCheck !== '0').length)
   return (

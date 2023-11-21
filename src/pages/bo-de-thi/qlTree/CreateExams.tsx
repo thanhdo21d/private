@@ -11,6 +11,7 @@ const CreateExams = () => {
   const [open, setOpen] = useState(false)
   const [checkState, setCheckState] = useState(false)
   const [addQuestion, setAddQuestion] = useState(false)
+  const [checkHistory, setCheckHistory] = useState(false)
   const showDrawer = () => {
     setOpen(true)
     setCheckState(!checkState)
@@ -43,25 +44,38 @@ const CreateExams = () => {
     <>
       <Divider orientation='left'>Create Exams</Divider>
       <div>
-        <div className='flex gap-10'>
-          <div>
-            <p>Kì Thi</p>
-            <Input
-              className='h-[32px] border mt-2 border-[#d9d9d9]  w-[400px] rounded-md'
-              size='large'
-              placeholder='large size'
-            />
+        <div className='flex gap-10 items-center justify-between'>
+          <div className='flex gap-10 items-center'>
+            <div>
+              <p>Kì Thi</p>
+              <Input
+                className='h-[32px] border mt-2 border-[#d9d9d9]  w-[400px] rounded-md'
+                size='large'
+                placeholder='large size'
+              />
+            </div>
+            <div>
+              <p> Hiệu lực trong</p>
+              <DatePicker.RangePicker className='mt-2' onChange={onDateChange} />
+            </div>
+            <div>
+              <p>Thời Gian </p>
+              <InputNumber className='h-[32px] mt-2 rounded-md' size='large' />
+            </div>
           </div>
           <div>
-            <p> Hiệu lực trong</p>
-            <DatePicker.RangePicker className='mt-2' onChange={onDateChange} />
-          </div>
-          <div>
-            <p>Thời Gian </p>
-            <InputNumber className='h-[32px] mt-2 rounded-md' size='large' />
+            <p className='text-center'>Sử Dụng Cấu Trúc Gần Nhất </p>
+            <Button
+              onClick={() => {
+                showDrawer()
+                return setCheckHistory(true)
+              }}
+              styleClass='h-[32px] mt-2 rounded-md'
+            >
+              Xem Cấu Trúc Đã Tạo
+            </Button>
           </div>
         </div>
-
         <div className='mt-10'>
           <p>Tên Bài Thi</p>
           <Input
@@ -111,65 +125,71 @@ const CreateExams = () => {
           </Space>
         }
       >
-        <div className='bg-[#D9D9D9] w-full rounded-md h-screen relative'>
-          <h3 className='text-center pt-4 text-xl text-black underline'>Details Questions</h3>
-          {inputFields.map((inputField: any, index: any) => {
-            console.log(inputField)
-            console.log(inputFields)
-            return (
-              <div
-                key={index}
-                className='bg-white w-11/12 h-[60px] mx-auto rounded-md border mt-5 flex justify-between items-center'
-              >
-                <div className='mx-5 flex items-center gap-3'>
-                  <p className='text-xl text-black'>Points</p>
-                  <input
-                    className='rounded-md'
-                    placeholder='points'
-                    type='text'
-                    name='x'
-                    value={inputField.x}
-                    onChange={(event) => handleInputChange(index, event)}
-                  />
-                </div>
-                <div className='flex items-center gap-5'>
-                  <div className='flex items-center gap-3'>
-                    <p className='text-xl text-black'>Count</p>
-                    <input
-                      className='rounded-md'
-                      placeholder='Count'
-                      type='text'
-                      name='y'
-                      value={inputField.y}
-                      onChange={(event) => handleInputChange(index, event)}
-                    />
-                  </div>
-                  <div className='mx-5'>
-                    {index !== 0 && (
-                      <img
-                        className='w-[30px] hover:scale-110 cursor-pointer'
-                        src={closeIcons}
-                        alt='close'
-                        onClick={() => handleRemoveFields(index)}
+        {checkHistory ? (
+          <div> </div>
+        ) : (
+          <div>
+            <div className='bg-[#D9D9D9] w-full rounded-md h-screen relative'>
+              <h3 className='text-center pt-4 text-xl text-black underline'>Details Questions</h3>
+              {inputFields.map((inputField: any, index: any) => {
+                console.log(inputField)
+                console.log(inputFields)
+                return (
+                  <div
+                    key={index}
+                    className='bg-white w-11/12 h-[60px] mx-auto rounded-md border mt-5 flex justify-between items-center'
+                  >
+                    <div className='mx-5 flex items-center gap-3'>
+                      <p className='text-xl text-black'>Points</p>
+                      <input
+                        className='rounded-md'
+                        placeholder='points'
+                        type='text'
+                        name='x'
+                        value={inputField.x}
+                        onChange={(event) => handleInputChange(index, event)}
                       />
-                    )}
+                    </div>
+                    <div className='flex items-center gap-5'>
+                      <div className='flex items-center gap-3'>
+                        <p className='text-xl text-black'>Count</p>
+                        <input
+                          className='rounded-md'
+                          placeholder='Count'
+                          type='text'
+                          name='y'
+                          value={inputField.y}
+                          onChange={(event) => handleInputChange(index, event)}
+                        />
+                      </div>
+                      <div className='mx-5'>
+                        {index !== 0 && (
+                          <img
+                            className='w-[30px] hover:scale-110 cursor-pointer'
+                            src={closeIcons}
+                            alt='close'
+                            onClick={() => handleRemoveFields(index)}
+                          />
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )
+              })}
+              <div className='w-fit h-fit mx-auto rounded-md mt-5'>
+                <img
+                  className='w-[40px] hover:scale-110 cursor-pointer'
+                  src={addIcons}
+                  alt='add'
+                  onClick={handleAddFields}
+                />
               </div>
-            )
-          })}
-          <div className='w-fit h-fit mx-auto rounded-md mt-5'>
-            <img
-              className='w-[40px] hover:scale-110 cursor-pointer'
-              src={addIcons}
-              alt='add'
-              onClick={handleAddFields}
-            />
+            </div>
+            <div className='absolute bottom-10 mx-auto flex justify-center items-center w-full'>
+              <Button styleClass='py-2 w-2/3 bg-[#24A19C]'>Xác Nhận</Button>
+            </div>
           </div>
-        </div>
-        <div className='absolute bottom-10 mx-auto flex justify-center items-center w-full'>
-          <Button styleClass='py-2 w-2/3 bg-[#24A19C]'>Xác Nhận</Button>
-        </div>
+        )}
       </Drawer>
 
       {addQuestion && (
@@ -232,7 +252,10 @@ const CreateExams = () => {
                 </div>
                 <div className='mx-2'>
                   <img
-                    onClick={showDrawer}
+                    onClick={() => {
+                      showDrawer()
+                      setCheckHistory(false)
+                    }}
                     className='w-[30px] hover:scale-110 cursor-pointer'
                     src={`${checkState ? checkIcons : unCheckIcons}`}
                     alt='close'

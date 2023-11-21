@@ -76,7 +76,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/tree-menu/:id',
-    // element: <CheckCookieUserLogin />,
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <TreeMenu />,
@@ -107,7 +107,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/',
-    // element: <CheckCookieUserLogin />,
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultLayoutTrangthi />,
@@ -131,7 +131,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/user-info',
-    // element: <CheckCookieUserLogin />,
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultUserInfo />,
@@ -154,7 +154,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/admin',
-    // element: <CheckCookieUserLogin />,
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultLayout />,

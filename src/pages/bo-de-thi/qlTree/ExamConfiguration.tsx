@@ -11,7 +11,7 @@ import {
   useGetAllExamsCategoriesQuery,
   useRemoveExamsCategoriesMutation
 } from '~/apis/examSetting/examSetting'
-import { useNavigate, useParams } from 'react-router-dom'
+import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { toastService } from '~/utils/toask/toaskMessage'
 import Pagination from '~/pages/roles/Pagination'
 import { Footer } from 'antd/es/layout/layout'
@@ -21,13 +21,22 @@ const ExamConfiguration = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [checkOption, setCheckOption] = useState(false)
+  const [queryParameters] = useSearchParams()
+  const dataPageQuery: string | null = queryParameters.get('page')
+  const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const search: string | null = queryParameters.get('search')
   const queryConfig = useQueryConfig()
   const [createExamsCategories] = useCreateExamsDepartmentMutation()
   const {
     data: dataExamsCategories,
     isLoading: isDataExamsCategoriesLoading,
     isFetching
-  } = useGetAllExamsCategoriesQuery(id as string)
+  } = useGetAllExamsCategoriesQuery({
+    id: id,
+    page: dataPageQuery || 1,
+    limit: datalimitQueryChange || 10,
+    search: search || ''
+  })
   const [removeExamsCategories] = useRemoveExamsCategoriesMutation()
   console.log(dataExamsCategories)
   const [open, setOpen] = useState(false)
@@ -76,8 +85,7 @@ const ExamConfiguration = () => {
       .unwrap()
       .then(() => toastService.success('Successfully removed'))
   }
-
-  const dataSource = dataExamsCategories?.exam?.examsKT?.map((items: any, index: any) => ({
+  const dataSource = dataExamsCategories?.examsKT?.examsKT?.map((items: any, index: any) => ({
     key: items._id,
     index: index + 1,
     name: items.name,
@@ -85,7 +93,6 @@ const ExamConfiguration = () => {
     start: items.startDate,
     end: items.endDate
   }))
-
   const columns = [
     {
       title: 'STT',
@@ -152,6 +159,16 @@ const ExamConfiguration = () => {
       }
     }
   ]
+  const onFinishSearch = ({ keyword }: any) => {
+    const keywordSpace = keyword.trim()
+    console.log(keywordSpace)
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: keywordSpace
+      }).toString()
+    })
+  }
   return (
     <div>
       <Breadcrumb
@@ -166,11 +183,15 @@ const ExamConfiguration = () => {
       />
       <div className='flex justify-between mb-5 mt-10'>
         <div>
-          <Form className='flex gap-5' onFinish={onFinish} layout='vertical' hideRequiredMark>
-            <Form.Item name='name' className='' rules={[{ required: true, message: 'vui lòng nhập Tên Kì Thi ...!' }]}>
+          <Form className='flex gap-5' onFinish={onFinishSearch} layout='vertical' hideRequiredMark>
+            <Form.Item
+              name='keyword'
+              className=''
+              rules={[{ required: true, message: 'vui lòng nhập Tên Kì Thi ...!' }]}
+            >
               <Input className='w-[330px] border border-[#ccc]' placeholder='vui lòng nhập Tên Kì Thi ...!' />
             </Form.Item>
-            <Form.Item name='name' className='' rules={[{ required: true, message: 'vui lòng nhập Tên Kì Thi ...!' }]}>
+            <Form.Item >
               <button className='bg-success px-8 rounded-md text-white font-medium py-2.5' type='submit'>
                 Submit
               </button>
@@ -203,15 +224,12 @@ const ExamConfiguration = () => {
         }
       >
         <Form onFinish={onFinish} layout='vertical' hideRequiredMark>
-          {/* Input Component */}
           <Form.Item name='name' label='Tên Kì Thi' rules={[{ required: true, message: 'Vui lòng nhập Tên Kì Thi!' }]}>
             <Input placeholder='Vui lòng nhập Tên Kì Thi!' />
           </Form.Item>
-          {/* DatePicker Component */}
           <Form.Item label='Thời Gian Diễn ra kì thi'>
             <DatePicker.RangePicker onChange={onDateChange} />
           </Form.Item>
-          {/* Submit Button */}
           <Form.Item>
             <Button type='submit'>Submit</Button>
           </Form.Item>
@@ -297,7 +315,9 @@ const ExamConfiguration = () => {
           ) : (
             <>
               <Table dataSource={dataSource} columns={columns} pagination={false} className='dark:bg-black  mt-4 ' />
-              <Pagination pageSize={5}  queryConfig={queryConfig}/>
+              <div>
+                <Pagination pageSize={dataExamsCategories?.totalPages} queryConfig={queryConfig} />
+              </div>
             </>
           )}
         </>

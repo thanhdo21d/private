@@ -65,7 +65,7 @@ const DefaultLayoutTrangthi = () => {
         </button>
       </div>
 
-      <div className='right-4 flex gap-2 justify-center top-5  absolute w-[500px] items-center text-center bg-black bg-opacity-50 rounded-lg h-[80px]'>
+      <div className='right-4 z-50 flex gap-2 justify-around top-5  absolute w-[600px] items-center text-center bg-black bg-opacity-50 rounded-lg h-[80px]'>
         <div
           className='pt-4 relative w-[50px] h-[50px]  bg-danger hover:bg-warning  rounded-full shadow-md cursor-pointer'
           onClick={handelLogOut}
@@ -80,7 +80,7 @@ const DefaultLayoutTrangthi = () => {
         <div className=''>
           <p className='text-md font-medium'>
             <span className='pr-2'>{t('product.hello_user')} </span>{' '}
-            <span className='text-danger font-bold text-xl'>{profile?.email}</span>{' '}
+            <span className='text-danger font-bold text-xl'>{profile?.username}</span>{' '}
           </p>
         </div>
         <div className='cursor-pointer   pl-2 '>

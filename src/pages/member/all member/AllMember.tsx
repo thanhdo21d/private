@@ -1,6 +1,6 @@
 import React from 'react'
-import { Input, Popconfirm, Table } from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
+import { Form, Input, Popconfirm, Table } from 'antd'
+import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button, EmailIcon } from '~/components'
 import { useDeleteUserMutation, useGetAllUserQuery } from '~/apis/user/user.api'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
@@ -8,9 +8,18 @@ import { AiFillEdit } from 'react-icons/ai'
 import { toastService } from '~/utils/toask/toaskMessage'
 import Pagination from '~/pages/roles/Pagination'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
+import { Footer } from 'antd/es/layout/layout'
+type FieldType = {
+  keyword?: string
+}
 const AllMember = () => {
   const navigate = useNavigate()
   const [removeMember, { isLoading }] = useDeleteUserMutation()
+  const [queryParameters] = useSearchParams()
+  const dataPageQuery: string | null = queryParameters.get('page')
+  const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const search: string | null = queryParameters.get('search')
+  const uri = import.meta.env.VITE_API
   const queryConfig = useQueryConfig()
   const confirm = (id: string) => {
     removeMember(id)
@@ -18,9 +27,22 @@ const AllMember = () => {
       .then(() => toastService.success('remove member successfully'))
       .catch(() => toastService.error('error removing member'))
   }
-  const { data } = useGetAllUserQuery()
-  console.log(data)
-  const dataSource = data?.docs.map((item: any) => ({
+  const { data } = useGetAllUserQuery({
+    limit: datalimitQueryChange || 20,
+    page: dataPageQuery || 1,
+    employeeCode: search || ''
+  })
+  const onFinish = ({ keyword }: any) => {
+    const keywordSpace = keyword.trim()
+    console.log(keywordSpace)
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: keywordSpace
+      }).toString()
+    })
+  }
+  const dataSource = data?.docs?.map((item: any) => ({
     key: item._id,
     name: item.username,
     avatar: item.avatar,
@@ -45,9 +67,6 @@ const AllMember = () => {
       dataIndex: 'role',
       key: 'role',
       render: (text: { name: string }) => {
-        // const name = text.split('@')
-        // const userName = name[0].split('.')
-        // const checkName = userName.pop()
         return <a className='text-md font-bold'>{text.name}</a>
       }
     },
@@ -62,7 +81,7 @@ const AllMember = () => {
       dataIndex: 'avatar',
 
       key: 'age',
-      render: (text: string) => <img className='text-md w-[50px] font-bold' src={`${text}`} />
+      render: (text: string) => <img className='text-md w-[50px] font-bold' src={`${uri}${text}`} />
     },
     {
       title: 'code',
@@ -132,8 +151,17 @@ const AllMember = () => {
         Thêm mới
       </Button>
       <div className='mt-10 flex gap-5'>
-        <Input className='h-[50px] w-[600px]' placeholder='Tìm Kiếm Theo Code ....' />
-        <Button styleClass='w-[150px] h-[50px] bg-graydark'>Tìm Kiếm</Button>
+        <Form className='flex gap-5  justify-center' onFinish={onFinish}>
+          <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your code!' }]}>
+            <Input
+              className='h-[40px] w-[500px] xl:w-[600px] border border-[#ccc]'
+              placeholder='Tìm Kiếm Theo câu hỏi ....'
+            />
+          </Form.Item>
+          <Button type='submit' styleClass='w-[150px] h-[50px] bg-graydark'>
+            Tìm Kiếm
+          </Button>
+        </Form>
       </div>
       <hr className='mt-5' />
       <div className='mt-2'>
@@ -144,7 +172,11 @@ const AllMember = () => {
           </div>
         </div>
       </div>
-      <div className='absolute bottom-0 text-center'>Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.</div>
+      <Footer className='mt-5 w-full  justify-between dark:bg-black absolute bottom-0'>
+        <div className='text-md font-semibold text-center dark:text-white'>
+          Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+        </div>
+      </Footer>
     </div>
   )
 }

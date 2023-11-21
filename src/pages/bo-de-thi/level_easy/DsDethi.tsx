@@ -7,16 +7,24 @@ import { UnorderedListOutlined, AppstoreAddOutlined } from '@ant-design/icons'
 import { category } from '~/types/department/department.type'
 import { EyeOutlined } from '@ant-design/icons'
 import { Col, DatePicker, Drawer, Form, Input, Row, Select, Skeleton, Space, Table } from 'antd'
-import { useCreateCategoriesMutation, useGetAllCategoriesQuery, useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
+import {
+  useCreateCategoriesMutation,
+  useGetAllCategoriesQuery,
+  useGetCategoriesDepartmentsQuery,
+  useRemoveCategoriesTreeMutation
+} from '~/apis/category/categories'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { Footer } from 'antd/es/layout/layout'
+import { useGetIdUserQuery } from '~/apis/user/user.api'
 const DsDethi = () => {
   const navigate = useNavigate()
   const { data: dataAllCategories, isFetching: isGetCategoriesLoading } = useGetAllCategoriesQuery()
-  console.log(dataAllCategories)
   const [createCategories, { isLoading: isCreateCategoriesLoading }] = useCreateCategoriesMutation()
+  const [removeCategories, { isLoading: isRemoveLoading }] = useRemoveCategoriesTreeMutation()
   const { profile, reset } = useContext(AppContext)
-  console.log(profile)
+  console.log(profile?.role.name)
+  const { data: dataUser, isLoading, isFetching } = useGetIdUserQuery(profile?._id as string)
+  console.log(dataUser?.user?.role?.adminDepartMent)
   const { Option } = Select
   const [open, setOpen] = useState(false)
   const [checkOption, setCheckOption] = useState(false)
@@ -37,7 +45,7 @@ const DsDethi = () => {
         setOpen(false)
       })
   }
-  const dataSource = dataAllCategories?.data
+  const dataSource = dataUser?.user?.role?.adminDepartMent
     .filter((items: category) => items.parentCheck !== '0')
     .map((data: category, index: number) => ({
       index: index,
@@ -60,11 +68,11 @@ const DsDethi = () => {
       title: <p className='flex justify-center'>Tác Vụ</p>,
       render: ({ key: id }: { key: string }) => {
         return (
-          <div className='flex justify-center'>
+          <div className='flex justify-center space-x-2'>
             <Button
               onClick={() => {
                 sessionStorage.removeItem('categories')
-                localStorage.setItem("idCategories",id)
+                localStorage.setItem('idCategories', id)
                 return navigate(`/tree-menu/${id}/dashboard-other-admin`)
               }}
               styleClass='bg-[#3d5ee1] flex items-center w-fit '
@@ -74,16 +82,32 @@ const DsDethi = () => {
               </span>
               <span className='font-medium'> xem chi tiết </span>
             </Button>
+            {profile?.role?.name == 'Admin' && (
+              <Button
+                onClick={() => {
+                  const confirmTrue = window.confirm('Are you sure you want to categories')
+                  sessionStorage.removeItem('categories')
+                  if (confirmTrue)
+                    removeCategories(id)
+                      .unwrap()
+                      .then(() => toastService.success('deleted successfully'))
+                }}
+                styleClass='bg-danger flex items-center w-fit '
+              >
+                <span className='font-medium  text-white'> xóa </span>
+              </Button>
+            )}
           </div>
         )
       }
     }
   ]
+  if (isLoading || isFetching) return <div>Loading...</div>
   return (
     <div>
       <div className=' xl:flex justify-between mb-5'>
         <div>
-          <Form className='flex gap-5' onFinish={onFinish} layout='vertical' hideRequiredMark>
+          <Form className='flex gap-5'  layout='vertical' hideRequiredMark>
             <Form.Item
               name='name'
               className=''
@@ -95,9 +119,6 @@ const DsDethi = () => {
               />
             </Form.Item>
             <Form.Item
-              name='name'
-              className=''
-              rules={[{ required: true, message: 'vui lòng nhập Tên Phòng Ban ...!' }]}
             >
               <button className='bg-success px-8 rounded-md text-white font-medium py-2.5' type='submit'>
                 Submit
@@ -162,7 +183,7 @@ const DsDethi = () => {
         <h4 className='pl-5 pt-5 text-black underline'> Danh Sách DepartMents</h4>
         {checkOption ? (
           <div className='grid grid-cols-3 gap-5 mt-10'>
-            {profile?.role.adminDepartMent
+            {dataUser?.user?.role?.adminDepartMent
               .filter((items: category) => items.parentCheck !== '0')
               .map((data: category) => {
                 console.log(data)

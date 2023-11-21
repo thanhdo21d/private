@@ -105,7 +105,7 @@ const FoldersCategories = () => {
           />
           <div className='flex justify-between mb-5 mt-3'>
             <div>
-              <Form className='flex gap-5' onFinish={onFinish} layout='vertical' hideRequiredMark>
+              <Form className='flex gap-5' layout='vertical' hideRequiredMark>
                 <Form.Item
                   name='name'
                   className=''

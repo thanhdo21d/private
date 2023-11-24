@@ -55,6 +55,12 @@ const AllMember = () => {
   }))
   const columns = [
     {
+      title: 'code',
+      dataIndex: 'users',
+      key: 'users',
+      render: (text: string) => <a className='text-danger font-bold'>{text}</a>
+    },
+    {
       title: 'Tên',
       dataIndex: 'name',
       key: 'name',
@@ -71,23 +77,11 @@ const AllMember = () => {
       }
     },
     {
-      title: 'Phòng Ban',
-      dataIndex: 'department',
-      key: 'department',
-      render: (text: string) => <a className='text-md pl-5 font-bold'>{text}</a>
-    },
-    {
       title: 'Ảnh',
       dataIndex: 'avatar',
 
       key: 'age',
       render: (text: string) => <img className='text-md w-[50px] font-bold' src={`${uri}${text}`} />
-    },
-    {
-      title: 'code',
-      dataIndex: 'users',
-      key: 'users',
-      render: (text: string) => <a className='text-danger font-bold'>{text}</a>
     },
     {
       title: 'Ngày sửa',
@@ -134,12 +128,6 @@ const AllMember = () => {
               <AiFillEdit />
             </span>
             <span>Sửa</span>
-          </Button>
-          <Button styleClass='flex items-center  w-[80px] xl:w-[100px]'>
-            <span>
-              <EmailIcon />
-            </span>
-            <span>Mailer</span>
           </Button>
         </div>
       )

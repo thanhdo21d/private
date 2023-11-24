@@ -1,5 +1,5 @@
 import { Divider, Drawer, Form, Input, Popconfirm, Skeleton, Space, Table, Tooltip, Upload } from 'antd'
-import { SelectCommonPlacement } from 'antd/es/_util/motion'
+import logoExsl from '../../../assets/xlsx.png'
 import { Footer } from 'antd/es/layout/layout'
 import { useEffect, useState, useMemo } from 'react'
 import { Link, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -16,6 +16,7 @@ import DetailsDsEasy from '../level_easy/DetailsDsEasy'
 import { useGetIDcategoriesQuery, useRemoveExamsDepartmentMutation } from '~/apis/category/categories'
 import InputNumber from '~/components/inputNumber'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
+import axios from 'axios'
 type FieldType = {
   keyword?: string
 }
@@ -218,6 +219,23 @@ const FormData = () => {
         search: keywordSpace
       }).toString()
     })
+  }
+  const handelExport = async () => {
+    try {
+      const response = await axios.post('http://localhost:8282/export/question/6555a21fc43cc54abbbfccbc', {
+        responseType: 'blob'
+      })
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'export.xlsx')
+      document.body.appendChild(link)
+      link.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(link)
+    } catch (error: any) {
+      console.error('Lỗi: ' + error.message)
+    }
   }
   return (
     <div className='relative'>
@@ -451,6 +469,11 @@ const FormData = () => {
           <Button styleClass='py-1 px-1 hover:bg-opacity-80' onClick={handleClick}>
             Áp dụng
           </Button>
+          <div>
+            <Tooltip title='export to excels'>
+              <img onClick={handelExport} className='w-[47px] cursor-pointer hover:scale-105' src={`${logoExsl}`} />
+            </Tooltip>
+          </div>
         </div>
         <div>
           {/*  */}

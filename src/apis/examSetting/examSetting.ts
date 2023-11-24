@@ -48,8 +48,18 @@ const ExamSetting = createApi({
       query: (id: string) => `/topicExams/get/${id}`,
       providesTags: ['ExamSetting']
     }),
-    getIdExamsCategories: builder.query<any, string>({
-      query: (id: string) => `/examsk/getId/${id}`,
+    getIdExamsCategories: builder.query<any, any>({
+      query: ({ id, page, limit, search }: { id: string; page: string; limit: string; search: string }) => {
+        return {
+          url: `/examsk/getId/${id}`,
+          method: 'GET',
+          params: {
+            page: page,
+            limit: limit,
+            search: search || ''
+          }
+        }
+      },
       providesTags: ['ExamSetting']
     }),
     removeTopicExams: builder.mutation<any, any>({

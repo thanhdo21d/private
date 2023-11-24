@@ -14,6 +14,9 @@ import ExamSetting from '~/apis/examSetting/examSetting'
 import loggersAPI from '~/apis/checklogs/loggersAPi'
 import { loggersReducer } from '../slice/dateLogger.slice'
 import UserDepartMentApi from '~/apis/userDepartMent/userDepartment'
+import categoryHistoryAPI from '~/apis/question/ExamsEasy'
+import topicExamsApi from '~/apis/topicQuestion/topicQuestion'
+import { categoriesReducer } from '../slice/checkCategories'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -26,10 +29,13 @@ export const store = configureStore({
     [categorydepartmentAPI.reducerPath]: categorydepartmentAPI.reducer,
     [ExamSetting.reducerPath]: ExamSetting.reducer,
     [loggersAPI.reducerPath]: loggersAPI.reducer,
-    [UserDepartMentApi.reducerPath] : UserDepartMentApi.reducer,
+    [UserDepartMentApi.reducerPath]: UserDepartMentApi.reducer,
+    [categoryHistoryAPI.reducerPath]: categoryHistoryAPI.reducer,
+    [topicExamsApi.reducerPath]: topicExamsApi.reducer,
     //toolkit
     theme: themeReducer,
-    loggers: loggersReducer
+    loggers: loggersReducer,
+    dataCategories: categoriesReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -44,6 +50,8 @@ export const store = configureStore({
       ExamSetting.middleware,
       loggersAPI.middleware,
       UserDepartMentApi.middleware,
+      categoryHistoryAPI.middleware,
+      topicExamsApi.middleware,
       rtkQueryErrorLogger
     )
 })

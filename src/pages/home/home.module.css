@@ -1,0 +1,157 @@
+/* Reset some default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* Define styles for the hero banner */
+.hero-banner {
+  /* padding: 40px 0; */
+  position: relative;
+  background-image: linear-gradient(to right, #8e2, #4a00e0);
+  height: 500px;
+}
+/* Media query for medium-sized screens */
+@media (min-width: 768px) {
+  .hero-banner {
+    height: calc(110vh);
+  }
+}
+/* Styles for the content within the hero banner */
+.hero-banner .content {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column-reverse;
+  margin: 0 auto;
+  max-width: calc(100% - 20px);
+  position: relative;
+  align-items: center;
+}
+
+/* Media query for medium-sized screens */
+@media (min-width: 768px) {
+  .hero-banner .content {
+    top:-110px;
+    flex-direction: row;
+    max-width: 1200px;
+  }
+}
+/* Styles for the image within the hero banner */
+.hero-banner .content .img {
+  position: relative;
+  z-index: 9;
+  width: 150px;
+  margin-bottom: 17px;
+}
+
+/* Media query for large-sized screens */
+@media (min-width: 1200px) {
+  .hero-banner .content .img {
+    width: 380px;
+    margin-right: 60px;
+    margin-top: 40px;
+    margin-bottom: 0;
+  }
+}
+
+/* Media query for extra-large screens */
+@media (min-width: 1440px) {
+  .hero-banner .content .img {
+    width: 400px;
+    margin-right: 0;
+    margin-top: 0;
+  }
+}
+
+/* Styles for the text content within the hero banner */
+.hero-banner .content .text-content {
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
+
+/* Media query for extra-large screens */
+@media (min-width: 1440px) {
+  .hero-banner .content .text-content {
+    left: 0;
+  }
+}
+
+/* Styles for the heading within the text content */
+.hero-banner .content .text-content h1 {
+  font-size: 80px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+/* Media query for medium-sized screens */
+@media (min-width: 768px) {
+  .hero-banner .content .text-content h1 {
+    font-size: 180px;
+  }
+}
+
+/* Styles for the paragraph within the text content */
+.hero-banner .content .text-content p {
+  max-width: 300px;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 20px;
+}
+
+/* Media query for medium-sized screens */
+@media (min-width: 768px) {
+  .hero-banner .content .text-content p {
+    max-width: 500px;
+    font-size: 18px;
+    line-height: 24px;
+    margin-bottom: 40px;
+  }
+}
+
+/* Styles for the call-to-action buttons */
+.hero-banner .content .text-content .ctas {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Styles for the "Read More" button */
+.hero-banner .content .text-content .ctas .banner-cta {
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 500;
+  border: 2px solid whitesmoke;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* Styles for the "Ship Now" button */
+.hero-banner .content .text-content .ctas .banner-cta.v2 {
+  background-color: aliceblue;
+  color: black;
+}
+
+/* Hover effect for the buttons */
+.hero-banner .content .text-content .ctas .banner-cta:hover {
+  opacity: 0.8;
+}
+.rotate-book {
+  transition: transform 0.2s ease-in-out; /* Thêm hiệu ứng transition */
+}
+.rotate-book:hover {
+  transform: rotate(45deg); /* Xoay ảnh khi hover */
+}

@@ -6,14 +6,11 @@ import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { useAppDispatch } from '~/store/root/hook'
-import { setAccessToken } from '~/store/slice/getCookies.slice'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useGetAccessTokenMutation } from '~/apis/auth/signin.api'
 import { setCookie, setProfileToLS } from '~/utils/utils'
 import { useTranslation } from 'react-i18next'
 import { locals } from '~/i18n/i18n'
-import img from '../../../assets/images/logo/1111111111111.jpg'
 import { TypeAnimation } from 'react-type-animation'
 import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
@@ -30,6 +27,7 @@ const Signin = () => {
   const { data: dataBannerID, isFetching } = useGetIdBannersQuery('652c9174be0b746b392bc8fb')
   const { t } = useTranslation(['header'])
   const currentLanguage = locals[i18n.language as keyof typeof locals]
+  const uri = import.meta.env.VITE_API
   const navigate = useNavigate()
   const {
     register,
@@ -58,9 +56,6 @@ const Signin = () => {
   if (isError) {
     toastService.error(t('product.login_error'))
     Cookies.remove('token')
-    setTimeout(() => {
-      // window.location.reload()
-    }, 500)
   }
   if (isSuccess) {
     console.log(isSuccess)
@@ -90,7 +85,7 @@ const Signin = () => {
           <div
             className='lg:flex w-1/2 hidden bg-gray-500 bg-no-repeat bg-cover relative items-center'
             style={{
-              backgroundImage: `url(${dataBannerID?.data?.url || img})`
+              backgroundImage: `url(${uri}${dataBannerID?.data?.url})`
             }}
           >
             <div className='absolute bg-black opacity-60 inset-0 z-0' />
@@ -128,7 +123,7 @@ const Signin = () => {
             <div
               className='absolute lg:hidden z-10 inset-0 bg-gray-500 bg-no-repeat bg-cover items-center'
               style={{
-                backgroundImage: `url(${dataBannerID?.data?.url || img})`
+                backgroundImage: `url(${dataBannerID?.data?.url})`
               }}
             >
               <div className='absolute bg-black opacity-60 inset-0 z-0' />

@@ -44,6 +44,7 @@ import DetailsExamsQuestion from './pages/bo-de-thi/detailExamsQuestion/DetailsE
 import MemberDepartment from './layouts/otherAdmin/MemberDepartment'
 import EditQuestionExams from './pages/bo-de-thi/dataDetails/EditQuestionExams'
 import FoldersCategories from './pages/bo-de-thi/qlTree/FoldersCategories'
+import Home from './pages/home/Home'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -83,7 +84,7 @@ export const routers = createBrowserRouter([
         children: [
           { path: 'all-folders', element: <FoldersCategories /> },
           { path: 'dashboard-other-admin', element: <DashBoardOtherAdmin /> },
-          { path: 'member', element: <MemberDepartment /> },
+          { path: 'member', element:  <MemberDepartment /> },
           { path: 'settings/edit', element: <EditTree /> },
           { path: 'all-folders/category/:id', element: <FormData /> },
           { path: 'settings/ki-thi', element: <ExamConfiguration /> },
@@ -96,15 +97,7 @@ export const routers = createBrowserRouter([
   },
   { path: 'details-exams/:id', element: <DetailsExams /> },
   { path: 'question/edit/:id', element: <EditQuestionExams /> },
-  {
-    path: '/demo',
-    element: (
-      <Suspense>
-        <MenuIten />
-      </Suspense>
-    ),
-    children: []
-  },
+  { path: 'action/home', element: <Home /> },
   {
     path: '/',
     element: <CheckCookieUserLogin />,
@@ -112,7 +105,7 @@ export const routers = createBrowserRouter([
       {
         element: <DefaultLayoutTrangthi />,
         children: [
-          { index: true, element: <Navigate to='home' /> },
+          { index: true, element: <Navigate to='action/home' /> },
           { path: 'home', element: <AcceptUserDipament /> },
           { path: 'excel', element: <DemoExcel /> },
           { path: 'action-bai-thi', element: <PopQuesion /> },

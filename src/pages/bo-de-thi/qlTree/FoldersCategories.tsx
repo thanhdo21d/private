@@ -3,21 +3,33 @@ import { Breadcrumb, Divider, Drawer, Form, Input, Popconfirm, Skeleton, Space, 
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { AiFillEdit } from 'react-icons/ai'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '~/components'
 import { CategoryTreeItem } from './Silbader'
 import { useCreateCategoriesMutation, useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
 import { MdOutlineDriveFolderUpload } from 'react-icons/md'
 import { Footer } from 'antd/es/layout/layout'
 import { toastService } from '~/utils/toask/toaskMessage'
+import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 const FoldersCategories = () => {
   const idCate = localStorage.getItem('idCategories')
   const { id } = useParams()
   const [queryParameters] = useSearchParams()
   const dataExamsQuery: any = queryParameters.get('category')
+  const searchKeyword: string | null = queryParameters.get('keyword')
+
   const [dataCategories, setDataCategories] = useState<any[]>([])
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
-  const { data: dataCategoriTree, isLoading, isFetching } = useGetCategoriesDepartmentsQuery(idCate)
+  const queryConfig = useQueryConfig()
+  const {
+    data: dataCategoriTree,
+    isLoading,
+    isFetching
+  } = useGetCategoriesDepartmentsQuery({
+    id: idCate as string,
+    name: searchKeyword || ''
+  })
   const [createCategories, { isLoading: isCreateCategoriesLoading }] = useCreateCategoriesMutation()
   useEffect(() => {
     const savedCategories = sessionStorage.getItem('categories')
@@ -52,6 +64,17 @@ const FoldersCategories = () => {
         setOpen(false)
       })
   }
+
+  const onFinishSearch = ({ keyword }: any) => {
+    const keywordSpace = keyword.trim()
+    console.log(keywordSpace)
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        keyword: keywordSpace
+      }).toString()
+    })
+  }
   return (
     <div className='relative'>
       {isLoading || isFetching ? (
@@ -82,7 +105,17 @@ const FoldersCategories = () => {
               <div>
                 {dataCategories?.map((category: any) => {
                   if (category && category._id) {
-                    return <CategoryTreeItem key={category._id} category={category} level={0} bg={true} button={true} />
+                    return (
+                      <CategoryTreeItem
+                        key={category._id}
+                        category={category}
+                        level={0}
+                        bg={true}
+                        button={true}
+                        createExams={false}
+                        checkMember={false}
+                      />
+                    )
                   }
                   return null
                 })}
@@ -105,19 +138,11 @@ const FoldersCategories = () => {
           />
           <div className='flex justify-between mb-5 mt-3'>
             <div>
-              <Form className='flex gap-5' layout='vertical' hideRequiredMark>
-                <Form.Item
-                  name='name'
-                  className=''
-                  rules={[{ required: true, message: 'vui lòng nhập Tên Folder ...!' }]}
-                >
+              <Form onFinish={onFinishSearch} className='flex gap-5' layout='vertical' hideRequiredMark>
+                <Form.Item name='keyword' rules={[{ required: true, message: 'vui lòng nhập Tên Folder ...!' }]}>
                   <Input className='w-[330px] border border-[#ccc]' placeholder='vui lòng nhập Tên Folder ...!' />
                 </Form.Item>
-                <Form.Item
-                  name='name'
-                  className=''
-                  rules={[{ required: true, message: 'vui lòng nhập Tên Folder ...!' }]}
-                >
+                <Form.Item>
                   <button className='bg-success px-8 rounded-md text-white font-medium py-2.5' type='submit'>
                     Submit
                   </button>
@@ -136,9 +161,18 @@ const FoldersCategories = () => {
               </button>
             </div>
           </div>
-          <div className='mt-5 min-h-screen'>
+          <div className='mt-5  border rounded-md  shadow-lg'>
             {dataCategories?.map((category: any) => {
-              return <CategoryTreeItem key={category?._id} category={category} level={0} bg={true} button={true} />
+              return (
+                <CategoryTreeItem
+                  key={category?._id}
+                  category={category}
+                  level={0}
+                  bg={true}
+                  button={true}
+                  createExams={false}
+                />
+              )
             })}
           </div>
         </div>

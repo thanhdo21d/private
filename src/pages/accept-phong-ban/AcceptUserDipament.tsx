@@ -17,14 +17,22 @@ import { useGetAllExamsCategoriesQuery } from '~/apis/examSetting/examSetting'
 const AcceptUserDipament = () => {
   const [checkConcept, setCheckConcept] = useState<boolean>(false)
   const { data: dataAllCategories, isFetching: isGetCategoriesLoading } = useGetAllCategoriesQuery()
+  console.log(dataAllCategories)
   const [queryParameters] = useSearchParams()
   const dataPageQuery: string | null = queryParameters.get('department')
+  const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const search: string | null = queryParameters.get('search')
   const {
     data: dataExamsCategories,
     isLoading: isDataExamsCategoriesLoading,
     isFetching
-  } = useGetAllExamsCategoriesQuery(dataPageQuery as string)
-  console.log(dataExamsCategories)
+  } = useGetAllExamsCategoriesQuery({
+    id: dataPageQuery,
+    page: 1,
+    limit: datalimitQueryChange || 10,
+    search: search || ''
+  })
+  console.log(dataExamsCategories, 'exmas')
   const { t } = useTranslation(['header'])
   const { profile } = useContext(AppContext)
   const navigate = useNavigate()
@@ -42,8 +50,8 @@ const AcceptUserDipament = () => {
         {checkConcept ? (
           <div>
             <div className='h-full w-[50%] mx-auto rounded-sm shadow-md flex gap-15  justify-center items-center bg-black bg-opacity-30 from-indigo-600 via-indigo-700 to-indigo-700'>
-              {dataExamsCategories?.exam?.examsKT.length > 0 ? (
-                dataExamsCategories?.exam?.examsKT?.map((data: any) => {
+              {dataExamsCategories?.examsKT?.examsKT.length > 0 ? (
+                dataExamsCategories?.examsKT?.examsKT?.map((data: any) => {
                   console.log(data)
                   return (
                     <div
@@ -241,7 +249,7 @@ const AcceptUserDipament = () => {
             </div>
           </div>
           <div>
-            <img className='w-[220px]' src={`${logoAction}`} />
+            <img className='w-[150px]' src={`${logoAction}`} />
           </div>
         </div>
       )}

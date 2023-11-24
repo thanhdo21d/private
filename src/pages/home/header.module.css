@@ -1,0 +1,23 @@
+.main-header {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  margin: 0 auto;
+}
+.header-content ::after {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  margin: 0 auto;
+  position: absolute;
+  z-index: 9999;
+}

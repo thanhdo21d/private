@@ -1,9 +1,10 @@
-import { Form, Input, Popconfirm, Skeleton, Table, Tooltip } from 'antd'
+import { Drawer, Form, Input, Popconfirm, Skeleton, Space, Table, Tooltip } from 'antd'
 import { Footer } from 'antd/es/layout/layout'
-import React from 'react'
+import React, { useState } from 'react'
 import { AiFillEdit } from 'react-icons/ai'
 import { PiKeyReturnThin } from 'react-icons/pi'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import logoPdf from '../../../assets/pdf.png'
 import {
   useCreateTopicExamsMutation,
   useGetIdExamsCategoriesQuery,
@@ -15,17 +16,33 @@ import InputNumber from '~/components/inputNumber'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 import Pagination from '~/pages/roles/Pagination'
 import { toastService } from '~/utils/toask/toaskMessage'
+import axios from 'axios'
 type FieldType = {
   keyword?: string
 }
 const ExamsQuestion = () => {
   const navigate = useNavigate()
+  const uri = import.meta.env.VITE_API
   const { id } = useParams()
-  const { data: dataIdExmas, isLoading, isFetching } = useGetIdExamsCategoriesQuery(id as string)
+  const [open, setOpen] = useState(false)
+  const [queryParameters] = useSearchParams()
+  const dataPageQuery: string | null = queryParameters.get('page')
+  const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const search: string | null = queryParameters.get('search')
+  const {
+    data: dataIdExmas,
+    isLoading,
+    isFetching
+  } = useGetIdExamsCategoriesQuery({
+    id: id,
+    page: dataPageQuery,
+    limit: datalimitQueryChange,
+    search: search || ''
+  })
   const queryConfig = useQueryConfig()
   const [addTopicQuestion] = useCreateTopicExamsMutation()
   const [removeTopic, { isLoading: isRemoveTopicLoading }] = useRemoveTopicExamsMutation()
-  console.log(dataIdExmas?.data?.topicExams)
+  console.log(dataIdExmas,"l")
   const confirm = (idExams: string) => {
     removeTopic({
       id: idExams,
@@ -38,6 +55,43 @@ const ExamsQuestion = () => {
   const cancel = () => {
     toastService.error('Click on No')
   }
+  const showDrawer = () => {
+    setOpen(true)
+  }
+  const onClose = () => {
+    setOpen(false)
+  }
+  const handelExportPdf = async (id: string) => {
+    try {
+      const response = await axios.get(`${uri}export/topicExams/${id}`, {
+        responseType: 'blob'
+      })
+      if (response.status === 200) {
+        const pdfBlob = new Blob([response.data], { type: 'application/pdf' })
+        const pdfUrl = window.URL.createObjectURL(pdfBlob)
+        const a = document.createElement('a')
+        a.href = pdfUrl
+        a.download = 'exported.pdf'
+        a.click()
+        toastService.success('Export success')
+      } else {
+        toastService.error('Export failed')
+      }
+    } catch (error) {
+      console.error('Export error:', error)
+      toastService.error('Export failed')
+    }
+  }
+  const onFinish = ({ keyword }: any) => {
+    const keywordSpace = keyword.trim()
+    console.log(keywordSpace)
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: keywordSpace
+      }).toString()
+    })
+  }
   const dataSource = dataIdExmas?.data?.topicExams.map((item: any, index: any) => ({
     STT: index + 1,
     key: item._id,
@@ -47,6 +101,39 @@ const ExamsQuestion = () => {
     updatedAt: item.updatedAt,
     name: item.name
   }))
+
+  const dataSourceHistory = dataIdExmas?.data?.topicExams.map((item: any, index: any) => ({
+    STT: index + 1,
+    key: item._id,
+    name: item.name
+  }))
+  const columnsHistory = [
+    {
+      title: 'STT',
+      dataIndex: 'STT',
+      key: 'STT'
+    },
+    {
+      title: 'name',
+      dataIndex: 'name',
+      key: 'name'
+    },
+    {
+      title: <p className='flex justify-center text-danger font-semibold text-xl'>actions</p>,
+      render: ({ key: id }: { key: string }) => {
+        return (
+          <div className='flex items-center justify-center gap-3'>
+            <Button styleClass='p-2 w-[180px] flex items-center focus:outline-none hover:bg-warning'>
+              <span>
+                <AiFillEdit />
+              </span>
+              <span>áp dụng</span>
+            </Button>
+          </div>
+        )
+      }
+    }
+  ]
 
   const columns = [
     {
@@ -121,10 +208,18 @@ const ExamsQuestion = () => {
                 <span>
                   <DeleteIcon />
                 </span>
-                {/* isRemoveLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : */}
                 <span>{'Delete'}</span>
               </Button>
             </Popconfirm>
+            <div className='p-2 w-[80px] flex items-center focus:outline-none hover:scale-105'>
+              <Tooltip title='Export to Pdf'>
+                <img
+                  onClick={() => handelExportPdf(id)}
+                  className='w-[50px] h-[40px] cursor-pointer'
+                  src={`${logoPdf}`}
+                />
+              </Tooltip>
+            </div>
           </div>
         )
       }
@@ -132,6 +227,23 @@ const ExamsQuestion = () => {
   ]
   return (
     <div>
+      <Drawer
+        title='Details Questions'
+        placement={'right'}
+        width={900}
+        className='absolute z-10000000'
+        onClose={onClose}
+        open={open}
+        extra={
+          <Space>
+            <Button styleClass='py-2' onClick={onClose}>
+              Cancel
+            </Button>
+          </Space>
+        }
+      >
+        <Table dataSource={dataSourceHistory} columns={columnsHistory} pagination={false} />
+      </Drawer>
       <button
         type='submit'
         className='my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4 text-2xl text-white  rounded-sm tracking-wide bg-[#001529]  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg  transition ease-in duration-300'
@@ -141,6 +253,7 @@ const ExamsQuestion = () => {
       <div className='flex items-center justify-between'>
         <div className=''>
           <Form
+            onFinish={onFinish}
             className='flex gap-5  justify-center'
             name='basic'
             labelCol={{ span: 8 }}
@@ -157,30 +270,7 @@ const ExamsQuestion = () => {
             </Button>
           </Form>
         </div>
-        <div className='flex items-center justify-end gap-5 '>
-          <div
-            className={` bg-danger cursor-pointer h-[40px] flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
-          >
-            <Popconfirm
-              title='Delete the task'
-              description='Xóa tất cả sẽ không thể khôi phục , bạn đã chắc ?'
-              okButtonProps={{
-                style: { backgroundColor: 'blue', marginRight: '20px' }
-              }}
-              okText='Yes'
-              cancelText='No'
-            >
-              <Tooltip title='Trở Về'>
-                <p className='text-base font-medium text-black  flex items-center gap-4'>
-                  <span>
-                    <DeleteIcon />
-                  </span>
-                  <span className='text-white '> Xóa Tất Cả</span>
-                </p>
-              </Tooltip>
-            </Popconfirm>
-          </div>
-          {/*  */}
+        <div className='2xl:flex grid grid-cols-1 gap-y-2 items-center justify-end gap-5 '>
           <Link
             to='create-exams'
             className={` bg-white h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide cursor-pointer  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
@@ -190,10 +280,20 @@ const ExamsQuestion = () => {
                 <span>
                   <PiKeyReturnThin className='text-xl text-danger' />
                 </span>
-                <span> Thêm Đề Thi</span>
+                <span> Thêm Đề Thi Mới</span>
               </div>
             </Tooltip>
           </Link>
+          <div
+            className={` bg-white h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide cursor-pointer  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
+          >
+            <div className='text-base font-medium text-black  flex items-center gap-4'>
+              <span>
+                <PiKeyReturnThin className='text-xl text-danger' />
+              </span>
+              <span onClick={showDrawer}> Thêm Đề Từ Cấu Trúc Cũ</span>
+            </div>
+          </div>
         </div>
       </div>
       {isLoading || isFetching ? (
@@ -215,7 +315,7 @@ const ExamsQuestion = () => {
             Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
           </div>
           <div>
-            <Pagination pageSize={5} queryConfig={queryConfig} />
+            <Pagination pageSize={dataIdExmas?.totalPages} queryConfig={queryConfig} />
             <div className='flex items-center gap-5 mt-4'>
               <div style={{ textDecoration: 'underline' }} className='text-md'>
                 số bản ghi

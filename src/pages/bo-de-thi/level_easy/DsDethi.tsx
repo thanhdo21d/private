@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { useGetAllDepartmentQuery } from '~/apis/department/department'
 import { Button } from '~/components'
 import { AppContext } from '~/contexts/app.contexts'
@@ -9,6 +9,7 @@ import { EyeOutlined } from '@ant-design/icons'
 import { Col, DatePicker, Drawer, Form, Input, Row, Select, Skeleton, Space, Table } from 'antd'
 import {
   useCreateCategoriesMutation,
+  useGetAllCategoriesDepartmentQuery,
   useGetAllCategoriesQuery,
   useGetCategoriesDepartmentsQuery,
   useRemoveCategoriesTreeMutation
@@ -16,11 +17,25 @@ import {
 import { toastService } from '~/utils/toask/toaskMessage'
 import { Footer } from 'antd/es/layout/layout'
 import { useGetIdUserQuery } from '~/apis/user/user.api'
+import Pagination from '~/pages/roles/Pagination'
+import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 const DsDethi = () => {
+  const [queryParameters] = useSearchParams()
+  const dataPageQuery: string | null = queryParameters.get('page')
+  const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const search: string | null = queryParameters.get('search')
   const navigate = useNavigate()
   const { data: dataAllCategories, isFetching: isGetCategoriesLoading } = useGetAllCategoriesQuery()
+  const { data: dataAllCategoriesDepartment, isLoading: isGetCategoriesDepartmentLoading } =
+    useGetAllCategoriesDepartmentQuery({
+      page: dataPageQuery || 1,
+      limit: datalimitQueryChange || 10,
+      name: search || ''
+    })
+  console.log(dataAllCategoriesDepartment)
   const [createCategories, { isLoading: isCreateCategoriesLoading }] = useCreateCategoriesMutation()
   const [removeCategories, { isLoading: isRemoveLoading }] = useRemoveCategoriesTreeMutation()
+  const queryConfig = useQueryConfig()
   const { profile, reset } = useContext(AppContext)
   console.log(profile?.role.name)
   const { data: dataUser, isLoading, isFetching } = useGetIdUserQuery(profile?._id as string)
@@ -45,14 +60,30 @@ const DsDethi = () => {
         setOpen(false)
       })
   }
-  const dataSource = dataUser?.user?.role?.adminDepartMent
-    .filter((items: category) => items.parentCheck !== '0')
-    .map((data: category, index: number) => ({
-      index: index,
-      key: data._id,
-      name: data.name
-    }))
-
+  const onFinishSearch = ({ keyword }: any) => {
+    const keywordSpace = keyword.trim()
+    console.log(keywordSpace)
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: keywordSpace
+      }).toString()
+    })
+  }
+  const dataSource =
+    profile?.role.name == 'Admin'
+      ? dataAllCategoriesDepartment?.data?.map((data: category, index: number) => ({
+          index: index + 1,
+          key: data._id,
+          name: data.name
+        }))
+      : dataUser?.user?.role?.adminDepartMent
+          .filter((items: category) => items.parentCheck !== '0')
+          .map((data: category, index: number) => ({
+            index: index + 1,
+            key: data._id,
+            name: data.name
+          }))
   const columns = [
     {
       title: 'STT',
@@ -107,24 +138,27 @@ const DsDethi = () => {
     <div>
       <div className=' xl:flex justify-between mb-5'>
         <div>
-          <Form className='flex gap-5'  layout='vertical' hideRequiredMark>
-            <Form.Item
-              name='name'
-              className=''
-              rules={[{ required: true, message: 'vui lòng nhập Tên Phòng Ban ...!' }]}
-            >
-              <Input
-                className='w-[250px] xl:w-[330px] border border-[#ccc]'
-                placeholder='vui lòng nhập Tên Phòng Ban ...!'
-              />
-            </Form.Item>
-            <Form.Item
-            >
-              <button className='bg-success px-8 rounded-md text-white font-medium py-2.5' type='submit'>
-                Submit
-              </button>
-            </Form.Item>
-          </Form>
+          {profile?.role.name == 'Admin' ? (
+            <Form onFinish={onFinishSearch} className='flex gap-5' layout='vertical' hideRequiredMark>
+              <Form.Item
+                name='keyword'
+                className=''
+                rules={[{ required: true, message: 'vui lòng nhập Tên Phòng Ban ...!' }]}
+              >
+                <Input
+                  className='w-[250px] xl:w-[330px] border border-[#ccc]'
+                  placeholder='vui lòng nhập Tên Phòng Ban ...!'
+                />
+              </Form.Item>
+              <Form.Item>
+                <button className='bg-success px-8 rounded-md text-white font-medium py-2.5' type='submit'>
+                  Submit
+                </button>
+              </Form.Item>
+            </Form>
+          ) : (
+            ''
+          )}
         </div>
         <div className='flex items-center gap-5'>
           <UnorderedListOutlined
@@ -235,7 +269,12 @@ const DsDethi = () => {
               })}
           </div>
         ) : (
-          <Table dataSource={dataSource} columns={columns} pagination={false} className='dark:bg-black  mt-4 ' />
+          <>
+            <Table dataSource={dataSource} columns={columns} pagination={false} className='dark:bg-black  mt-4 ' />
+            <div>
+              <Pagination pageSize={dataAllCategoriesDepartment?.options?.totalPages} queryConfig={queryConfig} />
+            </div>
+          </>
         )}
         <Footer className='mt-5 w-full  justify-between dark:bg-black absolute bottom-0'>
           <div className='text-md font-semibold text-center dark:text-white'>

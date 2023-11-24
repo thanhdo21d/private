@@ -9,6 +9,7 @@ import { Button } from '~/components'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
+import axios from 'axios'
 type FieldType = {
   url?: string
 }
@@ -29,55 +30,37 @@ const beforeUpload = (file: RcFile) => {
   return isJpgOrPng && isLt2M
 }
 const EditBanner = () => {
-  const [loading, setLoading] = useState(false)
-  const {t} = useTranslation(['header'])
-  const [imageUrl, setImageUrl] = useState<string>()
   const [form] = Form.useForm()
+  const [file, setFile] = useState<any>(null)
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const uri = import.meta.env.VITE_API
   const { data: bannerData, error, isFetching: isGetBanerLoading } = useGetIdBannersQuery(id || '')
   console.log(bannerData)
-  const [updateBanner, { isLoading: isUpdateLoading }] = useUpdateBannerMutation()
   useEffect(() => {
-    // đồng bộ dữ liệu từ API fill vào form
     form.setFieldsValue({
       url: bannerData?.data?.url
-      // status: bannerData?.data?.status
     })
   }, [bannerData, form, id])
-  const onFinish = (values: any) => {
-    console.log(values)
-    updateBanner({ ...values, _id: id })
-      .unwrap()
-      .then(() => {
-        toastService.success('Banner updated successfully')
-        navigate('/admin/banner')
+  const handleSubmit = async (event: any) => {
+    event.preventDefault()
+    const formData = new FormData()
+    formData.append('banner', file)
+    formData.append('bannerId', id as string)
+    try {
+      await axios.post('http://localhost:8282/upload-banner', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       })
-      .catch(() => toastService.error('Error updating banner'))
-  }
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo)
-  }
-  const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true)
-      return
-    }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj as RcFile, (url) => {
-        setLoading(false)
-        setImageUrl(url)
-        console.log(imageUrl)
-      })
+      toastService.success('banner uploaded successfully')
+      setTimeout(() => {
+        window.location.reload()
+      }, 350)
+    } catch (error) {
+      console.error(error)
     }
   }
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  )
   return (
     <>
       <Button styleClass='bg-strokedark font-bold' onClick={() => navigate('/admin/banner')}>
@@ -87,48 +70,37 @@ const EditBanner = () => {
           <PiKeyReturnDuotone />
         </span>
       </Button>
-      {isGetBanerLoading ? (
-        <Skeleton />
-      ) : (
-        <div className='mx-auto w-[900px] mt-20'>
-          <Form
-            form={form}
-            name='basic'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ maxWidth: 600 }}
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            autoComplete='off'
-          >
-            <Form.Item<FieldType>
-              label='đường dẫn images'
-              name='url'
-              rules={[{ required: true, message: 'Please input your Roles!' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type='submit'>
-                {isUpdateLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : t('product.update_banner')}
-              </Button>
-            </Form.Item>
-          </Form>
-
-          <Upload
-            name='avatar'
-            listType='picture-circle'
-            className='avatar-uploader'
-            showUploadList={false}
-            action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
-            beforeUpload={beforeUpload}
-            onChange={handleChange}
-          >
-            {imageUrl ? <img src={imageUrl} alt='avatar' style={{ width: '100%' }} /> : uploadButton}
-          </Upload>
+      <div className='w-full mt-5  p-4 sm:p-6 lg:p-8 bg-white shadow-md'>
+        <div className='flex justify-between items-center'>
+          <div className='flex items-center gap-5'>
+            <span className='text-xl font-semibold block'> Sửa Ảnh </span>
+          </div>
+          <p className='text-sm font-semibold block'>upload ảnh</p>
         </div>
-      )}
+        <span className='text-gray-600'>vui lòng chọn file và upload</span>
+        <div className='w-full p-8 mx-2 flex justify-center'>
+          <img className='w-[500px] h-[300px]' src={`${uri}${bannerData?.data.url}`} />
+        </div>
+        <div>
+          <form onSubmit={handleSubmit} className='flex justify-center'>
+            <label
+              htmlFor='fileInput'
+              className='flex items-center w-1/2 justify-center mx-2 py-2 bg-[#D7B978] group rounded-md shadow-lg cursor-pointer hover:text-white text-white hover:font-bold transition-all'
+            >
+              <input
+                type='file'
+                id='fileInput'
+                onChange={(e: any) => setFile(e.target.files[0])}
+                style={{ display: 'none' }}
+              />
+              Select Image
+            </label>
+            <button type='submit' className='bg-success px-2 rounded-md text-white font-medium'>
+              Upload
+            </button>
+          </form>
+        </div>
+      </div>
     </>
   )
 }

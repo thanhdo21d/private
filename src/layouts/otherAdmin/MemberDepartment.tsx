@@ -1,4 +1,4 @@
-import { Col, Drawer, Form, Input, Popconfirm, Row, Skeleton, Space, Table } from 'antd'
+import { Checkbox, Col, Drawer, Form, Input, Popconfirm, Row, Skeleton, Space, Table } from 'antd'
 import { Footer } from 'antd/es/layout/layout'
 import axios from 'axios'
 import React, { useState } from 'react'
@@ -11,12 +11,14 @@ import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 import Pagination from '~/pages/roles/Pagination'
 import { toastService } from '~/utils/toask/toaskMessage'
 import InsertMember from './InsertMember'
+import { CheckboxChangeEvent } from 'antd/es/checkbox'
 type FieldType = {
   code?: string
 }
-const MemberDepartment = () => {
+const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember: boolean; sendDataToParent: any }) => {
   const queryConfig = useQueryConfig()
   const navigate = useNavigate()
+  const [dataToSend, setDataToSend] = useState<any[]>([])
   const idCate = localStorage.getItem('idCategories')
   const [queryParameters] = useSearchParams()
   const dataPageQuery: string | null = queryParameters.get('page')
@@ -63,6 +65,17 @@ const MemberDepartment = () => {
       .unwrap()
       .then(() => toastService.success('Delete success'))
       .catch(() => toastService.error('Error deleting'))
+  }
+  const sendDataToParentProps = () => {
+    sendDataToParent(dataToSend)
+  }
+  const onChange = (id: any) => {
+    const index = dataToSend.indexOf(id)
+    if (index === -1) {
+      setDataToSend([...dataToSend, id])
+    } else {
+      setDataToSend(dataToSend.filter((item) => item !== id))
+    }
   }
   const dataSource = dataUserDepartments?.data?.users?.map(
     ({
@@ -116,24 +129,28 @@ const MemberDepartment = () => {
       title: <p className='flex justify-center'>Tác Vụ</p>,
       render: ({ key: id }: { key: string }) => (
         <div className='flex justify-center space-x-2'>
-          <Popconfirm
-            title='Delete the task'
-            description='Are you sure to delete this task?'
-            onConfirm={() => confirm(id)}
-            okText='Yes'
-            okButtonProps={{
-              style: { backgroundColor: 'blue' }
-            }}
-            cancelText='No'
-            placement='rightBottom'
-          >
-            <Button styleClass='bg-danger flex items-center w-fit w-[100px]'>
-              <span>
-                <DeleteIcon />
-              </span>
-              <span className='font-medium'> Xóa</span>
-            </Button>
-          </Popconfirm>
+          {checkMember ? (
+            <Checkbox onChange={() => onChange(id)}>chọn</Checkbox>
+          ) : (
+            <Popconfirm
+              title='Delete the task'
+              description='Are you sure to delete this task?'
+              onConfirm={() => confirm(id)}
+              okText='Yes'
+              okButtonProps={{
+                style: { backgroundColor: 'blue' }
+              }}
+              cancelText='No'
+              placement='rightBottom'
+            >
+              <Button styleClass='bg-danger flex items-center w-fit w-[100px]'>
+                <span>
+                  <DeleteIcon />
+                </span>
+                <span className='font-medium'> Xóa</span>
+              </Button>
+            </Popconfirm>
+          )}
         </div>
       )
     }
@@ -162,6 +179,14 @@ const MemberDepartment = () => {
       toastService.error('Error uploading file')
       setIsLoading(false)
     }
+  }
+  const onFinishFailed = (errorInfo: any) => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: ''
+      }).toString()
+    })
   }
   return (
     <div>
@@ -256,35 +281,55 @@ const MemberDepartment = () => {
           <InsertMember />
         )}
       </Drawer>
-      <div className='flex space-x-2'>
-        <Button
-          styleClass='bg-warning'
-          onClick={() => {
-            showDrawer()
-            return setCheckExcel(false)
-          }}
-        >
-          Thêm mới
-        </Button>
-        <Button
-          styleClass='bg-success'
-          onClick={() => {
-            showDrawer()
-            return setCheckExcel(true)
-          }}
-        >
-          Thêm mới Từ Excel
-        </Button>
-      </div>
+      {!checkMember && (
+        <div className='flex space-x-2'>
+          <Button
+            styleClass='bg-warning'
+            onClick={() => {
+              showDrawer()
+              return setCheckExcel(false)
+            }}
+          >
+            Thêm mới
+          </Button>
+          <Button
+            styleClass='bg-success'
+            onClick={() => {
+              showDrawer()
+              return setCheckExcel(true)
+            }}
+          >
+            Thêm mới Từ Excel
+          </Button>
+        </div>
+      )}
 
       <div className='mt-10 flex gap-5'>
-        <Form layout='vertical' onFinish={onFinish} className='flex gap-5  justify-center'>
+        <Form
+          layout='vertical'
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          className='flex gap-5  justify-center'
+        >
           <Form.Item<FieldType> name='code' rules={[{ required: true, message: 'vui lòng nhập code nhân viên ...!' }]}>
-            <Input className='h-[50px] w-[600px]' placeholder='Tìm Kiếm Theo Code ....' />
+            <Input
+              className={`h-[50px] ${checkMember ? 'w-[300px]' : 'w-[600px]'} `}
+              placeholder='Tìm Kiếm Theo Code ....'
+            />
           </Form.Item>
           <Button type='submit' styleClass='w-[150px] h-[50px] bg-graydark'>
             Tìm Kiếm
           </Button>
+          {checkMember && (
+            <>
+              <Button type='button' styleClass='w-[150px] h-[50px] !px-0 bg-graydark'>
+                chọn tất cả
+              </Button>
+              <Button onClick={sendDataToParentProps} type='button' styleClass='w-[150px] h-[50px] !px-0 bg-success'>
+                xác nhận
+              </Button>
+            </>
+          )}
         </Form>
       </div>
       <hr className='mt-5' />

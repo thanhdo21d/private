@@ -1,6 +1,5 @@
 import { Empty, Popconfirm, Skeleton } from 'antd'
 import React, { useContext } from 'react'
-import logoUrl from '../../assets/images/logo/1111111111111.jpg'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { Tooltip } from 'antd'
 import { Helmet } from 'react-helmet-async'
@@ -17,6 +16,8 @@ const DefaultLayoutTrangthi = () => {
   const { profile, reset } = useContext(AppContext)
   const { t } = useTranslation(['header'])
   const navigate = useNavigate()
+  const uri = import.meta.env.VITE_API
+
   const handelLogOut = () => {
     const logout = window.confirm('Bạn Có Muốn Đăng Xuất !')
     if (logout) {
@@ -46,7 +47,7 @@ const DefaultLayoutTrangthi = () => {
         className='lg:flex w-full z-0 hidden bg-login bg-no-repeat bg-cover relative items-center'
         style={{
           // backgroundImage: `url(${logoUrl})`
-          backgroundImage: `url(${dataBannerID?.data.url || logoUrl})`
+          backgroundImage: `url(${uri}${dataBannerID?.data.url})`
         }}
       ></div>
       <div className='absolute bg-black opacity-60 inset-0 z-0'></div>

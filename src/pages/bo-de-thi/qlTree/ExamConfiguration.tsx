@@ -191,7 +191,7 @@ const ExamConfiguration = () => {
             >
               <Input className='w-[330px] border border-[#ccc]' placeholder='vui lòng nhập Tên Kì Thi ...!' />
             </Form.Item>
-            <Form.Item >
+            <Form.Item>
               <button className='bg-success px-8 rounded-md text-white font-medium py-2.5' type='submit'>
                 Submit
               </button>
@@ -315,15 +315,15 @@ const ExamConfiguration = () => {
           ) : (
             <>
               <Table dataSource={dataSource} columns={columns} pagination={false} className='dark:bg-black  mt-4 ' />
-              <div>
-                <Pagination pageSize={dataExamsCategories?.totalPages} queryConfig={queryConfig} />
-              </div>
             </>
           )}
         </>
       )}
       <Footer className='mt-5 w-full  justify-between dark:bg-black absolute bottom-0'>
-        <div className='text-md font-semibold text-center dark:text-white'>
+        <div>
+          <Pagination pageSize={dataExamsCategories?.totalPages} queryConfig={queryConfig} />
+        </div>
+        <div className='text-md mt-5 font-semibold text-center dark:text-white'>
           Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
         </div>
       </Footer>

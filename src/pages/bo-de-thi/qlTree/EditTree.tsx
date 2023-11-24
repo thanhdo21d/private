@@ -26,7 +26,17 @@ const EditTree = () => {
       <div className='mt-15 min-h-screen'>
         {dataCategories?.map((category: any) => {
           console.log(category)
-          return <CategoryTreeItem key={category._id} category={category} level={0} bg={true} button={true} />
+          return (
+            <CategoryTreeItem
+              key={category._id}
+              category={category}
+              level={0}
+              bg={true}
+              button={true}
+              createExams={false}
+              checkMember={false}
+            />
+          )
         })}
       </div>
     </div>

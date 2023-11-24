@@ -2,35 +2,50 @@
 
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon, Button } from '~/components'
-import { Drawer, Form, Input, Menu, Popconfirm, Select, Skeleton, Table, Tooltip } from 'antd'
+import { Checkbox, Drawer, Form, Input, Menu, Popconfirm, Select, Skeleton, Table, Tooltip } from 'antd'
 import { NavLink, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AiFillHome, AiFillSetting, AiOutlineDashboard } from 'react-icons/ai'
 import { FaRegFolderOpen } from 'react-icons/fa'
 import { dashboardOther, settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
+import checkIcons from '../../../assets/check.png'
+import unCheckIcons from '../../../assets/unchecked.png'
+
 import {
   useEditCategoriesTreeMutation,
   useGetCategoriesDepartmentsQuery,
   useRemoveCategoriesTreeMutation
 } from '~/apis/category/categories'
 import { toastService } from '~/utils/toask/toaskMessage'
+import { useAppDispatch } from '~/store/root/hook'
+import { setDataCategoires } from '~/store/slice/checkCategories'
 interface SidebarProps {
   sidebarOpen: boolean
   setSidebarOpen: (arg: boolean) => void
   textUi: string
   checkInfo?: boolean
 }
-export const CategoryTreeItem = React.memo(({ category, level, bg, button }: any) => {
+export const CategoryTreeItem = React.memo(({ category, level, bg, button, createExams, checkMember }: any) => {
   console.log(category, 'category')
-  const location = useLocation()
+  const dispatch = useAppDispatch()
   const { id } = useParams()
+  const idCate = localStorage.getItem('idCategories')
   const [removeCategoriTree] = useRemoveCategoriesTreeMutation()
+  const [isChecked, setIsChecked] = useState(false)
   const [editCategoriTree] = useEditCategoriesTreeMutation()
   const [open, setOpen] = useState(false)
   const [dataTree, setDataTree] = useState<any[]>([])
   const [queryParameters] = useSearchParams()
+  const searchKeyword: string | null = queryParameters.get('keyword')
   const parentId: string | null = queryParameters.get('parentId')
   const navigate = useNavigate()
-  const { data: dataCategoriTree, isLoading, isFetching } = useGetCategoriesDepartmentsQuery(id)
+  const {
+    data: dataCategoriTree,
+    isLoading,
+    isFetching
+  } = useGetCategoriesDepartmentsQuery({
+    id: idCate as string,
+    name: searchKeyword || ''
+  })
   const [isOpen, setIsOpen] = useState(() => {
     const openCategories = JSON.parse(sessionStorage.getItem('openCategories') || '{}')
     return !!openCategories[category?._id]
@@ -68,7 +83,8 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button }: any
       }).toString()
     })
   }
-  const toggleOpen = () => {
+  const toggleOpen = (e: any) => {
+    e.stopPropagation()
     setIsOpen((prevState) => {
       const newState = !prevState
       const openCategories = JSON.parse(sessionStorage.getItem('openCategories') || '{}')
@@ -158,6 +174,12 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button }: any
       }
     }
   ]
+  const onChange = (e: any) => {
+    e.stopPropagation()
+    const newChecked = !isChecked
+    setIsChecked(newChecked)
+    dispatch(setDataCategoires({ id: category._id, name: category.name, checked: newChecked }))
+  }
   return (
     <div className=''>
       <Drawer
@@ -222,21 +244,32 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button }: any
                   {category?.name} <FaRegFolderOpen className='text-2xl' />
                 </span>
               </div>
-              <div>
-                {button && category?.children && (
-                  <div className='space-x-5 py-2'>
-                    <button onClick={showDrawer} className='font-bold text-success underline'>
-                      Edit
-                    </button>
-                    <button onClick={handleCategoryClickDetails} className='font-bold text-success underline'>
-                      Chi Tiết
-                    </button>
-                    <button onClick={handelRemoveCategori} className='font-bold text-danger underline'>
-                      Delete
-                    </button>
-                  </div>
-                )}
-              </div>
+              {createExams && (
+                <div className='py-2'>
+                  <Checkbox
+                    checked={isChecked}
+                    onChange={(e) => {
+                      e.stopPropagation()
+                      onChange(e)
+                    }}
+                  >
+                    chọn
+                  </Checkbox>
+                </div>
+              )}
+              {button && !createExams && category?.children && (
+                <div className='space-x-5 py-2'>
+                  <button onClick={showDrawer} className='font-bold text-success underline'>
+                    Edit
+                  </button>
+                  <button onClick={handleCategoryClickDetails} className='font-bold text-success underline'>
+                    Chi Tiết
+                  </button>
+                  <button onClick={handelRemoveCategori} className='font-bold text-danger underline'>
+                    Delete
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           {isOpen && (
@@ -249,6 +282,8 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button }: any
                     level={level + 1}
                     bg={bg}
                     button={button ? true : false}
+                    createExams={createExams ? true : false}
+                    checkMember={checkMember ? true : false}
                   />
                 ))}
             </div>

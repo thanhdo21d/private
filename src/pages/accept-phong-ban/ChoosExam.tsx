@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Card, Col, Row, Skeleton } from 'antd'
 import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useGetIdExamsCategoriesQuery } from '~/apis/examSetting/examSetting'
 import { IoMdReturnLeft } from 'react-icons/io'
 const ChoosExam = () => {
@@ -13,7 +13,20 @@ const ChoosExam = () => {
     return () => (window.onscroll = null)
   }
   const { id } = useParams()
-  const { data: dataIdExmas, isLoading, isFetching } = useGetIdExamsCategoriesQuery(id as string)
+  const [queryParameters] = useSearchParams()
+  const dataPageQuery: string | null = queryParameters.get('page')
+  const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const search: string | null = queryParameters.get('search')
+  const {
+    data: dataIdExmas,
+    isLoading,
+    isFetching
+  } = useGetIdExamsCategoriesQuery({
+    id: id,
+    page: dataPageQuery,
+    limit: datalimitQueryChange,
+    search: search || ''
+  })
   console.log(dataIdExmas)
   return (
     <div>

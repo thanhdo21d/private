@@ -1,4 +1,5 @@
 import { Image, Pagination, Popconfirm, Skeleton, Table } from 'antd'
+import { Footer } from 'antd/es/layout/layout'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiFillEdit } from 'react-icons/ai'
@@ -9,6 +10,7 @@ import { toastService } from '~/utils/toask/toaskMessage'
 const AddBanner = () => {
   const { data, isFetching } = useGetAllBannersQuery()
   const { t } = useTranslation(['header'])
+  const uri = import.meta.env.VITE_API
   const navigate = useNavigate()
   const [removeBanner] = useDeleteBannerMutation()
   const confirm = (id: string) => {
@@ -44,7 +46,7 @@ const AddBanner = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text: string) => {
-        return <Image  width={200} src={`${text}`} />
+        return <Image width={200} src={`${uri}${text}`} />
       }
     },
     {
@@ -61,9 +63,7 @@ const AddBanner = () => {
             }}
             cancelText='No'
             placement='rightBottom'
-          >
-            {/* <Button styleClass='bg-danger '>Xóa</Button> */}
-          </Popconfirm>
+          ></Popconfirm>
           <Button styleClass='flex items-center ' onClick={() => navigate(`/admin/banner/${id}/edit`)}>
             <span>
               <AiFillEdit />
@@ -81,11 +81,14 @@ const AddBanner = () => {
       ) : (
         <div className='mt-2'>
           <Table dataSource={dataSource} pagination={false} columns={columns} />
-          <div className='mt-5 float-right'>
-            <Pagination defaultCurrent={1} total={50} />
-          </div>
         </div>
       )}
+      <Footer className='mt-5 flex justify-between dark:bg-black '>
+        <div className='text-md font-semibold text-center dark:text-white'>
+          Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+        </div>
+        <div className='text-md font-semibold text-center dark:text-white'>design by thanhdo IS.</div>
+      </Footer>
     </div>
   )
 }

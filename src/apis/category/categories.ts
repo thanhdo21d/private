@@ -17,6 +17,20 @@ const categorydepartmentAPI = createApi({
       },
       providesTags: ['Category']
     }),
+    getAllCategoriesDepartment: builder.query<any[], any>({
+      query: ({ page, limit, name }: { page: string; limit: string; name: string }) => {
+        return {
+          url: '/get-category/users',
+          method: 'GET',
+          params: {
+            page: page,
+            limit: limit,
+            name: name || ''
+          }
+        }
+      },
+      providesTags: ['Category']
+    }),
     createCategories: builder.mutation<any[], any>({
       query: (data) => {
         return {
@@ -53,10 +67,13 @@ const categorydepartmentAPI = createApi({
       invalidatesTags: ['Category']
     }),
     getCategoriesDepartments: builder.query({
-      query: (id) => {
+      query: ({ id, name }: { id: string; name: string }) => {
         return {
           url: `category-tree/${id}`,
-          method: 'GET'
+          method: 'GET',
+          params: {
+            name: name || ''
+          }
         }
       },
       providesTags: ['Category']
@@ -92,6 +109,7 @@ export const {
   useRemoveExamsDepartmentMutation,
   useGetCategoriesDepartmentsQuery,
   useRemoveCategoriesTreeMutation,
-  useEditCategoriesTreeMutation
+  useEditCategoriesTreeMutation,
+  useGetAllCategoriesDepartmentQuery
 } = categorydepartmentAPI
 export default categorydepartmentAPI

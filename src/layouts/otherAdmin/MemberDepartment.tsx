@@ -12,10 +12,12 @@ import Pagination from '~/pages/roles/Pagination'
 import { toastService } from '~/utils/toask/toaskMessage'
 import InsertMember from './InsertMember'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
+import { useAppDispatch } from '~/store/root/hook'
 type FieldType = {
   code?: string
 }
 const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember: boolean; sendDataToParent: any }) => {
+  const dispatch = useAppDispatch()
   const queryConfig = useQueryConfig()
   const navigate = useNavigate()
   const [dataToSend, setDataToSend] = useState<any[]>([])

@@ -4,6 +4,11 @@ const initialState = {
     id: '',
     name: '',
     checked: false
+  },
+  categoriesMember: {
+    code: [] as string[],
+    id: [] as string[],
+    checked: false
   }
 }
 export const datacatgeories = createSlice({
@@ -12,8 +17,11 @@ export const datacatgeories = createSlice({
   reducers: {
     setDataCategoires: (state, action: PayloadAction<{ id: string; name: string; checked: boolean }>) => {
       state.categoriesData = action.payload
+    },
+    setMemberCategoires: (state, action: PayloadAction<{ code: string[]; id: string[]; checked: boolean }>) => {
+      state.categoriesMember = action.payload
     }
   }
 })
-export const { setDataCategoires } = datacatgeories.actions
+export const { setDataCategoires, setMemberCategoires } = datacatgeories.actions
 export const categoriesReducer = datacatgeories.reducer

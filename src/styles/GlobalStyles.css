@@ -495,7 +495,7 @@
 .category-item {
   position: relative;
   padding-left: 20px;
-  margin-left: -10px; /* Để tạo khoảng cách giữa các category cùng cấp */
+  margin-left: -10px;
 }
 
 .category-item::before {
@@ -504,7 +504,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  border-left: 2px dashed #ccc; /* Sử dụng viền đứt 2px màu xám */
+  border-left: 1px dashed #ccc; /* Sử dụng viền đứt 2px màu xám */
 }
 
 .loader {

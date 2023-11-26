@@ -2,13 +2,16 @@
 
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon, Button } from '~/components'
-import { Checkbox, Drawer, Form, Input, Menu, Popconfirm, Select, Skeleton, Table, Tooltip } from 'antd'
+import closeIcons from '../../../assets/close.png'
+import addIcons from '../../../assets/plus.png'
+import { Checkbox, Drawer, Form, Input, Menu, Popconfirm, Select, Skeleton, Space, Table, Tooltip } from 'antd'
 import { NavLink, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AiFillHome, AiFillSetting, AiOutlineDashboard } from 'react-icons/ai'
 import { FaRegFolderOpen } from 'react-icons/fa'
 import { dashboardOther, settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
 import checkIcons from '../../../assets/check.png'
 import unCheckIcons from '../../../assets/unchecked.png'
+import folder from '../../../assets/folder.png'
 
 import {
   useEditCategoriesTreeMutation,
@@ -26,6 +29,7 @@ interface SidebarProps {
 }
 export const CategoryTreeItem = React.memo(({ category, level, bg, button, createExams, checkMember }: any) => {
   console.log(category, 'category')
+  const [inputFields, setInputFields] = useState<any>([{ point: '', count: '' }])
   const dispatch = useAppDispatch()
   const { id } = useParams()
   const idCate = localStorage.getItem('idCategories')
@@ -33,6 +37,7 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
   const [isChecked, setIsChecked] = useState(false)
   const [editCategoriTree] = useEditCategoriesTreeMutation()
   const [open, setOpen] = useState(false)
+  const [openExams, setOpenExams] = useState(false)
   const [dataTree, setDataTree] = useState<any[]>([])
   const [queryParameters] = useSearchParams()
   const searchKeyword: string | null = queryParameters.get('keyword')
@@ -53,6 +58,13 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
   const showDrawer = (e: React.MouseEvent) => {
     e.stopPropagation()
     setOpen(true)
+  }
+  const showDrawerExams = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setOpenExams(true)
+  }
+  const onCloseExams = () => {
+    setOpenExams(false)
   }
   const onClose = () => {
     setOpen(false)
@@ -110,7 +122,6 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
         .catch(() => toastService.error('Error removing'))
   }
   const onFinish = (values: any) => {
-    console.log(values)
     editCategoriTree({
       id: category._id as string,
       parentId: parentId || null,
@@ -174,14 +185,116 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
       }
     }
   ]
-  const onChange = (e: any) => {
-    e.stopPropagation()
-    const newChecked = !isChecked
-    setIsChecked(newChecked)
-    dispatch(setDataCategoires({ id: category._id, name: category.name, checked: newChecked }))
+  const handleInputChange = (index: any, event: any) => {
+    const { name, value } = event.target
+    const values = [...inputFields]
+    values[index][name] = value
+    setInputFields(values)
   }
+  const handleAddFields = () => {
+    setInputFields([...inputFields, { point: '', count: '' }])
+  }
+  const handleRemoveFields = (index: any) => {
+    const values = [...inputFields]
+    values.splice(index, 1)
+    setInputFields(values)
+  }
+
   return (
     <div className=''>
+      <Drawer
+        title='Details Questions'
+        placement={'right'}
+        width={900}
+        className='absolute z-10000000'
+        onClose={onCloseExams}
+        open={openExams}
+        extra={
+          <Space>
+            <Button styleClass='py-2' onClick={onCloseExams}>
+              Cancel
+            </Button>
+          </Space>
+        }
+      >
+        <div>
+          <div>
+            <div className='bg-[#D9D9D9] w-full rounded-md h-screen relative'>
+              <h3 className='text-center pt-4 text-xl text-black underline'>{category.name}</h3>
+              {inputFields.map((inputField: any, index: any) => {
+                return (
+                  <div
+                    key={index}
+                    className='bg-white w-11/12 h-[60px] mx-auto rounded-md border mt-5 flex justify-between items-center'
+                  >
+                    <div className='mx-5 flex items-center gap-3'>
+                      <p className='text-xl text-black'>Points</p>
+                      <input
+                        className='rounded-md'
+                        placeholder='points'
+                        type='text'
+                        name='point'
+                        value={inputField.x}
+                        onChange={(event) => handleInputChange(index, event)}
+                      />
+                    </div>
+                    <div className='flex items-center gap-5'>
+                      <div className='flex items-center gap-3'>
+                        <p className='text-xl text-black'>Count</p>
+                        <input
+                          className='rounded-md'
+                          placeholder='Count'
+                          type='text'
+                          name='count'
+                          value={inputField.y}
+                          onChange={(event) => handleInputChange(index, event)}
+                        />
+                      </div>
+                      <div className='mx-5'>
+                        {index !== 0 && (
+                          <img
+                            className='w-[30px] hover:scale-110 cursor-pointer'
+                            src={closeIcons}
+                            alt='close'
+                            onClick={() => handleRemoveFields(index)}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+              <div className='w-fit h-fit mx-auto rounded-md mt-5'>
+                <img
+                  className='w-[40px] hover:scale-110 cursor-pointer'
+                  src={addIcons}
+                  alt='add'
+                  onClick={handleAddFields}
+                />
+              </div>
+            </div>
+            <div className='absolute bottom-10 mx-auto flex justify-center items-center w-full'>
+              <Button
+                onClick={() => {
+                  dispatch(
+                    setDataCategoires({
+                      id: category._id,
+                      name: category.name,
+                      checked: true,
+                      inputFields: inputFields
+                    })
+                  )
+                  onCloseExams()
+                }}
+                styleClass='py-2 w-2/3 bg-[#24A19C]'
+              >
+                Xác Nhận
+              </Button>
+            </div>
+          </div>
+          )
+        </div>
+      </Drawer>
       <Drawer
         title='cấu hình categories'
         placement={'right'}
@@ -229,11 +342,16 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
         </div>
       ) : (
         <div className={`${bg ? 'bg-white' : 'bg-[#000c17]'} rounded-md`}>
-          <div onClick={toggleOpen} className='cursor-pointer px-3 py-2 '>
+          <div className='cursor-pointer px-3 py-2 '>
             <div className='category-item relative flex justify-between gap-5'>
               <div className='flex gap-2 items-center  '>
                 {category?.children && category.children.length > 0 ? (
-                  <span className='mr-3'>{isOpen ? '-' : '+'}</span>
+                  <span
+                    onClick={toggleOpen}
+                    className='mr-3 p-2 w-[25px] h-[25px] flex justify-center items-center hover:font-bold hover:scale-115 bg-black rounded-full text-white'
+                  >
+                    {isOpen ? '-' : '+'}
+                  </span>
                 ) : null}
                 <span
                   className={`category-name   hover:text-md ${
@@ -241,20 +359,18 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
                   } hover:font-semibold flex gap-5 items-center`}
                   onClick={handleCategoryClick}
                 >
-                  {category?.name} <FaRegFolderOpen className='text-2xl' />
+                  {category?.name}
+                  {category?.children && category.children.length > 0 && <img className='w-[30px]' src={folder} />}
                 </span>
               </div>
               {createExams && (
                 <div className='py-2'>
-                  <Checkbox
-                    checked={isChecked}
-                    onChange={(e) => {
-                      e.stopPropagation()
-                      onChange(e)
-                    }}
+                  <button
+                    className='w-[100px] h-[30px] bg-body hover:bg-success hover:scale-105 ease-in-out text-white font-medium rounded-md'
+                    onClick={showDrawerExams}
                   >
                     chọn
-                  </Checkbox>
+                  </button>
                 </div>
               )}
               {button && !createExams && category?.children && (

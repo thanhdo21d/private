@@ -169,6 +169,14 @@ const ExamConfiguration = () => {
       }).toString()
     })
   }
+  const onFinishFailed = (errorInfo: any) => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: ''
+      }).toString()
+    })
+  }
   return (
     <div>
       <Breadcrumb
@@ -183,7 +191,13 @@ const ExamConfiguration = () => {
       />
       <div className='flex justify-between mb-5 mt-10'>
         <div>
-          <Form className='flex gap-5' onFinish={onFinishSearch} layout='vertical' hideRequiredMark>
+          <Form
+            className='flex gap-5'
+            onFinish={onFinishSearch}
+            onFinishFailed={onFinishFailed}
+            layout='vertical'
+            hideRequiredMark
+          >
             <Form.Item
               name='keyword'
               className=''

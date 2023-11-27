@@ -84,7 +84,7 @@ export const routers = createBrowserRouter([
         children: [
           { path: 'all-folders', element: <FoldersCategories /> },
           { path: 'dashboard-other-admin', element: <DashBoardOtherAdmin /> },
-          { path: 'member', element:  <MemberDepartment /> },
+          { path: 'member', element: <MemberDepartment /> },
           { path: 'settings/edit', element: <EditTree /> },
           { path: 'all-folders/category/:id', element: <FormData /> },
           { path: 'settings/ki-thi', element: <ExamConfiguration /> },

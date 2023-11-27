@@ -58,9 +58,7 @@ const AcceptUserDipament = () => {
                       key={data?._id}
                       className='rounded bg-white bg-opacity-30 w-72 m-5 shadow-xl hover:bg-success flex flex-col text-gray-200'
                     >
-                      {/* Title */}
                       <p className='font-semibold bg-white bg-opacity-20 rounded-t px-4 py-2'>{data?.name}</p>
-                      {/* Pricing */}
                       <div className='flex flex-row items-center pt-8 bg-white bg-opacity-10 pl-12 pr-10 gap-3'>
                         <div className='flex items-center gap-1'>
                           <span className='text-base'> phòng ban </span>

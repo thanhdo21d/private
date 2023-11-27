@@ -65,7 +65,7 @@ const AllMember = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text: string) => {
-        return <a className='text-md font-bold'>{text}</a>
+        return <a className='text-md font-bold'>{text ? text : ''}</a>
       }
     },
     {
@@ -73,7 +73,7 @@ const AllMember = () => {
       dataIndex: 'role',
       key: 'role',
       render: (text: { name: string }) => {
-        return <a className='text-md font-bold'>{text.name}</a>
+        return <a className='text-md font-bold'>{text?.name}</a>
       }
     },
     {
@@ -134,7 +134,7 @@ const AllMember = () => {
     }
   ]
   return (
-    <div>
+    <div className=''>
       <Button styleClass='bg-warning' onClick={() => navigate('/admin/all-member/add')}>
         Thêm mới
       </Button>
@@ -151,18 +151,16 @@ const AllMember = () => {
           </Button>
         </Form>
       </div>
-      <hr className='mt-5' />
-      <div className='mt-2'>
-        <Table dataSource={dataSource} pagination={false} columns={columns} />
-        <div className='mt-5 float-right'>
-          <div>
-            <Pagination pageSize={data?.totalPages} queryConfig={queryConfig} />
-          </div>
-        </div>
+      <hr className='mt-5 ' />
+      <div className='mt-2 '>
+        <Table className='' dataSource={dataSource} pagination={false} columns={columns} />
       </div>
-      <Footer className='mt-5 w-full  justify-between dark:bg-black absolute bottom-0'>
+      <Footer className='mt-5 2xl:flex justify-between dark:bg-black '>
         <div className='text-md font-semibold text-center dark:text-white'>
           Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+        </div>
+        <div>
+          <Pagination pageSize={data?.totalPages} queryConfig={queryConfig} />
         </div>
       </Footer>
     </div>

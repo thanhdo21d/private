@@ -42,7 +42,7 @@ const ExamsQuestion = () => {
   const queryConfig = useQueryConfig()
   const [addTopicQuestion] = useCreateTopicExamsMutation()
   const [removeTopic, { isLoading: isRemoveTopicLoading }] = useRemoveTopicExamsMutation()
-  console.log(dataIdExmas,"l")
+  console.log(dataIdExmas, 'l')
   const confirm = (idExams: string) => {
     removeTopic({
       id: idExams,
@@ -119,15 +119,15 @@ const ExamsQuestion = () => {
       key: 'name'
     },
     {
-      title: <p className='flex justify-center text-danger font-semibold text-xl'>actions</p>,
+      title: <p className='flex justify-center text-danger font-semibold text-xl'>tác vụ</p>,
       render: ({ key: id }: { key: string }) => {
         return (
-          <div className='flex items-center justify-center gap-3'>
-            <Button styleClass='p-2 w-[180px] flex items-center focus:outline-none hover:bg-warning'>
+          <div className='flex space-x-2 items-center justify-center gap-3'>
+            <Button styleClass='p-2 !px-3 flex items-center focus:outline-none hover:bg-warning'>
               <span>
                 <AiFillEdit />
               </span>
-              <span>áp dụng</span>
+              <Link to={`create-exams`}>áp dụng</Link>
             </Button>
           </div>
         )
@@ -176,10 +176,10 @@ const ExamsQuestion = () => {
       }
     },
     {
-      title: <p className='flex justify-center text-danger font-semibold text-xl'>actions</p>,
+      title: <p className='flex justify-center text-danger font-semibold text-xl'>tác vụ</p>,
       render: ({ key: id }: { key: string }) => {
         return (
-          <div className='flex items-center justify-center gap-3'>
+          <div className='2xl:flex grid grid-cols-2 items-center justify-center gap-3'>
             <Link
               to={`${id}/details-exams`}
               id='buttonmodal'
@@ -225,6 +225,14 @@ const ExamsQuestion = () => {
       }
     }
   ]
+  const onFinishFailed = (errorInfo: any) => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: ''
+      }).toString()
+    })
+  }
   return (
     <div>
       <Drawer
@@ -254,6 +262,7 @@ const ExamsQuestion = () => {
         <div className=''>
           <Form
             onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
             className='flex gap-5  justify-center'
             name='basic'
             labelCol={{ span: 8 }}
@@ -263,7 +272,7 @@ const ExamsQuestion = () => {
             autoComplete='off'
           >
             <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your keyword!' }]}>
-              <Input className='h-[40px] w-[450px] 2xl:w-[600px]' placeholder='Tìm Kiếm Theo đề thi ....' />
+              <Input className='h-[40px] w-[400px] 2xl:w-[600px]' placeholder='Tìm Kiếm Theo đề thi ....' />
             </Form.Item>
             <Button type='submit' id='keycode13' styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'>
               Tìm Kiếm

@@ -8,7 +8,7 @@ import { DatePicker, Divider, Drawer, Empty, Input, InputNumber, Space } from 'a
 import { RangePickerProps } from 'antd/es/date-picker'
 import { useCreateTopicExamsApiMutation } from '~/apis/topicQuestion/topicQuestion'
 import { useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
-import { useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { CategoryTreeItem } from './Silbader'
 import MemberDepartment from '~/layouts/otherAdmin/MemberDepartment'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
@@ -17,6 +17,8 @@ import { toastService } from '~/utils/toask/toaskMessage'
 const CreateExams = () => {
   const [open, setOpen] = useState(false)
   const { categoriesData } = useAppSelector((state) => state.dataCategories)
+  const { id } = useParams()
+  console.log(id)
   const [dataExams, setDataExams] = useState({
     startDate: '',
     endDate: '',
@@ -42,6 +44,7 @@ const CreateExams = () => {
   })
   const [dataCategories, setDataCategories] = useState<any[]>([])
   const handleDataFromChild = (data: any) => {
+    if (data) setOpen(false)
     setCheckUser(false)
     setDataFromChild(data)
     console.log(data)
@@ -75,17 +78,23 @@ const CreateExams = () => {
       endDate: dateString[1]
     })
   }
-  console.log(dataExams)
 
   const handelInsertExams = () => {
+    const formattedCategoriesInfo = categoriesData.map((item) => ({
+      categoryId: item.id,
+      questionSets: item.questionSets.map((set) => ({
+        point: Number(set.point),
+        count: Number(set.count)
+      }))
+    }))
     createTopicExams({
-      id : "654b53a13e7a94b8ac8e6261",
+      id: id,
       name: dataExams.name,
-      categoriesInfo: [],
+      categoriesInfo: formattedCategoriesInfo,
       startDate: dataExams.startDate,
       endDate: dataExams.endDate,
       time: dataExams.timeOut,
-      users: [],
+      user: dataFromChild,
       loopQuestion: dataExams.loopUp || null
     })
       .unwrap()
@@ -143,11 +152,6 @@ const CreateExams = () => {
             </div>
             <div>
               <p className='2xl:text-center'> danh sách user </p>
-              <img className='h-[35px] mt-2 rounded-md cursor-pointer hover:scale-110' src={`${excelExport}`} />
-            </div>
-
-            <div>
-              <p className='2xl:text-center'> tạo đề từ excel </p>
               <img className='h-[35px] mt-2 rounded-md cursor-pointer hover:scale-110' src={`${excelExport}`} />
             </div>
           </div>
@@ -219,7 +223,7 @@ const CreateExams = () => {
             <div className='flex justify-between items-center bg-[#24A19C] py-1'>
               <h4 className='text-xl font-bold text-white pl-2'>Exams Question</h4>
               <div className='w-[40px] h-[40px] mr-2 rounded-md shadow-xl bg-[#cae0e0] flex justify-center items-center text-white font-bold'>
-                0
+                {categoriesData?.length}
               </div>
             </div>
             {categoriesData?.map((items: any) => (
@@ -244,9 +248,6 @@ const CreateExams = () => {
                 </div>
               </div>
             ))}
-            <div className='absolute bottom-3 mx-auto flex justify-center items-center w-full'>
-              <Button styleClass='py-2 w-2/3'>Xác Nhận</Button>
-            </div>
           </div>
           {/*  */}
           <div className='w-1/2 border border-boxdark rounded-md'>

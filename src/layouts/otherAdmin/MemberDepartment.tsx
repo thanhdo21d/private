@@ -16,8 +16,9 @@ import { useAppDispatch } from '~/store/root/hook'
 type FieldType = {
   code?: string
 }
-const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember: boolean; sendDataToParent: any }) => {
+const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember?: boolean; sendDataToParent?: any }) => {
   const dispatch = useAppDispatch()
+  const [selectAllChecked, setSelectAllChecked] = useState(false)
   const queryConfig = useQueryConfig()
   const navigate = useNavigate()
   const [dataToSend, setDataToSend] = useState<any[]>([])
@@ -79,6 +80,15 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember: bool
       setDataToSend(dataToSend.filter((item) => item !== id))
     }
   }
+  const toggleSelectAll = () => {
+    if (selectAllChecked) {
+      setDataToSend([])
+    } else {
+      const allIds = dataSource.map((item: any) => item.key)
+      setDataToSend(allIds)
+    }
+    setSelectAllChecked(!selectAllChecked)
+  }
   const dataSource = dataUserDepartments?.data?.users?.map(
     ({
       _id,
@@ -132,7 +142,9 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember: bool
       render: ({ key: id }: { key: string }) => (
         <div className='flex justify-center space-x-2'>
           {checkMember ? (
-            <Checkbox onChange={() => onChange(id)}>chọn</Checkbox>
+            <Checkbox checked={dataToSend.includes(id)} onChange={() => onChange(id)}>
+              chọn
+            </Checkbox>
           ) : (
             <Popconfirm
               title='Delete the task'
@@ -158,7 +170,6 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember: bool
     }
   ]
   const url = import.meta.env.VITE_API
-
   const [file, setFile] = useState<any>(null)
   const handleFileChange = (event: any) => {
     setFile(event.target.files[0])
@@ -324,8 +335,8 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember: bool
           </Button>
           {checkMember && (
             <>
-              <Button type='button' styleClass='w-[150px] h-[50px] !px-0 bg-graydark'>
-                chọn tất cả
+              <Button type='button' styleClass='w-[150px] h-[50px] !px-0 bg-graydark' onClick={toggleSelectAll}>
+                {selectAllChecked ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}
               </Button>
               <Button onClick={sendDataToParentProps} type='button' styleClass='w-[150px] h-[50px] !px-0 bg-success'>
                 xác nhận

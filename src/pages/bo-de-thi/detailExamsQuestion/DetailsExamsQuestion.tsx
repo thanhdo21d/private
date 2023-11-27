@@ -36,18 +36,18 @@ const DetailsExamsQuestion = () => {
   const data: DataType[] = dataIdExmasDetails?.data?.question.map((items: any) => {
     console.log(items)
     return {
-      key: items.question._id,
-      question: items.question.question,
-      image: items.question.image,
-      point: items.question.point,
-      results: items.question.answer,
-      questionA: items.question.choose
+      key: items._id,
+      question: items.question,
+      image: items.image,
+      point: items.point,
+      results: items.answer,
+      questionA: items.choose
     }
   })
   return (
     <div className='w-full'>
       <div className=' mt-15 justify-center items-center w-1/6'>
-        <Button onClick={() => navigate(-1)} styleClass='py-2 w-2/3 bg-[#24A19C]'>
+        <Button onClick={() => navigate(-1)} styleClass='py-2  bg-[#24A19C]'>
           Quay Lại
         </Button>
       </div>
@@ -105,7 +105,7 @@ const DetailsExamsQuestion = () => {
               <p> Câu Hỏi</p>
             </Divider>
             <div className='flex w-full justify-center'>
-              <Table className='w-full ' dataSource={data} pagination={false}>
+              <Table className='w-full overflow-x-auto' dataSource={data} pagination={false}>
                 <ColumnGroup className='' title={<p className='border-b border-[#ccc]'>questions</p>}>
                   <Column
                     title='Câu Hỏi'

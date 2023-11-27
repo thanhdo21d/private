@@ -3,8 +3,15 @@ interface Category {
   id: string
   name: string
   checked: boolean
-  inputFields: any[]
+  questionSets: {
+    categoryId: string
+    questionSets: {
+      point: string | number
+      count: string | number
+    }[]
+  }[]
 }
+
 interface CategoriesState {
   categoriesData: Category[]
   categoriesMember: {
@@ -26,19 +33,19 @@ const categoriesSlice = createSlice({
   initialState,
   reducers: {
     setDataCategoires: (state, action: PayloadAction<Category>) => {
-      const { id, name, checked, inputFields } = action.payload
+      const { id, name, checked, questionSets } = action.payload
       const existingCategoryIndex = state.categoriesData.findIndex((category) => category.id === id)
       if (existingCategoryIndex !== -1) {
-        state.categoriesData[existingCategoryIndex] = { id, name, checked, inputFields }
+        state.categoriesData[existingCategoryIndex] = { id, name, checked, questionSets }
       } else {
-        state.categoriesData.push({ id, name, checked, inputFields })
+        state.categoriesData.push({ id, name, checked, questionSets })
       }
     },
     addSelectedCategory: (state, action: PayloadAction<Category>) => {
-      const { id, name, checked, inputFields } = action.payload
+      const { id, name, checked, questionSets } = action.payload
       const existingCategoryIndex = state.categoriesData.findIndex((category) => category.id === id)
       if (existingCategoryIndex === -1) {
-        state.categoriesData.push({ id, name, checked, inputFields })
+        state.categoriesData.push({ id, name, checked, questionSets })
       }
     },
     removeSelectedCategory: (state, action: PayloadAction<Category>) => {

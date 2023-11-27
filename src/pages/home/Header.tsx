@@ -56,7 +56,7 @@ const Header = () => {
         <meta name='description' />
       </Helmet>
       <header className={`${styles['main-header']} ${scroll ? styles['sticky-header'] : ''} `}>
-        <div className={styles['header-content']}>
+        <div style={{ position: 'relative', zIndex: 1 }} className={styles['header-content']}>
           <div>
             <div className='absolute left-5 top-5 flex gap-5'>
               <button

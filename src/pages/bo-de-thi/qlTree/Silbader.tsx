@@ -281,7 +281,7 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
                       id: category._id,
                       name: category.name,
                       checked: true,
-                      inputFields: inputFields
+                      questionSets: inputFields
                     })
                   )
                   onCloseExams()
@@ -348,7 +348,7 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
                 {category?.children && category.children.length > 0 ? (
                   <span
                     onClick={toggleOpen}
-                    className='mr-3 p-2 w-[25px] h-[25px] flex justify-center items-center hover:font-bold hover:scale-115 bg-black rounded-full text-white'
+                    className='mr-3 p-2 w-[25px] h-[25px] flex justify-center items-center text-xl hover:font-bold hover:scale-115 bg-black rounded-full text-white'
                   >
                     {isOpen ? '-' : '+'}
                   </span>
@@ -413,15 +413,37 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
   const navigate = useNavigate()
   const trigger = useRef<any>(null)
   const idCate = localStorage.getItem('idCategories')
-  console.log(idCate)
   const { id } = useParams()
   const sidebar = useRef<any>(null)
   const isActive = location.pathname.includes(`all-folders`)
   const isActiveKT = location.pathname.includes(`ki-thi`)
-
-  console.log(isActive)
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
+  useEffect(() => {
+    const clickHandler = ({ target }: MouseEvent) => {
+      if (!sidebar.current || !trigger.current) return
+      if (!sidebarOpen || sidebar.current.contains(target) || trigger.current.contains(target)) return
+      setSidebarOpen(false)
+    }
+    document.addEventListener('click', clickHandler)
+    return () => document.removeEventListener('click', clickHandler)
+  }, [])
+  useEffect(() => {
+    const keyHandler = ({ keyCode }: KeyboardEvent) => {
+      if (!sidebarOpen || keyCode !== 27) return
+      setSidebarOpen(false)
+    }
+    document.addEventListener('keydown', keyHandler)
+    return () => document.removeEventListener('keydown', keyHandler)
+  }, [])
+  useEffect(() => {
+    localStorage.setItem('sidebar-expanded', sidebarExpanded.toString())
+    if (sidebarExpanded) {
+      document.querySelector('body')?.classList.add('sidebar-expanded')
+    } else {
+      document.querySelector('body')?.classList.remove('sidebar-expanded')
+    }
+  }, [sidebarExpanded])
   return (
     <div
       ref={sidebar}
@@ -445,7 +467,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
           onClick={() => setSidebarOpen(!sidebarOpen)}
           aria-controls='sidebar'
           aria-expanded={sidebarOpen}
-          className='lg:hidden block'
+          className=' block'
         >
           <BarsIcon />
         </button>

@@ -5,7 +5,7 @@ import { Outlet, createSearchParams, useNavigate } from 'react-router-dom'
 import { Header, Sidebar } from '~/layouts/DefaultLayout/components'
 import SidebarTree from './Silbader'
 const TreeMenu = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   return (
     <div className='dark:bg-boxdark-2 dark:text-bodydark'>
       <Helmet>

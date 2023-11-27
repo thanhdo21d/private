@@ -12,6 +12,9 @@ import logoBacktop from '../../../assets/images/logo/top.png'
 import { AiFillEdit, AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { PlusOutlined } from '@ant-design/icons'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
+import logoAdd from '../../../assets/plus.png'
+import leftArrow from '../../../assets/left-arrow.png'
+import logoRemove from '../../../assets/delete.png'
 import DetailsDsEasy from '../level_easy/DetailsDsEasy'
 import { useGetIDcategoriesQuery, useRemoveExamsDepartmentMutation } from '~/apis/category/categories'
 import InputNumber from '~/components/inputNumber'
@@ -237,6 +240,14 @@ const FormData = () => {
       console.error('Lỗi: ' + error.message)
     }
   }
+  const onFinishFailed = (errorInfo: any) => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: ''
+      }).toString()
+    })
+  }
   return (
     <div className='relative'>
       <>
@@ -436,6 +447,7 @@ const FormData = () => {
             className='flex gap-5  justify-center'
             name='basic'
             onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
             style={{ maxWidth: 900 }}
@@ -454,7 +466,7 @@ const FormData = () => {
           </Form>
         </div>
       </div>
-      <div className='flex items-center gap-5 mt-4 justify-between'>
+      <div className=' items-center gap-5 mt-4 justify-between'>
         <div className='flex items-center gap-5 mt-4'>
           <div style={{ textDecoration: 'underline' }} className='text-md'>
             số bản ghi
@@ -477,9 +489,9 @@ const FormData = () => {
         </div>
         <div>
           {/*  */}
-          <div className='flex items-center justify-end gap-5 '>
+          <div className='flex items-center justify-end gap-5 mt-[15px]'>
             <div
-              className={` bg-danger cursor-pointer h-[40px] flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
+              className={` bg-danger cursor-pointer h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide   font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
             >
               <Popconfirm
                 title='Delete the task'
@@ -493,9 +505,7 @@ const FormData = () => {
               >
                 <Tooltip title='Trở Về'>
                   <p className='text-base font-medium text-black  flex items-center gap-4'>
-                    <span>
-                      <DeleteIcon />
-                    </span>
+                    <img className='w-[22px]' src={logoRemove} />
                     <span className='text-white'> Xóa Tất Cả</span>
                   </p>
                 </Tooltip>
@@ -514,19 +524,20 @@ const FormData = () => {
             )}
             <div
               onClick={showDrawer}
-              className={` bg-white h-[40px]  flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide cursor-pointer  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
+              className={` bg-white h-[40px]  border border-[#ccc] flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide cursor-pointer  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}
             >
               <Tooltip title='Thêm Câu Hỏi'>
                 <div className='text-base font-medium text-black  flex items-center gap-4'>
                   <span>
-                    <PiKeyReturnThin className='text-xl text-danger' />
+                    <img className='w-[22px]' src={logoAdd} />
                   </span>
                   <span> Thêm Câu Hỏi</span>
                 </div>
               </Tooltip>
             </div>
-            <Button onClick={() => navigate(-1)} styleClass='py-2 bg-black'>
-              Quay Lại
+            <Button onClick={() => navigate(-1)} styleClass='py-2 bg-black flex  items-center gap-2 '>
+              <img className='w-[25px]' src={leftArrow} />
+              <span> Quay Lại</span>
             </Button>
           </div>
         </div>

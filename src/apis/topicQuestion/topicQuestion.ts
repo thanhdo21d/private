@@ -42,8 +42,17 @@ const topicExamsApi = createApi({
         }
       },
       invalidatesTags: ['topicExams']
+    }),
+    getQuestionStart: builder.query<any[], string>({
+      query: (id: string) => {
+        return {
+          url: `/start/${id}`,
+          method: 'GET'
+        }
+      },
+      providesTags: ['topicExams']
     })
   })
 })
-export const { useCreateTopicExamsApiMutation } = topicExamsApi
+export const { useCreateTopicExamsApiMutation, useGetQuestionStartQuery } = topicExamsApi
 export default topicExamsApi

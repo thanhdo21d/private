@@ -48,12 +48,12 @@ const UserProfile = () => {
           <div className='h-full'>
             <div className='border-b-2 block md:flex'>
               <div className='w-full md:w-2/5 p-4 sm:p-6 lg:p-8 bg-white shadow-md'>
-                <div className='flex justify-between items-center'>
+                <div className='2xl:flex justify-between items-center'>
                   <div className='flex items-center gap-5'>
                     <span className='text-xl font-semibold block'>Xin Chào {profile?.username}</span>
                     <img className='w-[50px] waving-image' src={`${heloUser}`} />
                   </div>
-                  <p className='text-sm font-semibold block'>{greeting}</p>
+                  <p className='text-sm my-2 font-semibold block'>{greeting}</p>
                 </div>
                 <span className='text-gray-600'>This information is secret so be careful</span>
                 <div className='w-full p-8 mx-2 flex justify-center'>

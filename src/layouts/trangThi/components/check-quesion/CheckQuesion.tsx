@@ -1,10 +1,21 @@
+import { Avatar } from 'antd'
 import { Footer, Header } from 'antd/es/layout/layout'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { PiKeyReturnFill } from 'react-icons/pi'
-import { Button } from '~/components'
+import { createSearchParams, useNavigate, useParams } from 'react-router-dom'
+import { useGetQuestionStartQuery } from '~/apis/topicQuestion/topicQuestion'
 const CheckQuesion = () => {
+  const { id } = useParams()
   const { t } = useTranslation(['header'])
+  const { data: dataQuestion } = useGetQuestionStartQuery(id as string)
+  console.log(dataQuestion)
+  const navigate = useNavigate()
+  const handelSearchQuestion = (id: string) => {
+    navigate({
+      search: createSearchParams({
+        questionID: id
+      }).toString()
+    })
+  }
   return (
     <div>
       <div>
@@ -21,20 +32,23 @@ const CheckQuesion = () => {
                 backgroundColor: 'darkgreen'
               }}
             >
-              <p className='text-xl py-5 font-bold text-white text-md text-center items-center'>
-                {t('product.all_questions')}: 40
+              <p className='text-sm 2xl:text-xl py-5 font-bold  text-white text-md text-center items-center'>
+                {t('product.all_questions')}: {dataQuestion?.totalQuestions}
               </p>
             </Header>
             <div className='border-t-4 w-[300px] mx-auto text-center  border-gray mb-5'></div>
-            <div className='px-6 h-[5000px] gird grid-cols-5 flex gap-3 '>
-              <div className='w-[40px]  h-[40px] rounded-full bg-blue23 text-center items-center'>
-                <span className='font-bold text-xl pt-2'>1</span>
-              </div>
-              <div className='w-[40px] h-[40px] rounded-full bg-graydark text-center items-center'>
-                <span className='font-bold text-xl pt-2'>2</span>
+            <div className='px-6 h-[5000px] '>
+              <div className='grid grid-cols-3 gap-5 mx-auto'>
+                {dataQuestion?.questions?.map((items: any, index: number) => (
+                  <div
+                    onClick={() => handelSearchQuestion(items?._id)}
+                    className='flex hover:scale-110 cursor-pointer justify-center items-center'
+                  >
+                    <Avatar className='bg-black '>{index + 1}</Avatar>
+                  </div>
+                ))}
               </div>
             </div>
-            {/*  */}
             <Footer
               style={{
                 position: 'sticky',
@@ -44,18 +58,17 @@ const CheckQuesion = () => {
                 alignItems: 'center',
                 backgroundColor: 'darkgreen',
                 height: 100
-
               }}
               className='absolute bottom-0  '
             >
-              <div className='flex gap-2 '>
-                <div className='w-[30px] h-[30px] rounded-full bg-blue23  text-center items-center'></div>
+              <div className='flex gap-2 w-full'>
+                <div className='w-[20px] h-[20px] 2xl:w-[30px] 2xl:h-[30px] rounded-full bg-blue23  text-center items-center'></div>
                 <div>
-                  <p className='text-white text-md font-medium'>{t('product.check_qes_dl')}</p>
+                  <p className='text-white text-sm 2xl:text-md font-medium'>{t('product.check_qes_dl')}</p>
                 </div>
               </div>
               <div className='flex gap-2 mt-3'>
-                <div className='w-[30px] h-[30px] rounded-full bg-graydark text-center items-center'></div>
+                <div className='w-[20px] h-[20px] 2xl:w-[30px] 2xl:h-[30px] rounded-full bg-graydark text-center items-center'></div>
                 <div>
                   <p className='text-white text-md font-medium'> {t('product.check_qes_cl')}</p>
                 </div>

@@ -4,7 +4,7 @@ import styles from './home.module.css'
 import book from '../../assets/book.png'
 import fadeIn from '~/utils/animation/variant'
 import Header from './Header'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 const Home = () => {
   const navigate = useNavigate()
   return (
@@ -18,7 +18,9 @@ const Home = () => {
             <h1> DENSO</h1>
             <p>Empowering Excellence: Elevating Employee Performance Through Innovative Testing Solutions</p>
             <div className={styles.ctas}>
-              <div className={styles['banner-cta']}> Read More</div>
+              <Link to='/GuideLine' className={styles['banner-cta']}>
+                Read More
+              </Link>
               <button
                 onClick={() => navigate('/home')}
                 className={`${styles['banner-cta']} ${styles.v2} overflow-hidden bg-fixed opacity-100 transition duration-300 ease-in-out hover:opacity-50 z-999`}

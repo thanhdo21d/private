@@ -130,7 +130,7 @@ const ExamConfiguration = () => {
       render: ({ key: id }: { key: string }) => {
         return (
           <div className='flex justify-center gap-5'>
-            <Button onClick={() => navigate(`bai-thi/${id}`)} styleClass='bg-[#3d5ee1] flex items-center w-fit '>
+            <Button onClick={() => navigate(`bai-thi/${id}`)} styleClass='bg-[#3d5ee1] flex items-center w-fit !px-3'>
               <span>
                 <EyeOutlined />
               </span>
@@ -147,7 +147,7 @@ const ExamConfiguration = () => {
               cancelText='No'
               placement='rightBottom'
             >
-              <Button styleClass='bg-danger flex items-center w-fit '>
+              <Button styleClass='bg-danger flex items-center w-fit !px-3'>
                 <span>
                   <DeleteOutlined />
                 </span>
@@ -178,7 +178,7 @@ const ExamConfiguration = () => {
     })
   }
   return (
-    <div>
+    <div className='relative'>
       <Breadcrumb
         items={[
           {
@@ -329,18 +329,18 @@ const ExamConfiguration = () => {
           ) : (
             <>
               <Table dataSource={dataSource} columns={columns} pagination={false} className='dark:bg-black  mt-4 ' />
+              <Footer className='mt-5 w-full  justify-between dark:bg-black '>
+                <div>
+                  <Pagination pageSize={dataExamsCategories?.totalPages} queryConfig={queryConfig} />
+                </div>
+                <div className='text-md mt-5 font-semibold text-center dark:text-white'>
+                  Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+                </div>
+              </Footer>
             </>
           )}
         </>
       )}
-      <Footer className='mt-5 w-full  justify-between dark:bg-black absolute bottom-0'>
-        <div>
-          <Pagination pageSize={dataExamsCategories?.totalPages} queryConfig={queryConfig} />
-        </div>
-        <div className='text-md mt-5 font-semibold text-center dark:text-white'>
-          Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
-        </div>
-      </Footer>
     </div>
   )
 }

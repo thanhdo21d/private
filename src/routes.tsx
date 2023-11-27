@@ -45,6 +45,8 @@ import MemberDepartment from './layouts/otherAdmin/MemberDepartment'
 import EditQuestionExams from './pages/bo-de-thi/dataDetails/EditQuestionExams'
 import FoldersCategories from './pages/bo-de-thi/qlTree/FoldersCategories'
 import Home from './pages/home/Home'
+import GuideLine from './pages/GuideLine/GuideLine'
+import ChooseExams from './pages/accept-phong-ban/ChooseExams'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -96,6 +98,7 @@ export const routers = createBrowserRouter([
     ]
   },
   { path: 'details-exams/:id', element: <DetailsExams /> },
+  { path: '/GuideLine', element: <GuideLine /> },
   { path: 'question/edit/:id', element: <EditQuestionExams /> },
   { path: 'action/home', element: <Home /> },
   {
@@ -107,8 +110,9 @@ export const routers = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to='action/home' /> },
           { path: 'home', element: <AcceptUserDipament /> },
+          { path: 'choose-exam/:id', element: <ChooseExams /> },
           { path: 'excel', element: <DemoExcel /> },
-          { path: 'action-bai-thi', element: <PopQuesion /> },
+          { path: 'action-bai-thi/:id', element: <PopQuesion /> },
           { path: 'ChoosExam/:id', element: <ChoosExam /> }
         ]
       }

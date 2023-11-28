@@ -12,6 +12,45 @@ function equal(prevProp: any, nextProp: any) {
   return false
 }
 
+const [dataCategoriess, setDataCategories] = useState<any[]>([])
+
+// Tạo một biến memoizedDataCategoriess để lưu trữ kết quả tính toán
+const memoizedDataCategoriess = useMemo(() => {
+  const savedCategories = sessionStorage.getItem('categories')
+
+  if (savedCategories) {
+    return JSON.parse(savedCategories)
+  } else if (dataCategoriTree) {
+    const newDataCategories = [dataCategoriTree]
+    sessionStorage.setItem('categories', JSON.stringify(newDataCategories))
+    return newDataCategories
+  }
+
+  return []
+}, [idCate, dataCategoriTree])
+
+useEffect(() => {
+  // Gán giá trị của memoizedDataCategoriess vào dataCategoriess
+  setDataCategories(memoizedDataCategoriess)
+}, [memoizedDataCategoriess])
+
+// Sử dụng dataCategoriess trong render
+{dataCategoriess?.map((category: any) => {
+  return (
+    <CategoryTreeItem
+      key={category?._id}
+      category={category}
+      level={0}
+      bg={true}
+      button={true}
+      createExams={true}
+      checkMember={true}
+    />
+  )
+})}
+
+
+
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 

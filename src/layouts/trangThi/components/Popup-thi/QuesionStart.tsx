@@ -62,6 +62,26 @@ const QuesionStart = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [])
+  const canvasRef = useRef<any>(null)
+
+  // useEffect(() => {
+  //   const canvas = canvasRef.current
+  //   const context = canvas.getContext('2d')
+  //   context.clearRect(0, 0, canvas.width, canvas.height)
+  //   context.font = '16px Arial'
+  //   context.fillStyle = 'black'
+  //   dataIdExmasDetails?.questions?.forEach((question: any, index: number) => {
+  //     const questionText = `Câu ${index + 1}: ${question.question}`
+  //     const answerTexts = question.choose.map((answer: any, answerIndex: number) => {
+  //       return `A${answerIndex + 1}: ${answer.q}`
+  //     })
+  //     context.fillText(questionText, 10, (index + 1) * 30)
+  //     answerTexts.forEach((answerText: any, answerIndex: number) => {
+  //       context.fillText(answerText, 20, (index + 1) * 30 + (answerIndex + 1) * 20)
+  //     })
+  //   })
+  // }, [dataIdExmasDetails?.questions])
+
   return (
     <div className=' mx-auto px-4  '>
       <div className=' min-w-0 h-[800px] overflow-y-scroll break-words   bg-white  shadow-xl rounded-lg relative'>
@@ -120,6 +140,7 @@ const QuesionStart = () => {
                     ))}
                   </>
                 ))}
+                <canvas ref={canvasRef} />
               </div>
               {/* {Question ? (
                 <div className='flex justify-center mx-auto !mt-10'>

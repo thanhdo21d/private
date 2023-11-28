@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
-import closeIcons from '../../../assets/close.png'
-import addIcons from '../../../assets/plus.png'
-import checkIcons from '../../../assets/check.png'
-import unCheckIcons from '../../../assets/unchecked.png'
 import dayjs from 'dayjs'
 import { Button } from '~/components'
-import { DatePicker, Divider, Drawer, Empty, Image, Input, InputNumber, Skeleton, Space, Table, Tag } from 'antd'
+import { DatePicker, Divider, Drawer, Empty, Form, Image, Input, InputNumber, Skeleton, Space, Table, Tag } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
-import { useNavigate, useParams } from 'react-router-dom'
+import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useGetTopicExamsIDQuery } from '~/apis/examSetting/examSetting'
+type FieldType = {
+  keyword?: string
+}
 interface DataType {
   key: React.Key
   point: string
@@ -18,6 +17,16 @@ interface DataType {
   question: string[]
 }
 const DetailsExamsQuestion = () => {
+  const [open, setOpen] = useState(false)
+  const [queryParameters] = useSearchParams()
+  const search: string | null = queryParameters.get('search')
+
+  const showDrawer = () => {
+    setOpen(true)
+  }
+  const onClose = () => {
+    setOpen(false)
+  }
   const { Column, ColumnGroup } = Table
   const { id } = useParams()
   const uri = import.meta.env.VITE_API
@@ -30,8 +39,11 @@ const DetailsExamsQuestion = () => {
     data: dataIdExmasDetails,
     isLoading: isLoadingDetails,
     isFetching: isFetchingDetails
-  } = useGetTopicExamsIDQuery(id as string)
-  console.log(dataIdExmasDetails?.data?.question)
+  } = useGetTopicExamsIDQuery({
+    id: id as string,
+    search: search || ''
+  })
+  console.log(dataIdExmasDetails?.data?.user)
   const dateFormat = 'YYYY/MM/DD'
   const data: DataType[] = dataIdExmasDetails?.data?.question.map((items: any) => {
     console.log(items)
@@ -44,8 +56,76 @@ const DetailsExamsQuestion = () => {
       questionA: items.choose
     }
   })
+
+  const dataSourceUser = dataIdExmasDetails?.data?.user?.map((items: any) => ({
+    key: items._id,
+    code: items.employeeCode,
+    username: items.username,
+    avatar: items.avatar
+  }))
+
+  const columnsUser = [
+    {
+      title: 'code',
+      dataIndex: 'code',
+      key: 'code'
+    },
+    {
+      title: 'Name',
+      dataIndex: 'username',
+      key: 'username'
+    },
+    {
+      title: 'ảnh',
+      dataIndex: 'avatar',
+      key: 'avatar',
+      render: (items: string) => {
+        return <img className='w-[55px]' src={`${uri}${items}`} alt='avatar' />
+      }
+    }
+  ]
+
+  const onFinish = ({ keyword }: any) => {
+    const keywordSpace = keyword.trim()
+    console.log(keywordSpace)
+    navigate({
+      search: createSearchParams({
+        search: keywordSpace
+      }).toString()
+    })
+  }
+  const onFinishFailed = (errorInfo: any) => {
+    navigate({
+      search: createSearchParams({
+        search: ''
+      }).toString()
+    })
+  }
   return (
     <div className='w-full'>
+      <Drawer width={700} title='danh sách người thi' placement='right' onClose={onClose} open={open}>
+        <div className=''>
+          <Form
+            className='flex gap-5  justify-center'
+            name='basic'
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            style={{ maxWidth: 700 }}
+            initialValues={{ remember: true }}
+            autoComplete='off'
+          >
+            <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your code!' }]}>
+              <Input className='h-[40px] w-[400px] xl:w-[450px] border border-[#ccc]' placeholder='Tìm Kiếm ....' />
+            </Form.Item>
+            <Button type='submit' id='keycode13' styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'>
+              Tìm Kiếm
+            </Button>
+          </Form>
+        </div>
+        <Table dataSource={dataSourceUser} columns={columnsUser} pagination={false} />
+      </Drawer>
       <div className=' mt-15 justify-center items-center w-1/6'>
         <Button onClick={() => navigate(-1)} styleClass='py-2  bg-[#24A19C]'>
           Quay Lại
@@ -89,7 +169,12 @@ const DetailsExamsQuestion = () => {
               <InputNumber className='!h-[32px] mt-2 rounded-md' size='large' value={dataIdExmasDetails?.data?.time} />
             </div>
           </div>
-
+          <div className='mt-5'>
+            <Divider orientation='left'>danh sách người thi</Divider>
+            <Button onClick={showDrawer} styleClass='py-2'>
+              xem dánh sách
+            </Button>
+          </div>
           <div className='mt-10'>
             <p>Tên Bài Thi</p>
             <Input
@@ -122,7 +207,7 @@ const DetailsExamsQuestion = () => {
                       <>
                         {image.map((tag) => {
                           console.log(tag)
-                          return <Image key={tag} width={70} src={`${uri}/${tag}`}></Image>
+                          return <Image key={tag} width={50} src={`${uri}/${tag}`}></Image>
                         })}
                       </>
                     )}

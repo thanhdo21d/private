@@ -44,8 +44,16 @@ const ExamSetting = createApi({
       },
       providesTags: ['ExamSetting']
     }),
-    getTopicExamsID: builder.query<any, string>({
-      query: (id: string) => `/topicExams/get/${id}`,
+    getTopicExamsID: builder.query<any, { id: string; search: string }>({
+      query: ({ id, search }: { id: string; search: string }) => {
+        return {
+          url: `/topicExams/get/${id}`,
+          method: 'GET',
+          params: {
+            search: search || ''
+          }
+        }
+      },
       providesTags: ['ExamSetting']
     }),
     getIdExamsCategories: builder.query<any, any>({

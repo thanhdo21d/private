@@ -48,7 +48,7 @@ const EditBanner = () => {
     formData.append('banner', file)
     formData.append('bannerId', id as string)
     try {
-      await axios.post('http://localhost:8282/upload-banner', formData, {
+      await axios.post(`${uri}upload-banner`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

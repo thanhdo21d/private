@@ -18,7 +18,6 @@ const CreateExams = () => {
   const [open, setOpen] = useState(false)
   const { categoriesData } = useAppSelector((state) => state.dataCategories)
   const { id } = useParams()
-  console.log(id)
   const [dataExams, setDataExams] = useState({
     startDate: '',
     endDate: '',
@@ -26,6 +25,7 @@ const CreateExams = () => {
     loopUp: null as null | number,
     name: ''
   })
+  const [dataHistory, setDataHistory] = useState()
   const [addQuestion, setAddQuestion] = useState(false)
   const [dataFromChild, setDataFromChild] = useState([])
   const [checkUser, setCheckUser] = useState(false)
@@ -33,6 +33,7 @@ const CreateExams = () => {
   const dispatch = useAppDispatch()
   const searchKeyword: string | null = queryParameters.get('keyword')
   const idCate = localStorage.getItem('idCategories')
+  const idHistory = localStorage.getItem('history')
   const [createTopicExams, { isLoading: isCreateTopicExamsLoading }] = useCreateTopicExamsApiMutation()
   const {
     data: dataCategoriTree,
@@ -62,6 +63,9 @@ const CreateExams = () => {
       }
     }
   }, [idCate, dataCategoriTree])
+  // useEffect(() => {
+  //   setDataHistory(idHistory)
+  // }, [idHistory])
   const showDrawer = () => {
     setOpen(true)
   }

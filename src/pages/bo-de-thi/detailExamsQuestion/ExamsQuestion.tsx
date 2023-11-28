@@ -92,6 +92,14 @@ const ExamsQuestion = () => {
       }).toString()
     })
   }
+  const aproveHistory = (id: string) => {
+    navigate({
+      pathname: 'create-exams',
+      search: createSearchParams({
+        history: id
+      }).toString()
+    })
+  }
   const dataSource = dataIdExmas?.data?.topicExams.map((item: any, index: any) => ({
     STT: index + 1,
     key: item._id,
@@ -107,6 +115,7 @@ const ExamsQuestion = () => {
     key: item._id,
     name: item.name
   }))
+  console.log(dataIdExmas)
   const columnsHistory = [
     {
       title: 'STT',
@@ -127,7 +136,7 @@ const ExamsQuestion = () => {
               <span>
                 <AiFillEdit />
               </span>
-              <Link to={`create-exams`}>áp dụng</Link>
+              <p onClick={() => aproveHistory(id)}>áp dụng</p>
             </Button>
           </div>
         )

@@ -21,7 +21,7 @@ const UserProfile = () => {
     formData.append('avatar', file)
     formData.append('userId', profile?._id as string)
     try {
-      await axios.post('http://localhost:8282/upload-avatar', formData, {
+      await axios.post(`${uri}upload-avatar`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -81,9 +81,21 @@ const UserProfile = () => {
               </div>
               <div className='w-full md:w-3/5 p-8 bg-white lg:ml-4 shadow-md'>
                 <div className='rounded  shadow p-6'>
+                  <div className='pb-4'>
+                    <label htmlFor='about' className='font-semibold text-gray-700 block pb-1'>
+                      code
+                    </label>
+                    <input
+                      disabled
+                      id='email'
+                      className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full'
+                      type='email'
+                      defaultValue={profile?.code}
+                    />
+                  </div>
                   <div className='pb-6'>
                     <label htmlFor='name' className='font-semibold text-gray-700 block pb-1'>
-                      Name
+                      họ tên
                     </label>
                     <div className='flex'>
                       <input
@@ -107,34 +119,10 @@ const UserProfile = () => {
                       defaultValue={profile?.email}
                     />
                   </div>
-                  <div className='pb-4'>
-                    <label htmlFor='about' className='font-semibold text-gray-700 block pb-1'>
-                      code
-                    </label>
-                    <input
-                      disabled
-                      id='email'
-                      className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full'
-                      type='email'
-                      defaultValue={profile?.code}
-                    />
-                  </div>
-                  <div className='pb-4'>
-                    <label htmlFor='about' className='font-semibold text-gray-700 block pb-1'>
-                      address
-                    </label>
-                    <input
-                      disabled
-                      id='email'
-                      className='border-1 border-[#ccc]   rounded-r px-4 py-2 w-full'
-                      type='email'
-                      defaultValue={profile?.address}
-                    />
-                  </div>
 
                   <div className='pb-4'>
                     <label htmlFor='about' className='font-semibold text-gray-700 block pb-1'>
-                      role
+                      vai trò
                     </label>
                     <input
                       disabled

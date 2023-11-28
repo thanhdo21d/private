@@ -26,7 +26,7 @@ type FieldType = {
 const { TextArea } = Input
 const FormData = () => {
   const queryConfig = useQueryConfig()
-  const url = import.meta.env.VITE_API
+  const uri = import.meta.env.VITE_API
   const { id } = useParams()
   const [open, setOpen] = useState(false)
   const [showImage, setShowImage] = useState<boolean>(false)
@@ -137,12 +137,12 @@ const FormData = () => {
                 <img
                   onClick={() => {
                     setShowImage(!showImage)
-                    setImage(`${url}${img}`)
+                    setImage(`${uri}${img}`)
                   }}
                   className='w-[50px] cursor-pointer hover:scale-110'
                   loading='lazy'
                   crossOrigin='anonymous'
-                  src={`${url}${img}`}
+                  src={`${uri}${img}`}
                 />
               )}
             </Tooltip>
@@ -225,7 +225,7 @@ const FormData = () => {
   }
   const handelExport = async () => {
     try {
-      const response = await axios.post('http://localhost:8282/export/question/6555a21fc43cc54abbbfccbc', {
+      const response = await axios.post(`${uri}export/question/${id}`, {
         responseType: 'blob'
       })
       const url = window.URL.createObjectURL(new Blob([response.data]))

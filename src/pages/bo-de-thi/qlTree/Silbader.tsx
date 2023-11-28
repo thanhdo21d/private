@@ -51,6 +51,7 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
     id: idCate as string,
     name: searchKeyword || ''
   })
+  console.log(dataCategoriTree)
   const [isOpen, setIsOpen] = useState(() => {
     const openCategories = JSON.parse(sessionStorage.getItem('openCategories') || '{}')
     return !!openCategories[category?._id]

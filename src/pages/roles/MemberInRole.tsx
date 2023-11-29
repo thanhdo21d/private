@@ -20,6 +20,7 @@ interface DataType {
   role: string
 }
 const MemberInRole: React.FC = () => {
+  
   const [queryParameters] = useSearchParams()
   const search: string | null = queryParameters.get('search')
   const uri = import.meta.env.VITE_API

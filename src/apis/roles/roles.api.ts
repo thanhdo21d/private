@@ -32,8 +32,15 @@ const RoleApi = createApi({
       },
       providesTags: ['role']
     }),
-    getIdRoles: builder.query<IRoleDoc, string>({
-      query: (id: string) => `/role/${id}`,
+    getIdRoles: builder.query<IRoleDoc, { id: string; search: string }>({
+      query: ({ id, search }: { id: string; search: string }) => {
+        return {
+          url: `/role/${id}`,
+          params: {
+            search: search || ''
+          }
+        }
+      },
       providesTags: ['role']
     }),
 

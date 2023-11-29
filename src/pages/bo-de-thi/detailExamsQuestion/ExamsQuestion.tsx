@@ -42,7 +42,6 @@ const ExamsQuestion = () => {
   const queryConfig = useQueryConfig()
   const [addTopicQuestion] = useCreateTopicExamsMutation()
   const [removeTopic, { isLoading: isRemoveTopicLoading }] = useRemoveTopicExamsMutation()
-  console.log(dataIdExmas, 'l')
   const confirm = (idExams: string) => {
     removeTopic({
       id: idExams,

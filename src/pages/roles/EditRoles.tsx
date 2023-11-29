@@ -24,7 +24,10 @@ const EditRoles: React.FC = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const { data: taskRoleData, isFetching: taskRoleDataFetching } = useGetAllTaskRoleQuery()
-  const { data: roleData, isFetching: isGetRoleLoading } = useGetIdRolesQuery(id as string)
+  const { data: roleData, isFetching: isGetRoleLoading } = useGetIdRolesQuery({
+    id: id as string,
+    search: ''
+  })
   const [addTaskRole] = useAddTaskRoleMutation()
   const [selectedOption, setSelectedOption] = useState('')
   const [updateRoles, { isLoading: isUpdateLoading }] = useUpdateRoleMutation()

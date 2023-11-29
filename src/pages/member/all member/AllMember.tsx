@@ -133,20 +133,25 @@ const AllMember = () => {
       )
     }
   ]
+  const onFinishFailed = (errorInfo: any) => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: ''
+      }).toString()
+    })
+  }
   return (
     <div className=''>
-      <Button styleClass='bg-warning' onClick={() => navigate('/admin/all-member/add')}>
-        Thêm mới
-      </Button>
       <div className='mt-10 flex gap-5'>
-        <Form className='flex gap-5  justify-center' onFinish={onFinish}>
+        <Form className='flex gap-5  justify-center' onFinishFailed={onFinishFailed} onFinish={onFinish}>
           <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your code!' }]}>
             <Input
               className='h-[40px] w-[500px] xl:w-[600px] border border-[#ccc]'
-              placeholder='Tìm Kiếm Theo câu hỏi ....'
+              placeholder='Tìm Kiếm Theo code ....'
             />
           </Form.Item>
-          <Button type='submit' styleClass='w-[150px] h-[50px] bg-graydark'>
+          <Button type='submit' styleClass='w-[150px] h-[40px] bg-graydark'>
             Tìm Kiếm
           </Button>
         </Form>

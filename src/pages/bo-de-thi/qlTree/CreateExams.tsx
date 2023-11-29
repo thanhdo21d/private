@@ -122,7 +122,6 @@ const CreateExams = () => {
   //     )
   //   }
   // }, [idHistory, dataHistoryExams?.categoriesInfo, dispatch])
-  console.log(categoriesData)
   const orderProducts = categoriesData?.map((item: any, index: number) => ({
     key: item.id,
     id: item.id,
@@ -141,29 +140,6 @@ const CreateExams = () => {
       dataIndex: 'productName',
       key: 'productName'
     },
-    // {
-    //   title: 'name',
-    //   dataIndex: 'questionSet',
-    //   key: 'questionSet',
-    //   render: (data: any) => {
-    //     return (
-    //       <div>
-    //         {data?.map((items: any, index: number) => {
-    //           console.log(items)
-    //           return (
-    //             <div key={index}>
-    //               <div className='flex items-center'>
-    //               <span>point</span>
-    //               <span className='text-danger'>{items.point}</span>
-    //               </div>
-
-    //             </div>
-    //           )
-    //         })}
-    //       </div>
-    //     )
-    //   }
-    // },
     {
       title: 'tác vụ',
       render: (item: any) => {
@@ -308,7 +284,6 @@ const CreateExams = () => {
         <div>loading .....</div>
       ) : (
         <>
-          {' '}
           {addQuestion && (
             <div className='flex justify-between w-full mt-15 gap-10'>
               <div className='w-1/2 border border-[#24A19C] rounded-md min-h-screen relative shadow-lg'>
@@ -318,28 +293,6 @@ const CreateExams = () => {
                     {categoriesData?.length}
                   </div>
                 </div>
-                {/* {categoriesData?.map((items: any) => (
-                  <div key={items?._id} className='mt-5 mx-2'>
-                    <div className='w-full  h-[60px] border rounded-md flex justify-between items-center shadow-lg bg-white bg-opacity-25'>
-                      <div className='mx-2'>
-                        <h2>{items?.name}</h2>
-                      </div>
-                      <div className='flex items-center gap-5'>
-                        <div className='mx-2'>
-                          <img className='w-[30px] hover:scale-110 cursor-pointer' src={detailsIcons} alt='detail' />
-                        </div>
-                        <div className='mx-2'>
-                          <img
-                            onClick={() => dispatch(removeSelectedCategory(items))}
-                            className='w-[30px] hover:scale-110 cursor-pointer'
-                            src={closeIcons}
-                            alt='close'
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))} */}
                 <div>
                   <Table
                     bordered
@@ -352,7 +305,6 @@ const CreateExams = () => {
                   />
                 </div>
               </div>
-              {/*  */}
               <div className='w-1/2 border border-boxdark rounded-md'>
                 <div className='flex justify-between items-center bg-[#5800FF] py-1'>
                   <h4 className='text-xl font-bold text-white pl-2'>Categories Question</h4>
@@ -360,8 +312,6 @@ const CreateExams = () => {
                     0
                   </div>
                 </div>
-                {/*  */}
-
                 <div className='mt-5 mx-2'>
                   <div className='w-full  border rounded-md  shadow-lg bg-white bg-opacity-25'>
                     {dataCategoriess?.map((category: any) => {

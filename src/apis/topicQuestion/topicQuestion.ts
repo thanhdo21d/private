@@ -1,9 +1,19 @@
 ///topicExams/create/
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import Cookies from 'js-cookie'
 const topicExamsApi = createApi({
   reducerPath: 'topicExams',
   baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API
+    baseUrl: import.meta.env.VITE_API,
+    prepareHeaders: (headers, { getState }) => {
+      console.log(getState())
+      const token = Cookies.get('token')
+      console.log(token, 'token')
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`)
+      }
+      return headers
+    }
   }),
   tagTypes: ['topicExams'],
   endpoints: (builder) => ({
@@ -51,8 +61,21 @@ const topicExamsApi = createApi({
         }
       },
       providesTags: ['topicExams']
+    }),
+    sessionExamsQuestion: builder.query<any[], { id: string; page: string; limit: string }>({
+      query: ({ id, page, limit }: { id: string; page: string; limit: string }) => {
+        return {
+          url: `/check/session/${id}`,
+          method: 'GET',
+          params: {
+            page: page || 1,
+            limit: limit || 1
+          }
+        }
+      },
+      providesTags: ['topicExams']
     })
   })
 })
-export const { useCreateTopicExamsApiMutation, useGetQuestionStartQuery } = topicExamsApi
+export const { useCreateTopicExamsApiMutation, useGetQuestionStartQuery, useSessionExamsQuestionQuery } = topicExamsApi
 export default topicExamsApi

@@ -1,8 +1,8 @@
 import { Footer, Header } from 'antd/es/layout/layout'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Countdown from 'react-countdown'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '~/components'
 import { toastService } from '~/utils/toask/toaskMessage'
 import PopupSuccess from './PopupSuccess.tsx/PopupSuccess'
@@ -12,17 +12,23 @@ import { AiOutlineEnter } from 'react-icons/ai'
 import { TiTick } from 'react-icons/ti'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { Checkbox, Divider, Form } from 'antd'
+import { Checkbox, Divider, Form, Skeleton } from 'antd'
 import { container, formats } from '~/utils/quill'
 import Spreadsheet from 'react-spreadsheet'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
-import { useGetQuestionStartQuery } from '~/apis/topicQuestion/topicQuestion'
+import { useSessionExamsQuestionQuery } from '~/apis/topicQuestion/topicQuestion'
+import { AppContext } from '~/contexts/app.contexts'
+import { Loader } from '~/common'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<boolean>(false)
+  const { profile } = useContext(AppContext)
   const { id } = useParams()
   const navigate = useNavigate()
   const [height, setHeight] = useState<any>(null)
+  const [queryParameters] = useSearchParams()
+  const dataPageQuery: string | null = queryParameters.get('page')
+  const datalimitQueryChange: string | null = queryParameters.get('limit')
   const [width, setWidth] = useState<any>(null)
   const confetiRef: any = useRef(null)
   const { t } = useTranslation(['header'])
@@ -30,8 +36,12 @@ const QuesionStart = () => {
     data: dataIdExmasDetails,
     isLoading: isLoadingDetails,
     isFetching: isFetchingDetails
-  } = useGetQuestionStartQuery(id as string)
-  console.log(dataIdExmasDetails)
+  } = useSessionExamsQuestionQuery({
+    id: profile?._id as string,
+    page: dataPageQuery as string,
+    limit: datalimitQueryChange as string
+  })
+  console.log(dataIdExmasDetails, 'ppp')
   useEffect(() => {
     setHeight((confetiRef.current = '2000px'))
     setWidth((confetiRef.current = '1200px'))
@@ -54,7 +64,7 @@ const QuesionStart = () => {
   useEffect(() => {
     const handleVisibilityChange = () => {
       // if (document.hidden) {
-      //   // alert('Học sinh đã thoát toàn màn hình!')
+      //   alert('Học sinh đã thoát toàn màn hình!')
       // }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
@@ -63,27 +73,19 @@ const QuesionStart = () => {
     }
   }, [])
   const canvasRef = useRef<any>(null)
-
-  // useEffect(() => {
-  //   const canvas = canvasRef.current
-  //   const context = canvas.getContext('2d')
-  //   context.clearRect(0, 0, canvas.width, canvas.height)
-  //   context.font = '16px Arial'
-  //   context.fillStyle = 'black'
-  //   dataIdExmasDetails?.questions?.forEach((question: any, index: number) => {
-  //     const questionText = `Câu ${index + 1}: ${question.question}`
-  //     const answerTexts = question.choose.map((answer: any, answerIndex: number) => {
-  //       return `A${answerIndex + 1}: ${answer.q}`
-  //     })
-  //     context.fillText(questionText, 10, (index + 1) * 30)
-  //     answerTexts.forEach((answerText: any, answerIndex: number) => {
-  //       context.fillText(answerText, 20, (index + 1) * 30 + (answerIndex + 1) * 20)
-  //     })
-  //   })
-  // }, [dataIdExmasDetails?.questions])
-
+  if (isLoadingDetails || isFetchingDetails)
+    return (
+      <div>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    )
   return (
-    <div className=' mx-auto px-4  '>
+    <div className=' mx-auto px-4'>
       <div className=' min-w-0 h-[800px] overflow-y-scroll break-words   bg-white  shadow-xl rounded-lg relative'>
         <Header
           style={{
@@ -121,26 +123,27 @@ const QuesionStart = () => {
             <div>
               <div className='text-danger'>
                 <Divider orientation='left'>Nội Dung Câu Hỏi</Divider>
-                {dataIdExmasDetails?.questions?.map((items: any) => (
-                  <>
-                    <div className=''>
-                      <p className='text-black font-bold underline text-xl py-2'>Câu 1</p>
-                      <p>{items.question}</p>
-                    </div>
-                    {items?.choose?.map((data: any) => (
-                      <div
-                        className='w-full mt-[20px] border border-body bg-bodydark rounded-md  flex items-center text-start
-      overflow-h-scroll min-h-[60px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
-       hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5'
-                      >
-                        <Checkbox />
-                        <span className='font-bold text-xl pl-5 text-black'>A </span> :
-                        <span className='font-medium text-md'> {data?.q}</span>
+                {dataIdExmasDetails?.questions?.map((items: any, index: number) => {
+                  return (
+                    <div key={items?._id}>
+                      <div className=''>
+                        <p className='text-black font-bold underline text-xl py-2'>Câu 1</p>
+                        <p>{items.question}</p>
                       </div>
-                    ))}
-                  </>
-                ))}
-                <canvas ref={canvasRef} />
+                      {items?.choose?.map((data: any) => (
+                        <div
+                          className='w-full mt-[20px] border border-body bg-bodydark rounded-md  flex items-center text-start
+        overflow-h-scroll min-h-[60px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
+         hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5'
+                        >
+                          <Checkbox />
+                          <span className='font-bold text-xl pl-5 text-black'>A </span> :
+                          <span className='font-medium text-md'> {data?.q}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                })}
               </div>
               {/* {Question ? (
                 <div className='flex justify-center mx-auto !mt-10'>

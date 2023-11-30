@@ -123,16 +123,17 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
         .catch(() => toastService.error('Error removing'))
   }
   const onFinish = (values: any) => {
+    console.log(values)
     editCategoriTree({
       id: category._id as string,
-      parentId: parentId || null,
+      parentId: parentId || category.parent,
       name: values.name
     })
       .unwrap()
       .then(() => {
         toastService.success('categories updated successfully')
         sessionStorage.removeItem('categories')
-        setTimeout(() => window.location.reload())
+        // setTimeout(() => window.location.reload())
       })
   }
   useEffect(() => {
@@ -302,7 +303,11 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
         width={500}
         onClose={onClose}
         open={open}
-        extra={<Button onClick={onClose}>Cancel</Button>}
+        extra={
+          <div>
+            <Button onClick={onClose}>Cancel</Button>
+          </div>
+        }
       >
         <p className='mb-3'>Nhập Tên Categories Mới</p>
         <Form
@@ -310,7 +315,7 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
           style={{ minWidth: '100%' }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: '100%' }}
-          initialValues={{ remember: true }}
+          initialValues={{ name: category?.name, remember: true }}
           onFinish={onFinish}
           autoComplete='off'
         >

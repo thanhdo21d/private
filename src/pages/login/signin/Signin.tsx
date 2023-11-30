@@ -20,10 +20,13 @@ import { AppContext } from '~/contexts/app.contexts'
 import { userLogin } from '~/types/users/userContext'
 import { useGetAllBannersQuery, useGetIdBannersQuery } from '~/apis/banner/banner.api'
 import { Skeleton } from 'antd'
+import { useAppDispatch } from '~/store/root/hook'
+import { setToken } from '~/store/slice/Auth.slice'
 const Signin = () => {
   const { i18n } = useTranslation()
   const { setIsAuthenticated, setProfile, profile } = useContext(AppContext)
   const [showPassword, setShowPassword] = useState<boolean>(true)
+  const dispatch = useAppDispatch()
   const { data: dataBannerID, isFetching } = useGetIdBannersQuery('652c9174be0b746b392bc8fb')
   const { t } = useTranslation(['header'])
   const currentLanguage = locals[i18n.language as keyof typeof locals]
@@ -39,24 +42,19 @@ const Signin = () => {
   const [loginApi, { isLoading, isError, isSuccess }] = useGetAccessTokenMutation()
   const onSubmit = async (data: SigninForm) => {
     try {
-      loginApi(data).then(({ data }: any) => {
-        console.log(data.dataUser, 'ok')
-        if (data !== 'undefined') {
-          console.log(data.checkDb, 'dbrr')
-          setProfile(data.checkDb)
-          setProfileToLS(data.checkDb)
-          Cookies.set('token', data.accessToken, { expires: 1 })
-        }
-      })
+      const result = await loginApi(data)
+      console.log(result, 'ok')
+      if (result.data !== 'undefined') {
+        setProfile(result.data.checkDb)
+        setProfileToLS(result.data.checkDb)
+        Cookies.set('token', result.data.accessToken)
+      }
     } catch (error) {
       console.log(error)
       toastService.error(t('product.login_error'))
     }
   }
-  if (isError) {
-    toastService.error(t('product.login_error'))
-    Cookies.remove('token')
-  }
+
   if (isSuccess) {
     console.log(isSuccess)
     toastService.success(t('product.login_success'))

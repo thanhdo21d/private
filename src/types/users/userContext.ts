@@ -4,9 +4,9 @@ export interface IuserContext {
   avatar: string
   createdAt: string
   email: string
-  username : string
-  code : string
-  address : string
+  username: string
+  code: string
+  address: string
   role: {
     name: string
     status: string

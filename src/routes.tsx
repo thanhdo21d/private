@@ -79,7 +79,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/tree-menu/:id',
-    // element: <CheckCookieUserLogin />,
+    element: <CheckCookieUserLogin />,
     children: [
       {
         element: <TreeMenu />,

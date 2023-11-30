@@ -10,6 +10,7 @@ import { toastService } from '~/utils/toask/toaskMessage'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 type FieldType = {
   url?: string
 }
@@ -34,6 +35,8 @@ const EditBanner = () => {
   const [file, setFile] = useState<any>(null)
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const token = Cookies.get('token')
+  console.log(token, 'token')
   const uri = import.meta.env.VITE_API
   const { data: bannerData, error, isFetching: isGetBanerLoading } = useGetIdBannersQuery(id || '')
   console.log(bannerData)
@@ -50,7 +53,8 @@ const EditBanner = () => {
     try {
       await axios.post(`${uri}upload-banner`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
         }
       })
       toastService.success('banner uploaded successfully')

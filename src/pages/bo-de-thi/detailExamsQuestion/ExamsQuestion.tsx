@@ -25,6 +25,7 @@ const ExamsQuestion = () => {
   const uri = import.meta.env.VITE_API
   const { id } = useParams()
   const [open, setOpen] = useState(false)
+  const [limitConfig, setLimitConfig] = useState('')
   const [queryParameters] = useSearchParams()
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
@@ -339,11 +340,24 @@ const ExamsQuestion = () => {
               </div>
               <div className='flex items-center gap-5 mt-4'>
                 <InputNumber
+                  onChange={(event) => setLimitConfig(event.target.value)}
                   className=''
                   classNameError='hidden'
                   classNameInput='h-8 w-50 border-t border-b border-gray-300 p-1 text-center outline-none'
                 />
-                <Button styleClass='py-1 px-1 hover:bg-opacity-80'>Áp dụng</Button>
+                <Button
+                  onClick={() => {
+                    navigate({
+                      search: createSearchParams({
+                        ...queryConfig,
+                        limit: limitConfig
+                      }).toString()
+                    })
+                  }}
+                  styleClass='py-1 px-1 hover:bg-opacity-80'
+                >
+                  Áp dụng
+                </Button>
               </div>
             </div>
           </div>

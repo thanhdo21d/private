@@ -47,6 +47,7 @@ import FoldersCategories from './pages/bo-de-thi/qlTree/FoldersCategories'
 import Home from './pages/home/Home'
 import GuideLine from './pages/GuideLine/GuideLine'
 import ChooseExams from './pages/accept-phong-ban/ChooseExams'
+import EditExamsKt from './pages/bo-de-thi/qlTree/editExams'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -90,6 +91,7 @@ export const routers = createBrowserRouter([
           { path: 'settings/edit', element: <EditTree /> },
           { path: 'all-folders/category/:id', element: <FormData /> },
           { path: 'settings/ki-thi', element: <ExamConfiguration /> },
+          { path: 'settings/ki-thi/edit/:id', element: <EditExamsKt /> },
           { path: 'settings/ki-thi/bai-thi/:id', element: <ExamsQuestion /> },
           { path: 'settings/ki-thi/bai-thi/:id/:id/details-exams', element: <DetailsExamsQuestion /> },
           { path: 'settings/ki-thi/bai-thi/:id/create-exams', element: <CreateExams /> }

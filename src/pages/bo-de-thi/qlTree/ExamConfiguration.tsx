@@ -1,6 +1,6 @@
 import { Breadcrumb, Col, Drawer, Form, Input, Popconfirm, Row, Skeleton, Space, Table } from 'antd'
 import { SizeType } from 'antd/es/config-provider/SizeContext'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '~/components'
 import { DatePicker } from 'antd'
 import { EyeOutlined, DeleteOutlined } from '@ant-design/icons'
@@ -20,7 +20,6 @@ const { RangePicker } = DatePicker
 const ExamConfiguration = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [checkOption, setCheckOption] = useState(false)
   const [queryParameters] = useSearchParams()
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
@@ -129,8 +128,14 @@ const ExamConfiguration = () => {
       title: <p className='flex justify-center'>Tác Vụ</p>,
       render: ({ key: id }: { key: string }) => {
         return (
-          <div className='flex justify-center gap-5'>
-            <Button onClick={() => navigate(`bai-thi/${id}`)} styleClass='bg-[#3d5ee1] flex items-center w-fit !px-3'>
+          <div className='2xl:flex space-y-5 2xl:space-y-0 justify-center gap-2'>
+            <Button onClick={() => navigate(`edit/${id}`)} styleClass=' flex items-center 2xl:w-fit w-[177px]'>
+              <span className='font-medium'>sửa </span>
+            </Button>
+            <Button
+              onClick={() => navigate(`bai-thi/${id}`)}
+              styleClass='bg-[#3d5ee1] flex items-center !px-2 2xl:w-fit w-[177px]'
+            >
               <span>
                 <EyeOutlined />
               </span>
@@ -147,7 +152,7 @@ const ExamConfiguration = () => {
               cancelText='No'
               placement='rightBottom'
             >
-              <Button styleClass='bg-danger flex items-center w-fit !px-3'>
+              <Button styleClass='bg-danger flex items-center !px-2  2xl:w-fit w-[177px]'>
                 <span>
                   <DeleteOutlined />
                 </span>
@@ -203,7 +208,7 @@ const ExamConfiguration = () => {
               className=''
               rules={[{ required: true, message: 'vui lòng nhập Tên Kì Thi ...!' }]}
             >
-              <Input className='w-[330px] border border-[#ccc]' placeholder='vui lòng nhập Tên Kì Thi ...!' />
+              <Input className='w-[330px] border !border-[#ccc]' placeholder='vui lòng nhập Tên Kì Thi ...!' />
             </Form.Item>
             <Form.Item>
               <button className='bg-success px-8 rounded-md text-white font-medium py-2.5' type='submit'>
@@ -213,14 +218,6 @@ const ExamConfiguration = () => {
           </Form>
         </div>
         <div className='flex items-center gap-5'>
-          <UnorderedListOutlined
-            onClick={() => setCheckOption(false)}
-            className='text-[20px] hover:bg-[#18AEFA] hover:border-[#18AEFA] p-2 cursor-pointer hover:font-bold text-white bg-[#3d5ee1] rounded-md border border-[#3d5ee1] shadow-lg ease-in-out'
-          />
-          <AppstoreAddOutlined
-            onClick={() => setCheckOption(true)}
-            className='text-[20px] p-2  border-[3px] border-[#EDF1F1] text-[#212529] ease-in-out bg-white shadow-lg rounded-md cursor-pointer hover:text-success'
-          />
           <button className='bg-success px-8 rounded-md text-white font-medium py-2.5' onClick={showDrawer}>
             Kì Thi Mới
           </button>
@@ -260,85 +257,15 @@ const ExamConfiguration = () => {
         </div>
       ) : (
         <>
-          {checkOption ? (
-            <div className='grid grid-cols-3 mt-5 gap-5'>
-              {dataExamsCategories?.exam?.examsKT?.map((data: any) => (
-                <div key={data?._id}>
-                  <div className=''>
-                    <div className='max-h-full max-w-[400px] overflow-y-auto sm:rounded-2xl bg-white'>
-                      <div className='w-full'>
-                        <div className='m-8 my-20 max-w-[400px] mx-auto'>
-                          <div className='mb-8'>
-                            <div className='text-center animate-bounce mx-auto flex justify-center'>
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                x='0px'
-                                y='0px'
-                                width='48'
-                                height='48'
-                                viewBox='0 0 48 48'
-                              >
-                                <path
-                                  fill='#4caf50'
-                                  d='M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z'
-                                ></path>
-                                <path
-                                  fill='#ccff90'
-                                  d='M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z'
-                                ></path>
-                              </svg>
-                            </div>
-                            <p className='text-gray-600 text-center'>{data?.name}.</p>
-                          </div>
-                          <div className='mt-5 mx-auto  '>
-                            <div className='flex justify-center'>
-                              <button
-                                // onClick={() => navigate(`/tree-menu/${data?._id}/category/${data?._id}`)}
-                                onClick={() => navigate(`bai-thi/${data?._id}`)}
-                                className='p-3 bg-strokedark  text-white w-[90%] rounded-md font-semibold'
-                              >
-                                Chi Tiết
-                              </button>
-                            </div>
-                            <div className='flex justify-center mt-5'>
-                              <Popconfirm
-                                title='Delete the task'
-                                description='Are you sure to delete this task?'
-                                onConfirm={() => confirm(data?._id)}
-                                okText='Yes'
-                                okButtonProps={{
-                                  style: { backgroundColor: 'blue' }
-                                }}
-                                cancelText='No'
-                                placement='rightBottom'
-                              >
-                                <button className='p-3 bg-warning  text-white w-[90%] rounded-md font-semibold'>
-                                  Remove
-                                </button>
-                              </Popconfirm>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {/*  */}
-                  </div>
-                </div>
-              ))}
+          <Table dataSource={dataSource} columns={columns} pagination={false} className='dark:bg-black  mt-4 ' />
+          <Footer className='mt-5 w-full  justify-between dark:bg-black '>
+            <div>
+              <Pagination pageSize={dataExamsCategories?.totalPages} queryConfig={queryConfig} />
             </div>
-          ) : (
-            <>
-              <Table dataSource={dataSource} columns={columns} pagination={false} className='dark:bg-black  mt-4 ' />
-              <Footer className='mt-5 w-full  justify-between dark:bg-black '>
-                <div>
-                  <Pagination pageSize={dataExamsCategories?.totalPages} queryConfig={queryConfig} />
-                </div>
-                <div className='text-md mt-5 font-semibold text-center dark:text-white'>
-                  Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
-                </div>
-              </Footer>
-            </>
-          )}
+            <div className='text-md mt-5 font-semibold text-center dark:text-white'>
+              Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+            </div>
+          </Footer>
         </>
       )}
     </div>

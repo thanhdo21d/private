@@ -14,6 +14,7 @@ import { RangePickerProps } from 'antd/es/date-picker'
 import { setLoggerDate } from '~/store/slice/dateLogger.slice'
 import { ClientSocket } from '~/socket/socket'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
+import ChilTableLogs from './ChilTableLogs'
 const CheckLog = () => {
   const [queryParameters] = useSearchParams()
   const [removeLogger] = useRemoveLoggersMutation()
@@ -22,11 +23,10 @@ const CheckLog = () => {
   const navigate = useNavigate()
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const search: string | null = queryParameters.get('search')
   const [open, setOpen] = useState(false)
   const { loggerDate } = useAppSelector((state) => state.loggers)
-  console.log(loggerDate)
   const queryConfig = useQueryConfig()
-  console.log(queryConfig, 'day nay')
   const {
     data: dataLoggers,
     isFetching,
@@ -35,11 +35,16 @@ const CheckLog = () => {
     page: dataPageQuery || 1,
     limit: datalimitQueryChange || 30,
     startDate: loggerDate?.startDate,
-    endDate: loggerDate?.endDate
+    endDate: loggerDate?.endDate,
+    search: search || ''
   })
-  console.log(dataLoggers)
-  const onFinish = (values: any) => {
-    console.log('Success:', values)
+  const onFinish = ({ code }: { code: string }) => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: code
+      }).toString()
+    })
   }
   const onFinishRemoveLoger = ({ days }: { days: any }) => {
     removeLogger({
@@ -65,7 +70,12 @@ const CheckLog = () => {
     })
   }
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo)
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: ''
+      }).toString()
+    })
   }
   const showDrawer = () => {
     setOpen(true)
@@ -75,7 +85,7 @@ const CheckLog = () => {
   }
   type FieldType = {
     username?: string
-    password?: string
+    code?: string
     remember?: string
   }
   const onDateChange: RangePickerProps['onChange'] = (_, dateString) => {
@@ -96,7 +106,7 @@ const CheckLog = () => {
       logType: logType,
       contents: contents,
       data: data,
-      ipAddress: ipAddress[1],
+      ipAddress: ipAddress,
       createdAt: createdAt
     })
   )
@@ -129,12 +139,12 @@ const CheckLog = () => {
       key: 'contents'
     },
     {
-      title: 'Author',
+      title: 'Code',
       dataIndex: 'user',
       key: 'user'
     },
     {
-      title: 'IP Computer',
+      title: 'Author',
       dataIndex: 'ipAddress',
       key: 'ipAddress'
     },
@@ -202,7 +212,7 @@ const CheckLog = () => {
         </Form.Item>
         <Form.Item<FieldType>
           label=' Code'
-          name='password'
+          name='code'
           rules={[{ required: true, message: 'Please input your Author Code!' }]}
         >
           <Input placeholder='Author Code' prefix={<UserOutlined />} />

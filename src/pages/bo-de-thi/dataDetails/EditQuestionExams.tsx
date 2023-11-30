@@ -49,10 +49,7 @@ const EditQuestionExams = () => {
               label={<p className='font-bold text-xl'>Câu Hỏi</p>}
               rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
             >
-              <TextArea
-                className='rounded-md border border-[#ccc] '
-                placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
-              />
+              <TextArea className='rounded-md border border-[#ccc] ' placeholder='vui lòng nhập Thêm Câu Hỏi ...!' />
             </Form.Item>
             <Divider></Divider>
             <Form.Item
@@ -68,7 +65,6 @@ const EditQuestionExams = () => {
               </Upload>
             </Form.Item>
             <Divider orientation='left'>Chi Tiết đáp án</Divider>
-
             <div className='grid grid-cols-2 gap-5 items-center'>
               <Form.Item
                 name='name'

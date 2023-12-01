@@ -18,6 +18,7 @@ import categoryHistoryAPI from '~/apis/question/ExamsEasy'
 import topicExamsApi from '~/apis/topicQuestion/topicQuestion'
 import { categoriesReducer } from '../slice/checkCategories'
 import authReducer from '../slice/Auth.slice'
+import AliasApi from '~/apis/aliasFolder/aliasFolder'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -33,6 +34,7 @@ export const store = configureStore({
     [UserDepartMentApi.reducerPath]: UserDepartMentApi.reducer,
     [categoryHistoryAPI.reducerPath]: categoryHistoryAPI.reducer,
     [topicExamsApi.reducerPath]: topicExamsApi.reducer,
+    [AliasApi.reducerPath]: AliasApi.reducer,
     //toolkit
     theme: themeReducer,
     checkToken: authReducer,
@@ -53,6 +55,7 @@ export const store = configureStore({
       loggersAPI.middleware,
       UserDepartMentApi.middleware,
       categoryHistoryAPI.middleware,
+      AliasApi.middleware,
       topicExamsApi.middleware,
       rtkQueryErrorLogger
     )

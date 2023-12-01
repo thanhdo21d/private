@@ -60,6 +60,11 @@ export const settingsSystemLogs: MenuProps['items'] = [
     getItem(<NavLink to={`/admin/check-log`}>Logs Hệ Thống</NavLink>, 'log', <BugOutlined />)
   ])
 ]
+export const settingsAlias: MenuProps['items'] = [
+  getItem( <p className='text-white font-semibold'>Cài Đặt</p>, 'settins', <SettingOutlined />, [
+    getItem(<NavLink to={`alias-folder`}>Cấu Hình Alias</NavLink>, 'alias')
+  ])
+]
 export const dashboardOther: MenuProps['items'] = [
   getItem('dashboard', 'Other', <AiOutlineDashboard />, [
     getItem(<NavLink to={`dashboard-other-admin`}>dashboard</NavLink>, 'Others', <BugOutlined />),

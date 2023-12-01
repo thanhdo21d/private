@@ -8,9 +8,11 @@ import { Checkbox, Drawer, Form, Input, Menu, Popconfirm, Select, Skeleton, Spac
 import { NavLink, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AiFillHome, AiFillSetting, AiOutlineDashboard } from 'react-icons/ai'
 import { FaRegFolderOpen } from 'react-icons/fa'
-import { dashboardOther, settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
+import { dashboardOther, settingsAlias, settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
 import checkIcons from '../../../assets/check.png'
 import unCheckIcons from '../../../assets/unchecked.png'
+import examsIcons from '../../../assets/exam.png'
+
 import folder from '../../../assets/folder.png'
 
 import {
@@ -486,15 +488,15 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
           mode='inline'
           items={dashboardOther}
         />
-        <nav className='px-3 mt-5'>
+        <nav className=' mt-5'>
           <div className='select-none'>
             <h3
               onClick={() => navigate(`/tree-menu/${idCate}/all-folders`)}
               className={`${
-                isActive ? 'bg-success  pl-4' : ''
-              } text-white mb-4 flex items-center  cursor-pointer  ml-4  py-2 rounded-md   text-sm font-semibold select-none`}
+                isActive ? 'bg-success' : ''
+              } text-white mb-4 flex items-center  cursor-pointer    py-2 rounded-md   text-sm font-semibold select-none`}
             >
-              <span className='pr-5'>
+              <span className='pr-5 pl-7'>
                 <FaRegFolderOpen className='text-2xl' />
               </span>
               <span> Thư Mục</span>
@@ -509,10 +511,11 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         onClick={() => navigate(`/tree-menu/${idCate}/settings/ki-thi`)}
       >
         <span>
-          <AiFillSetting className='text-white text-2xl' />
+          <img className='w-[30px]' src={examsIcons}/>
         </span>
         <span className='text-md text-bodydark1 font-medium'>Kì Thi</span>
       </p>
+      <Menu theme='dark' defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={settingsAlias} />
     </div>
   )
 }

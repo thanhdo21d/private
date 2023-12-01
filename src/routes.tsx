@@ -30,7 +30,6 @@ import FormData from './pages/bo-de-thi/dataDetails/FormData'
 import EditExams from './pages/bo-de-thi/editExams/EditExams'
 import DetailsExams from './pages/bo-de-thi/dataDetails/DetailsExams'
 import DemoExcel from './layouts/trangThi/components/Popup-thi/DemoExcel'
-import MenuIten from './utils/Demol'
 import ChoosExam from './pages/accept-phong-ban/ChoosExam'
 import Setting from './pages/setting/Setting'
 import TreeMenu from './pages/bo-de-thi/qlTree/TreeMenu'
@@ -48,6 +47,7 @@ import Home from './pages/home/Home'
 import GuideLine from './pages/GuideLine/GuideLine'
 import ChooseExams from './pages/accept-phong-ban/ChooseExams'
 import EditExamsKt from './pages/bo-de-thi/qlTree/editExams'
+import AliasFolder from './pages/aliasFolder/AliasFolder'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -86,6 +86,7 @@ export const routers = createBrowserRouter([
         element: <TreeMenu />,
         children: [
           { path: 'all-folders', element: <FoldersCategories /> },
+          { path: 'alias-folder', element: <AliasFolder /> },
           { path: 'dashboard-other-admin', element: <DashBoardOtherAdmin /> },
           { path: 'member', element: <MemberDepartment /> },
           { path: 'settings/edit', element: <EditTree /> },

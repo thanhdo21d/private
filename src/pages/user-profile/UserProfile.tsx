@@ -9,7 +9,6 @@ import { useGetIdUserQuery } from '~/apis/user/user.api'
 import { Skeleton } from 'antd/es'
 const UserProfile = () => {
   const { profile } = useContext(AppContext)
-  console.log(profile)
   const greeting = useGreetings()
   const [file, setFile] = useState<any>(null)
   const { data: dataUser, isLoading, isFetching } = useGetIdUserQuery(profile?._id as string)
@@ -119,7 +118,6 @@ const UserProfile = () => {
                       defaultValue={profile?.email}
                     />
                   </div>
-
                   <div className='pb-4'>
                     <label htmlFor='about' className='font-semibold text-gray-700 block pb-1'>
                       vai trò
@@ -129,7 +127,7 @@ const UserProfile = () => {
                       id='email'
                       className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full'
                       type='email'
-                      defaultValue={profile?.role?.name}
+                      defaultValue={dataUser?.user?.role?.name}
                     />
                     <span className='text-gray-600 pt-4 block opacity-70'>
                       Personal login information of your account

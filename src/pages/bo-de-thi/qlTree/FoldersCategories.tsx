@@ -17,7 +17,6 @@ const FoldersCategories = () => {
   const [queryParameters] = useSearchParams()
   const dataExamsQuery: any = queryParameters.get('category')
   const searchKeyword: string | null = queryParameters.get('keyword')
-
   const [dataCategories, setDataCategories] = useState<any[]>([])
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -161,7 +160,7 @@ const FoldersCategories = () => {
               </button>
             </div>
           </div>
-          <div className='mt-5  border rounded-md  shadow-lg'>
+          <div className='mt-5 overflow-y-auto border rounded-md  shadow-lg'>
             {dataCategories?.map((category: any) => {
               return (
                 <CategoryTreeItem
@@ -175,13 +174,13 @@ const FoldersCategories = () => {
               )
             })}
           </div>
+          <Footer className='mt-5 w-full  justify-between dark:bg-black '>
+            <div className='text-md font-semibold text-center dark:text-white'>
+              Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+            </div>
+          </Footer>
         </div>
       )}
-      <Footer className='mt-5 w-full  justify-between dark:bg-black absolute bottom-0'>
-        <div className='text-md font-semibold text-center dark:text-white'>
-          Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
-        </div>
-      </Footer>
     </div>
   )
 }

@@ -63,15 +63,19 @@ const ExamConfiguration = () => {
       name: name
     }))
     try {
-      console.log(formData)
       await createExamsCategories({
         id: id,
-        name: formData.name,
+        name: name,
         startDate: formData.startDate,
         endDate: formData.endDate
       })
         .unwrap()
-        .then(() => toastService.success('Successfully created'))
+        .then(() => {
+          toastService.success('Successfully created')
+          setTimeout(() => {
+            window.location.reload()
+          }, 400)
+        })
     } catch (error) {
       toastService.error('Failed to create')
     }

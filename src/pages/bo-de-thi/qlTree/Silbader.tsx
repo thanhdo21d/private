@@ -11,6 +11,8 @@ import { FaRegFolderOpen } from 'react-icons/fa'
 import { dashboardOther, settingsAlias, settingsSystem } from '~/layouts/DefaultLayout/components/Sidebar/components'
 import checkIcons from '../../../assets/check.png'
 import unCheckIcons from '../../../assets/unchecked.png'
+import serviceIcons from '../../../assets/technical-support.png'
+
 import examsIcons from '../../../assets/exam.png'
 
 import folder from '../../../assets/folder.png'
@@ -203,7 +205,11 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
     values.splice(index, 1)
     setInputFields(values)
   }
-
+  const handelCopyID = () => {
+    navigator.clipboard.writeText(category._id).then(() => {
+      toastService.success(`Copied "${category._id}" to clipboard`)
+    })
+  }
   return (
     <div className=''>
       <Drawer
@@ -382,16 +388,33 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
                 </div>
               )}
               {button && !createExams && category?.children && (
-                <div className='space-x-5 py-2'>
-                  <button onClick={showDrawer} className='font-bold text-success underline'>
-                    Edit
-                  </button>
-                  <button onClick={handleCategoryClickDetails} className='font-bold text-success underline'>
-                    Chi Tiết
-                  </button>
-                  <button onClick={handelRemoveCategori} className='font-bold text-danger underline'>
-                    Delete
-                  </button>
+                <div className='space-x-5 gap-5 py-2 flex items-center'>
+                  <div>
+                    <Popconfirm
+                      okButtonProps={{
+                        style: { backgroundColor: 'blue', marginRight: '20px' }
+                      }}
+                      onConfirm={handelCopyID}
+                      placement='top'
+                      title={'service'}
+                      description={'service copy and generate'}
+                      okText='Copy Path'
+                      cancelText='Generate Folder'
+                    >
+                      <img className='w-[33px] shadow-2xl cursor-pointer hover:scale-110' src={serviceIcons} alt='' />
+                    </Popconfirm>
+                  </div>
+                  <div className='flex items-center gap-5'>
+                    <button onClick={showDrawer} className='font-bold text-success underline'>
+                      Edit
+                    </button>
+                    <button onClick={handleCategoryClickDetails} className='font-bold text-success underline'>
+                      Chi Tiết
+                    </button>
+                    <button onClick={handelRemoveCategori} className='font-bold text-danger underline'>
+                      Delete
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -511,7 +534,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         onClick={() => navigate(`/tree-menu/${idCate}/settings/ki-thi`)}
       >
         <span>
-          <img className='w-[30px]' src={examsIcons}/>
+          <img className='w-[30px]' src={examsIcons} />
         </span>
         <span className='text-md text-bodydark1 font-medium'>Kì Thi</span>
       </p>

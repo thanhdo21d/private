@@ -176,7 +176,9 @@ const FoldersCategories = () => {
           </div>
           <Footer className='mt-5 w-full  justify-between dark:bg-black '>
             <div className='text-md font-semibold text-center dark:text-white'>
-              Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+                Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+                 <br />
+            Design by thanhdo
             </div>
           </Footer>
         </div>

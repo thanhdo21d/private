@@ -100,7 +100,11 @@ const AliasFolder = () => {
               </p>
               <p>
                 <Tooltip title='sửa'>
-                  <img className='w-[35px] cursor-pointer hover:scale-110' src={editIcon} />
+                  <img
+                    onClick={() => navigate(`edit/${id}`)}
+                    className='w-[35px] cursor-pointer hover:scale-110'
+                    src={editIcon}
+                  />
                 </Tooltip>
               </p>
             </div>
@@ -181,7 +185,11 @@ const AliasFolder = () => {
         </div>
         <div className='flex justify-end'>
           <Tooltip title='Thêm Mới Alias' placement='left'>
-            <img className='w-[50px] mb-5 cursor-pointer hover:scale-110' src={addIcons} />
+            <img
+              onClick={() => navigate('create')}
+              className='w-[50px] mb-5 cursor-pointer hover:scale-110'
+              src={addIcons}
+            />
           </Tooltip>
         </div>
       </div>

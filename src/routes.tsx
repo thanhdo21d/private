@@ -48,6 +48,7 @@ import GuideLine from './pages/GuideLine/GuideLine'
 import ChooseExams from './pages/accept-phong-ban/ChooseExams'
 import EditExamsKt from './pages/bo-de-thi/qlTree/editExams'
 import AliasFolder from './pages/aliasFolder/AliasFolder'
+import CreateAliasForder from './pages/aliasFolder/CreateAliasForder'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -80,13 +81,15 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/tree-menu/:id',
-    element: <CheckCookieUserLogin />,
+    // element: <CheckCookieUserLogin />,
     children: [
       {
         element: <TreeMenu />,
         children: [
           { path: 'all-folders', element: <FoldersCategories /> },
           { path: 'alias-folder', element: <AliasFolder /> },
+          { path: 'alias-folder/create', element: <CreateAliasForder /> },
+          { path: 'alias-folder/edit/:id', element: <CreateAliasForder /> },
           { path: 'dashboard-other-admin', element: <DashBoardOtherAdmin /> },
           { path: 'member', element: <MemberDepartment /> },
           { path: 'settings/edit', element: <EditTree /> },

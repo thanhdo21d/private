@@ -1,0 +1,21 @@
+{
+  "lý thuyết": {
+    "khó": {
+      "khó 1": {
+        "khó 1.1": false
+      }
+    },
+    "dễ": {
+      "dễ 1": {
+        "dễ 1.1": false
+      }
+    },
+    "trung bình": false
+  },
+  "thực hành": {
+    "thực hành 1": {
+      "thực hành 1.1": false
+    },
+    "thực hành khó": false
+  }
+}

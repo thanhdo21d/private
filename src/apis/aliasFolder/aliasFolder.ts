@@ -39,6 +39,7 @@ const AliasApi = createApi({
       },
       invalidatesTags: ['alias']
     }),
+
     defaultAlias: builder.mutation({
       query: ({ id, checkAlias, idCategory }) => {
         return {

@@ -1,4 +1,4 @@
-import { Breadcrumb, Divider, Drawer, Form, Input, Popconfirm, Skeleton, Space, Table } from 'antd'
+import { Breadcrumb, Divider, Drawer, Form, Input, Popconfirm, Skeleton, Space, Table, message } from 'antd'
 
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -81,7 +81,7 @@ const FoldersCategories = () => {
       ) : (
         <div className='min-h-screen '>
           <Drawer
-            title='Cấu Hình Categories'
+            title='Cấu Hình Folders'
             width={720}
             onClose={onClose}
             open={open}
@@ -95,10 +95,10 @@ const FoldersCategories = () => {
               <div>
                 <Form.Item
                   name='name'
-                  label={<p className='font-bold text-xl'>Tên categories</p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Tên categories ...!' }]}
+                  label={<p className='font-bold text-xl'>Tên Folders</p>}
+                  rules={[{ required: true, message: 'vui lòng nhập Tên Folders ...!' }]}
                 >
-                  <Input className=' border border-[#ccc]' placeholder='vui lòng nhập Tên categories ...!' />
+                  <Input className=' border border-[#ccc]' placeholder='vui lòng nhập Tên Folders ...!' />
                 </Form.Item>
               </div>
               <div>
@@ -176,9 +176,9 @@ const FoldersCategories = () => {
           </div>
           <Footer className='mt-5 w-full  justify-between dark:bg-black '>
             <div className='text-md font-semibold text-center dark:text-white'>
-                Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
-                 <br />
-            Design by thanhdo
+              Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+              <br />
+              Design by thanhdo
             </div>
           </Footer>
         </div>

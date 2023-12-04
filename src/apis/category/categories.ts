@@ -109,6 +109,15 @@ const categorydepartmentAPI = createApi({
         }
       },
       invalidatesTags: ['Category']
+    }),
+    generateAliasFolders: builder.mutation({
+      query: ({ id, idCate }: { id: string; idCate: string }) => {
+        return {
+          url: `/alias/folder/${id}/${idCate}`,
+          method: 'POST'
+        }
+      },
+      invalidatesTags: ['Category']
     })
   })
 })
@@ -120,6 +129,7 @@ export const {
   useGetCategoriesDepartmentsQuery,
   useRemoveCategoriesTreeMutation,
   useEditCategoriesTreeMutation,
-  useGetAllCategoriesDepartmentQuery
+  useGetAllCategoriesDepartmentQuery,
+  useGenerateAliasFoldersMutation
 } = categorydepartmentAPI
 export default categorydepartmentAPI

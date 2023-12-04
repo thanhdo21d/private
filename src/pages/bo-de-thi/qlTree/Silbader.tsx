@@ -19,6 +19,7 @@ import folder from '../../../assets/folder.png'
 
 import {
   useEditCategoriesTreeMutation,
+  useGenerateAliasFoldersMutation,
   useGetCategoriesDepartmentsQuery,
   useRemoveCategoriesTreeMutation
 } from '~/apis/category/categories'
@@ -35,6 +36,7 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
   console.log(category, 'category')
   const [inputFields, setInputFields] = useState<any>([{ point: '', count: '' }])
   const dispatch = useAppDispatch()
+  const [generateAliasFolders] = useGenerateAliasFoldersMutation()
   const { id } = useParams()
   const idCate = localStorage.getItem('idCategories')
   const [removeCategoriTree] = useRemoveCategoriesTreeMutation()
@@ -209,6 +211,16 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
     navigator.clipboard.writeText(category._id).then(() => {
       toastService.success(`Copied "${category._id}" to clipboard`)
     })
+  }
+
+  const hanelGenerateALiasFolders = (id: string) => {
+    generateAliasFolders({ id: id, idCate: idCate as string })
+      .unwrap()
+      .then(() => {
+        toastService.success('generate success')
+        sessionStorage.removeItem('categories')
+      })
+      .catch(() => toastService.error('error'))
   }
   return (
     <div className=''>
@@ -395,6 +407,7 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
                         style: { backgroundColor: 'blue', marginRight: '20px' }
                       }}
                       onConfirm={handelCopyID}
+                      onCancel={() => hanelGenerateALiasFolders(category._id)}
                       placement='top'
                       title={'service'}
                       description={'service copy and generate'}

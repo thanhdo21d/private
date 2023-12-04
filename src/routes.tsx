@@ -7,7 +7,6 @@ import Roles from './pages/roles/Roles'
 import AllMember from './pages/member/all member/AllMember'
 import AddMember from './pages/member/admin/Admin.member'
 import DefaultLayoutTrangthi from './layouts/trangThi/defaultLayoutTrangthi'
-const Signin = lazy(() => import('./pages/login/signin/Signin'))
 import DefaultUserInfo from './layouts/user-info/DefaultUserInfo'
 const UserProfile = lazy(() => import('./pages/user-profile/UserProfile'))
 import InfoResult from './pages/ket-qua-thi/InfoResult'
@@ -29,7 +28,6 @@ import DetailsDsEasy from './pages/bo-de-thi/level_easy/DetailsDsEasy'
 import FormData from './pages/bo-de-thi/dataDetails/FormData'
 import EditExams from './pages/bo-de-thi/editExams/EditExams'
 import DetailsExams from './pages/bo-de-thi/dataDetails/DetailsExams'
-import DemoExcel from './layouts/trangThi/components/Popup-thi/DemoExcel'
 import ChoosExam from './pages/accept-phong-ban/ChoosExam'
 import Setting from './pages/setting/Setting'
 import TreeMenu from './pages/bo-de-thi/qlTree/TreeMenu'
@@ -49,6 +47,7 @@ import ChooseExams from './pages/accept-phong-ban/ChooseExams'
 import EditExamsKt from './pages/bo-de-thi/qlTree/editExams'
 import AliasFolder from './pages/aliasFolder/AliasFolder'
 import CreateAliasForder from './pages/aliasFolder/CreateAliasForder'
+import Signin from './pages/login/signin/Signin'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -117,7 +116,6 @@ export const routers = createBrowserRouter([
           { index: true, element: <Navigate to='action/home' /> },
           { path: 'home', element: <AcceptUserDipament /> },
           { path: 'choose-exam/:id', element: <ChooseExams /> },
-          { path: 'excel', element: <DemoExcel /> },
           { path: 'action-bai-thi/:id', element: <PopQuesion /> },
           { path: 'ChoosExam/:id', element: <ChoosExam /> }
         ]
@@ -126,11 +124,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/login',
-    element: (
-      <Suspense>
-        <Signin />
-      </Suspense>
-    )
+    element: <Signin />
   },
   {
     path: '/user-info',

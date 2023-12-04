@@ -54,12 +54,14 @@ const Signin = () => {
       toastService.error(t('product.login_error'))
     }
   }
+  useEffect(() => {
+    if (isSuccess) {
+      console.log(isSuccess)
+      toastService.success(t('product.login_success'))
+      navigate('/')
+    }
+  }, [isSuccess, navigate])
 
-  if (isSuccess) {
-    console.log(isSuccess)
-    toastService.success(t('product.login_success'))
-    navigate('/')
-  }
   const changeLanguage = (lng: 'en' | 'vi') => {
     Cookies.set('language', lng)
     i18n.changeLanguage(lng)

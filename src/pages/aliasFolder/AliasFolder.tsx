@@ -6,6 +6,7 @@ import Pagination from '../roles/Pagination'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 import {
   useDefaultAliasMutation,
+  useGetIdAliasFoldersQuery,
   useQueryAliasAllQuery,
   useRemoveAliasDepartmentMutation
 } from '~/apis/aliasFolder/aliasFolder'
@@ -20,6 +21,12 @@ import { toastService } from '~/utils/toask/toaskMessage'
 const AliasFolder = () => {
   const idCate = localStorage.getItem('idCategories')
   const [queryParameters] = useSearchParams()
+  const details: string | null = queryParameters.get('details')
+  const {
+    data: dataAliasFoldersId,
+    isLoading: isAliasIDLoading,
+    isFetching: isAliasIdFetching
+  } = useGetIdAliasFoldersQuery(details || '')
   const search: string | null = queryParameters.get('search')
   const [open, setOpen] = useState(false)
   const showDrawer = () => {
@@ -62,7 +69,6 @@ const AliasFolder = () => {
       .then(() => toastService.success('default alias successfully '))
       .catch(() => toastService.error('default alias falsed'))
   }
-
   const dataSource = dataAlias?.alias.map((alias: any) => ({
     key: alias._id,
     name: alias.name,
@@ -86,7 +92,18 @@ const AliasFolder = () => {
             <div className='flex items-center gap-5'>
               <p>
                 <Tooltip title='chi tiết'>
-                  <img onClick={showDrawer} className='w-[35px] cursor-pointer hover:scale-110' src={detailsEye} />
+                  <img
+                    onClick={() => {
+                      showDrawer()
+                      return navigate({
+                        search: createSearchParams({
+                          details: id
+                        }).toString()
+                      })
+                    }}
+                    className='w-[35px] cursor-pointer hover:scale-110'
+                    src={detailsEye}
+                  />
                 </Tooltip>
               </p>
               <p>
@@ -98,7 +115,7 @@ const AliasFolder = () => {
                   />
                 </Tooltip>
               </p>
-              <p>
+              {/* <p>
                 <Tooltip title='sửa'>
                   <img
                     onClick={() => navigate(`edit/${id}`)}
@@ -106,7 +123,7 @@ const AliasFolder = () => {
                     src={editIcon}
                   />
                 </Tooltip>
-              </p>
+              </p> */}
             </div>
             <div>
               <p>
@@ -156,6 +173,39 @@ const AliasFolder = () => {
       }).toString()
     })
   }
+  const renderCategory = (category: any, data: any, level: any) => {
+    const indent = 10
+    const marginLeft = `${level * indent}px`
+    return (
+      <li key={category} style={{ marginLeft }}>
+        <strong>{category}</strong>
+        {typeof data === 'object' ? (
+          <ul>
+            {Object.keys(data).map((subCategory) => {
+              console.log(data)
+              return (
+                <React.Fragment key={subCategory}>
+                  {renderCategory(subCategory, data[subCategory], level + 1)}
+                </React.Fragment>
+              )
+            })}
+          </ul>
+        ) : (
+          <> {data ? <span>{`${category}: ${data}`}</span> : null}</>
+        )}
+      </li>
+    )
+  }
+  const renderData = (data: any) => {
+    return (
+      <ul>
+        {details &&
+          Object.keys(data).map((category) => (
+            <React.Fragment key={category}>{renderCategory(category, data[category], 0)}</React.Fragment>
+          ))}
+      </ul>
+    )
+  }
   if (isLoading || isFetching) return <div>loading ....</div>
   return (
     <div>
@@ -194,10 +244,15 @@ const AliasFolder = () => {
         </div>
       </div>
       <Table dataSource={dataSource} columns={columns} pagination={false} />
-      <Drawer title='Basic Drawer' placement='right' onClose={onClose} open={open}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+      <Drawer title='Basic Drawer' width={600} placement='right' onClose={onClose} open={open}>
+        {isAliasIDLoading || isAliasIdFetching ? (
+          <div>loading....</div>
+        ) : (
+          <div>
+            <p className='text-black underline font-bold pb-5 '>{dataAliasFoldersId?.name}</p>
+            {renderData(dataAliasFoldersId?.data)}
+          </div>
+        )}
       </Drawer>
       <div>
         <Footer className='mt-5 2xl:flex justify-between dark:bg-black '>

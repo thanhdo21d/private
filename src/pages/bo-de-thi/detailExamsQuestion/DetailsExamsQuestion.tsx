@@ -45,8 +45,10 @@ const DetailsExamsQuestion = () => {
     id: id as string,
     search: search || ''
   })
-  console.log(dataIdExmasDetails?.data?.user)
-  const [name, setName] = useState(dataIdExmasDetails?.data?.name || '')
+  console.log(dataIdExmasDetails)
+  const initName = dataIdExmasDetails?.data?.name
+  const [name, setName] = useState(initName)
+  console.log(name)
   const [dates, setDates] = useState([
     dayjs(dataIdExmasDetails?.data?.startDate?.split('T')[0]),
     dayjs(dataIdExmasDetails?.data?.endDate?.split('T')[0])
@@ -99,8 +101,8 @@ const DetailsExamsQuestion = () => {
   const onNameChange = (e) => {
     setName(e.target.value)
   }
-  const onDateChange = (date) => {
-    setDates(date)
+  const onDateChange = (_,date) => {
+    console.log(date)
   }
   const onTimeChange = (value) => {
     setTime(value)
@@ -121,6 +123,7 @@ const DetailsExamsQuestion = () => {
       }).toString()
     })
   }
+  console.log(dates)
   return (
     <div className='w-full'>
       <Drawer width={700} title='danh sách người thi' placement='right' onClose={onClose} open={open}>
@@ -170,19 +173,13 @@ const DetailsExamsQuestion = () => {
                 className='h-[32px] border mt-2 border-[#d9d9d9] text-black font-medium  w-[400px] rounded-md'
                 size='large'
                 placeholder='large size'
-                value={dataIdExmasDetails?.data?.name}
+                value={name}
+                onChange={onNameChange}
               />
             </div>
             <div>
               <p> Hiệu lực trong</p>
-              <DatePicker.RangePicker
-                className='mt-2'
-                onChange={onDateChange}
-                defaultValue={[
-                  dayjs(dataIdExmasDetails?.data?.startDate?.split('T')[0], dateFormat),
-                  dayjs(dataIdExmasDetails?.data?.endDate?.split('T')[0], dateFormat)
-                ]}
-              />
+              <DatePicker.RangePicker className='mt-2' onChange={onDateChange} value={dates} />
             </div>
             <div>
               <p>Thời Gian(phút) </p>

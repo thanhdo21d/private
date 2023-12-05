@@ -53,10 +53,36 @@ const categoriesSlice = createSlice({
     },
     setMemberCategoires: (state, action: PayloadAction<{ code: string[]; id: string[]; checked: boolean }>) => {
       state.categoriesMember = action.payload
+    },
+    updatePoint: (state, action) => {
+      const { id, index, value } = action.payload
+      const categoryIndex = state.categoriesData.findIndex((category) => category.id === id)
+      if (categoryIndex !== -1 && state.categoriesData[categoryIndex].questionSets[index]) {
+        state.categoriesData[categoryIndex].questionSets[index].point =
+          Number(state.categoriesData[categoryIndex].questionSets[index].point) + value
+      }
+    },
+    updateCount: (state, action) => {
+      const { id, index, value } = action.payload
+      const categoryIndex = state.categoriesData.findIndex((category) => category.id === id)
+      if (categoryIndex !== -1 && state.categoriesData[categoryIndex].questionSets[index]) {
+        state.categoriesData[categoryIndex].questionSets[index].count =
+          Number(state.categoriesData[categoryIndex].questionSets[index].count) + value
+      }
+    },
+    resetCategories: (state) => {
+      state.categoriesData = initialState.categoriesData
+      state.categoriesMember = initialState.categoriesMember
     }
   }
 })
-
-export const { setDataCategoires, addSelectedCategory, removeSelectedCategory, setMemberCategoires } =
-  categoriesSlice.actions
+export const {
+  setDataCategoires,
+  addSelectedCategory,
+  removeSelectedCategory,
+  setMemberCategoires,
+  updateCount,
+  updatePoint,
+  resetCategories
+} = categoriesSlice.actions
 export const categoriesReducer = categoriesSlice.reducer

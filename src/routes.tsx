@@ -48,6 +48,7 @@ import EditExamsKt from './pages/bo-de-thi/qlTree/editExams'
 import AliasFolder from './pages/aliasFolder/AliasFolder'
 import CreateAliasForder from './pages/aliasFolder/CreateAliasForder'
 import Signin from './pages/login/signin/Signin'
+import EditExamHistory from './pages/bo-de-thi/editExams/EditExamHistory'
 const CheckCookieUserLogin = () => {
   const cookie = Cookies.get('token')
   const navigate = useNavigate()
@@ -97,6 +98,7 @@ export const routers = createBrowserRouter([
           { path: 'settings/ki-thi/edit/:id', element: <EditExamsKt /> },
           { path: 'settings/ki-thi/bai-thi/:id', element: <ExamsQuestion /> },
           { path: 'settings/ki-thi/bai-thi/:id/:id/details-exams', element: <DetailsExamsQuestion /> },
+          { path: 'settings/ki-thi/bai-thi/:id/:id/details-exams/edit', element: <DetailsExamsQuestion /> },
           { path: 'settings/ki-thi/bai-thi/:id/create-exams', element: <CreateExams /> }
         ]
       }

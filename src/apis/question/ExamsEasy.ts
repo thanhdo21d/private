@@ -4,6 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import Cookies from 'js-cookie'
 const categoryHistoryAPI = createApi({
   reducerPath: 'history',
+  keepUnusedDataFor: 0,
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API,
     prepareHeaders: (headers, { getState }) => {
@@ -25,6 +26,7 @@ const categoryHistoryAPI = createApi({
           method: 'GET'
         }
       },
+      keepUnusedDataFor: 0,
       providesTags: ['history']
     })
   })

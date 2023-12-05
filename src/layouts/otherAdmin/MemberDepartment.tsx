@@ -180,7 +180,7 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember?: boo
     formData.append('file', file)
     setIsLoading(true)
     try {
-      const response = await axios.post(`${url}import/user/65448a58f5b62f89fa6bae54`, formData, {
+      const response = await axios.post(`${url}import/user/${idCate}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

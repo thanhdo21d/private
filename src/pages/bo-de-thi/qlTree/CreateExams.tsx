@@ -8,16 +8,19 @@ import { Col, DatePicker, Divider, Drawer, Empty, Input, InputNumber, Row, Space
 import { RangePickerProps } from 'antd/es/date-picker'
 import { useCreateTopicExamsApiMutation } from '~/apis/topicQuestion/topicQuestion'
 import { useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { CategoryTreeItem } from './Silbader'
 import MemberDepartment from '~/layouts/otherAdmin/MemberDepartment'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
-import { removeSelectedCategory, setDataCategoires } from '~/store/slice/checkCategories'
+import { removeSelectedCategory, resetCategories, setDataCategoires } from '~/store/slice/checkCategories'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { useGetHistoryCategoriesQuery } from '~/apis/question/ExamsEasy'
 import TableChildrend from './Chiltable'
+import axios from 'axios'
+import dayjs from 'dayjs'
 
 const CreateExams = () => {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const { categoriesData } = useAppSelector((state) => state.dataCategories)
   const { id } = useParams()
@@ -28,12 +31,14 @@ const CreateExams = () => {
     loopUp: null as null | number,
     name: ''
   })
+  const url = import.meta.env.VITE_API
   const [addQuestion, setAddQuestion] = useState(false)
   const [dataFromChild, setDataFromChild] = useState([])
-  const [checkUser, setCheckUser] = useState(false)
   const [queryParameters] = useSearchParams()
   const dispatch = useAppDispatch()
   const searchKeyword: string | null = queryParameters.get('keyword')
+  const keepCreating: string | null = queryParameters.get('keepCreating')
+  console.log(keepCreating)
   const idCate = localStorage.getItem('idCategories')
   const idHistory: string | null = queryParameters.get('history')
   const [createTopicExams, { isLoading: isCreateTopicExamsLoading }] = useCreateTopicExamsApiMutation()
@@ -45,18 +50,19 @@ const CreateExams = () => {
     id: idCate as string,
     name: searchKeyword || ''
   })
-  const { data: dataHistoryExams, isLoading: isHistoryLoading } = useGetHistoryCategoriesQuery(idHistory || '')
+  const { data: dataHistoryExams, isLoading: isHistoryLoading } = useGetHistoryCategoriesQuery(
+    idHistory || keepCreating || ''
+  )
   console.log(dataHistoryExams)
   const [dataCategoriess, setDataCategories] = useState<any[]>([])
+  const [file, setFile] = useState<any>(null)
   const handleDataFromChild = (data: any) => {
     if (data) setOpen(false)
-    setCheckUser(false)
     setDataFromChild(data)
     console.log(data)
   }
   useEffect(() => {
     const savedCategories = sessionStorage.getItem('categories')
-
     if (savedCategories) {
       setDataCategories(JSON.parse(savedCategories))
       console.log(dataCategoriess)
@@ -86,7 +92,7 @@ const CreateExams = () => {
       endDate: dateString[1]
     })
   }
-  console.log(categoriesData)
+  const dateFormat = 'YYYY/MM/DD'
   const handelInsertExams = () => {
     const formattedCategoriesInfo = categoriesData.map((item) => ({
       categoryId: item.id,
@@ -104,10 +110,38 @@ const CreateExams = () => {
       endDate: dataExams.endDate,
       time: dataExams.timeOut,
       user: dataFromChild,
-      loopQuestion: dataExams.loopUp || null
+      loopQuestion: dataExams.loopUp || null,
+      isEdit: '0'
     })
       .unwrap()
       .then(() => toastService.success('created'))
+      .catch(() => toastService.error('error'))
+  }
+  const handelTemporarySave = () => {
+    const formattedCategoriesInfo = categoriesData.map((item) => ({
+      categoryId: item.id,
+      categoryName: item.name,
+      questionSets: item.questionSets.map((set) => ({
+        point: Number(set.point),
+        count: Number(set.count)
+      }))
+    }))
+    createTopicExams({
+      id: id,
+      name: dataExams.name,
+      categoriesInfo: formattedCategoriesInfo,
+      startDate: dataExams.startDate,
+      endDate: dataExams.endDate,
+      time: dataExams.timeOut,
+      user: dataFromChild,
+      loopQuestion: dataExams.loopUp || null,
+      isEdit: '1'
+    })
+      .unwrap()
+      .then(() => {
+        toastService.success('đã lưu tạm thời')
+        window.location.reload()
+      })
       .catch(() => toastService.error('error'))
   }
   // useEffect(() => {
@@ -143,7 +177,6 @@ const CreateExams = () => {
     {
       title: 'tác vụ',
       render: (item: any) => {
-        console.log(item)
         return (
           <div className='mx-2'>
             <img
@@ -157,6 +190,48 @@ const CreateExams = () => {
       }
     }
   ]
+  const handleSubmit = async (event: any) => {
+    event.preventDefault()
+    const formData = new FormData()
+    formData.append('file', file)
+    try {
+      const { data } = await axios.post(`${url}api/imports/users/exams`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      toastService.success('uploading file successfully')
+      setDataFromChild(data)
+    } catch (error) {
+      console.error(error)
+      toastService.error('Error uploading file')
+    }
+  }
+  const handleFileChange = (event: any) => {
+    setFile(event.target.files[0])
+  }
+  useEffect(() => {
+    console.log(idHistory, keepCreating)
+    if (idHistory || keepCreating) {
+      const promises = dataHistoryExams?.categoriesInfo?.map((item: any, index: number) => {
+        const categoryData = {
+          id: item.categoryId,
+          name: item.categoryName,
+          checked: true,
+          questionSets: item.questionSets
+        }
+        return dispatch(setDataCategoires(categoryData))
+      })
+      if (promises) {
+        Promise.all(promises).then(() => {
+          console.log('success')
+        })
+      }
+    }
+    return () => {
+      dispatch(resetCategories())
+    }
+  }, [idHistory, keepCreating, dispatch, dataHistoryExams?.categoriesInfo])
   return (
     <>
       <Divider orientation='left'>Create Exams</Divider>
@@ -164,6 +239,9 @@ const CreateExams = () => {
         <div> loading ..... </div>
       ) : (
         <div>
+          <Button onClick={() => navigate(-1)} styleClass='py-1 mb-5'>
+            quay lại
+          </Button>
           <div className='2xl:flex gap-10 items-center justify-between'>
             <div className='2xl:flex grid grid-cols-3 gap-10 items-center'>
               <div>
@@ -199,10 +277,9 @@ const CreateExams = () => {
                 />
               </div>
               <div>
-                <p className='2xl:text-center'> danh sách user </p>
+                <p className='2xl:text-center'> danh sách member </p>
                 <Button
                   onClick={() => {
-                    setCheckUser(false)
                     showDrawer()
                   }}
                   styleClass='h-[32px] bg-success'
@@ -211,12 +288,24 @@ const CreateExams = () => {
                 </Button>
               </div>
               <div>
-                <p className='2xl:text-center'> danh sách member </p>
-                <img className='h-[35px] mt-2 rounded-md cursor-pointer hover:scale-110' src={`${excelExport}`} />
+                <form onSubmit={handleSubmit}>
+                  <p className='2xl:text-center'> import member </p>
+                  <div className='flex gap-5 items-center'>
+                    <img className='h-[42px] mt-2 rounded-md cursor-pointer hover:scale-110' src={`${excelExport}`} />
+                    <Button styleClass='!py-1 bg-meta-4' type='submit'>
+                      import
+                    </Button>
+                  </div>
+                  <div className='flex items-center gap-5'>
+                    <input onChange={handleFileChange} className='' type='file' />
+                  </div>
+                </form>
               </div>
             </div>
             <div className='mt-5 2xl:mt-0'>
-              <Button> Lưu Tạm Thời </Button>
+              <Button styleClass='py-2 bg-meta-4' onClick={handelTemporarySave}>
+                Lưu Tạm Thời
+              </Button>
             </div>
           </div>
           <div className='mt-10'>

@@ -63,7 +63,6 @@ const FoldersCategories = () => {
         setOpen(false)
       })
   }
-
   const onFinishSearch = ({ keyword }: any) => {
     const keywordSpace = keyword.trim()
     console.log(keywordSpace)

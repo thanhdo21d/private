@@ -208,11 +208,14 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
     setInputFields(values)
   }
   const handelCopyID = () => {
-    navigator.clipboard.writeText(category._id).then(() => {
-      toastService.success(`Copied "${category._id}" to clipboard`)
-    })
+    const textarea = document.createElement('textarea')
+    textarea.value = category._id
+    document.body.appendChild(textarea)
+    textarea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textarea)
+    toastService.success(`Copied "${category._id}" to clipboard`)
   }
-
   const hanelGenerateALiasFolders = (id: string) => {
     generateAliasFolders({ id: id, idCate: idCate as string })
       .unwrap()

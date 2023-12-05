@@ -30,6 +30,7 @@ const ExamsQuestion = () => {
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
   const search: string | null = queryParameters.get('search')
+  
   const {
     data: dataIdExmas,
     isLoading,
@@ -107,7 +108,8 @@ const ExamsQuestion = () => {
     startDate: item.startDate,
     endDate: item.endDate,
     updatedAt: item.updatedAt,
-    name: item.name
+    name: item.name,
+    isEdit: item.isEdit
   }))
 
   const dataSourceHistory = dataIdExmas?.data?.topicExams.map((item: any, index: any) => ({
@@ -186,7 +188,7 @@ const ExamsQuestion = () => {
     },
     {
       title: <p className='flex justify-center text-danger font-semibold text-xl'>tác vụ</p>,
-      render: ({ key: id }: { key: string }) => {
+      render: ({ key: id, isEdit }: { key: string; isEdit: string }) => {
         return (
           <div className='2xl:flex grid grid-cols-2 items-center justify-center gap-3'>
             <Link
@@ -196,7 +198,14 @@ const ExamsQuestion = () => {
             >
               Chi Tiết
             </Link>
-            <Button styleClass='p-2 w-[80px] flex items-center focus:outline-none hover:bg-warning'>
+            <Button
+              onClick={() => {
+                navigate({
+                  pathname: `${id}/details-exams/edit`
+                })
+              }}
+              styleClass='p-2 w-[80px] flex items-center focus:outline-none hover:bg-warning'
+            >
               <span>
                 <AiFillEdit />
               </span>
@@ -229,12 +238,35 @@ const ExamsQuestion = () => {
                 />
               </Tooltip>
             </div>
+            {isEdit && isEdit != '0' ? (
+              <div className='p-2  flex items-center focus:outline-none hover:scale-105'>
+                <Tooltip title='tiếp tục với đề đang tạo trước đó'>
+                  <p
+                    onClick={() => {
+                      //create-exams
+                      navigate({
+                        pathname: 'create-exams',
+                        search: createSearchParams({
+                          ...queryConfig,
+                          keepCreating: id
+                        }).toString()
+                      })
+                    }}
+                    className='text-black font-medium underline cursor-pointer'
+                  >
+                    tiếp tục tạo
+                  </p>
+                </Tooltip>
+              </div>
+            ) : (
+              ''
+            )}
           </div>
         )
       }
     }
   ]
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = () => {
     navigate({
       search: createSearchParams({
         ...queryConfig,
@@ -281,7 +313,10 @@ const ExamsQuestion = () => {
             autoComplete='off'
           >
             <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your keyword!' }]}>
-              <Input className='h-[40px] w-[400px] 2xl:w-[600px]' placeholder='Tìm Kiếm Theo đề thi ....' />
+              <Input
+                className='h-[40px] w-[400px] 2xl:w-[600px] border border-[#ccc] rounded-sm'
+                placeholder='Tìm Kiếm Theo đề thi ....'
+              />
             </Form.Item>
             <Button type='submit' id='keycode13' styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'>
               Tìm Kiếm

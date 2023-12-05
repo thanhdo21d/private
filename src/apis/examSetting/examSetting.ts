@@ -98,6 +98,16 @@ const ExamSetting = createApi({
         }
       },
       invalidatesTags: ['ExamSetting']
+    }),
+    editTopicExamId: builder.mutation<any, any>({
+      query: ({ id, body }: { id: string; body: any }) => {
+        return {
+          url: `/topicExams/edit/${id}`,
+          method: 'PATCH',
+          body: body
+        }
+      },
+      invalidatesTags: ['ExamSetting']
     })
   })
 })
@@ -108,6 +118,7 @@ export const {
   useGetIdExamsCategoriesQuery,
   useRemoveTopicExamsMutation,
   useCreateTopicExamsMutation,
-  useGetTopicExamsIDQuery
+  useGetTopicExamsIDQuery,
+  useEditTopicExamIdMutation
 } = ExamSetting
 export default ExamSetting

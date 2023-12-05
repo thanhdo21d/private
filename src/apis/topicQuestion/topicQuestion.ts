@@ -26,7 +26,8 @@ const topicExamsApi = createApi({
         endDate,
         time,
         loopQuestion,
-        user
+        user,
+        isEdit
       }: {
         id: string
         categoriesInfo: any[]
@@ -36,6 +37,7 @@ const topicExamsApi = createApi({
         time: string
         loopQuestion: string
         user: any[]
+        isEdit: string
       }) => {
         return {
           url: `/topicExams/create/${id}`,
@@ -47,7 +49,8 @@ const topicExamsApi = createApi({
             endDate: endDate,
             time: time,
             user: user,
-            loopQuestion: loopQuestion || null
+            loopQuestion: loopQuestion || null,
+            isEdit: isEdit || '0'
           }
         }
       },

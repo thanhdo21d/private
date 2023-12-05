@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { Button } from '~/components'
 import { DatePicker, Divider, Drawer, Empty, Form, Image, Input, InputNumber, Skeleton, Space, Table, Tag } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
-import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useGetTopicExamsIDQuery } from '~/apis/examSetting/examSetting'
 type FieldType = {
   keyword?: string
@@ -20,7 +20,9 @@ const DetailsExamsQuestion = () => {
   const [open, setOpen] = useState(false)
   const [queryParameters] = useSearchParams()
   const search: string | null = queryParameters.get('search')
+  const { pathname } = useLocation()
 
+  const checkPath = pathname.includes('edit')
   const showDrawer = () => {
     setOpen(true)
   }
@@ -31,9 +33,9 @@ const DetailsExamsQuestion = () => {
   const { id } = useParams()
   const uri = import.meta.env.VITE_API
   console.log(id)
-  const onDateChange: RangePickerProps['onChange'] = (_, dateString) => {
-    console.log(dateString)
-  }
+  // const onDateChange: RangePickerProps['onChange'] = (_, dateString) => {
+  //   console.log(dateString)
+  // }
   const navigate = useNavigate()
   const {
     data: dataIdExmasDetails,
@@ -44,6 +46,12 @@ const DetailsExamsQuestion = () => {
     search: search || ''
   })
   console.log(dataIdExmasDetails?.data?.user)
+  const [name, setName] = useState(dataIdExmasDetails?.data?.name || '')
+  const [dates, setDates] = useState([
+    dayjs(dataIdExmasDetails?.data?.startDate?.split('T')[0]),
+    dayjs(dataIdExmasDetails?.data?.endDate?.split('T')[0])
+  ])
+  const [time, setTime] = useState(dataIdExmasDetails?.data?.time || 0)
   const dateFormat = 'YYYY/MM/DD'
   const data: DataType[] = dataIdExmasDetails?.data?.question.map((items: any) => {
     console.log(items)
@@ -56,14 +64,12 @@ const DetailsExamsQuestion = () => {
       questionA: items.choose
     }
   })
-
   const dataSourceUser = dataIdExmasDetails?.data?.user?.map((items: any) => ({
     key: items._id,
     code: items.employeeCode,
     username: items.username,
     avatar: items.avatar
   }))
-
   const columnsUser = [
     {
       title: 'code',
@@ -82,9 +88,23 @@ const DetailsExamsQuestion = () => {
       render: (items: string) => {
         return <img className='w-[55px]' src={`${uri}${items}`} alt='avatar' />
       }
+    },
+    {
+      title: <p>{checkPath ? 'tác vụ' : ''}</p>,
+      render: ({ key: id }: { key: string }) => {
+        return <>{checkPath ? <Button styleClass='w-[55px]'>xóa</Button> : ''}</>
+      }
     }
   ]
-
+  const onNameChange = (e) => {
+    setName(e.target.value)
+  }
+  const onDateChange = (date) => {
+    setDates(date)
+  }
+  const onTimeChange = (value) => {
+    setTime(value)
+  }
   const onFinish = ({ keyword }: any) => {
     const keywordSpace = keyword.trim()
     console.log(keywordSpace)
@@ -126,10 +146,11 @@ const DetailsExamsQuestion = () => {
         </div>
         <Table dataSource={dataSourceUser} columns={columnsUser} pagination={false} />
       </Drawer>
-      <div className=' mt-15 justify-center items-center w-1/6'>
+      <div className=' mt-15 flex justify-center items-center w-1/3 gap-5'>
         <Button onClick={() => navigate(-1)} styleClass='py-2  bg-[#24A19C]'>
           Quay Lại
         </Button>
+        {checkPath && <Button styleClass='bg-success px-5 py-2'>Lưu</Button>}
       </div>
       <Divider orientation='left'>Chi Tiết Đề Thi</Divider>
       {isLoadingDetails ? (
@@ -146,10 +167,9 @@ const DetailsExamsQuestion = () => {
             <div>
               <p>Kì Thi</p>
               <Input
-                className='h-[32px] border mt-2 border-[#d9d9d9] text-black font-bold  w-[400px] rounded-md'
+                className='h-[32px] border mt-2 border-[#d9d9d9] text-black font-medium  w-[400px] rounded-md'
                 size='large'
                 placeholder='large size'
-                disabled={true}
                 value={dataIdExmasDetails?.data?.name}
               />
             </div>
@@ -165,8 +185,8 @@ const DetailsExamsQuestion = () => {
               />
             </div>
             <div>
-              <p>Thời Gian </p>
-              <InputNumber className='!h-[32px] mt-2 rounded-md' size='large' value={dataIdExmasDetails?.data?.time} />
+              <p>Thời Gian(phút) </p>
+              <InputNumber className=' mt-2 rounded-md' size='large' value={dataIdExmasDetails?.data?.time} />
             </div>
           </div>
           <div className='mt-5'>
@@ -331,7 +351,6 @@ const DetailsExamsQuestion = () => {
                         >
                           Details
                         </a>
-                        <a className='text-success font-medium underline'>edit</a>
                         <a className='text-danger font-medium underline'>Delete</a>
                       </Space>
                     )

@@ -100,11 +100,42 @@ const ExamSetting = createApi({
       invalidatesTags: ['ExamSetting']
     }),
     editTopicExamId: builder.mutation<any, any>({
-      query: ({ id, body }: { id: string; body: any }) => {
+      query: ({
+        id,
+        name,
+        status,
+        startDate,
+        endDate,
+        idQuestion,
+        time,
+        add,
+        remove
+      }: {
+        id: string
+        name: string
+        status: string
+        startDate: string
+        endDate: string
+        idQuestion: string[]
+        time: string
+        add: string[]
+        remove: string[]
+      }) => {
         return {
           url: `/topicExams/edit/${id}`,
           method: 'PATCH',
-          body: body
+          body: {
+            name: name || 'Updated Exam Name',
+            status: status || 'inactive',
+            startDate: startDate || '2023-12-01T00:00:00.000Z',
+            endDate: endDate || '2023-12-15T00:00:00.000Z',
+            idQuestion: idQuestion || '654b3a683378a6fd9c34637d',
+            time: time,
+            users: {
+              add: add || ['user1_id', 'user2_id'],
+              remove: remove || ['user3_id', 'user4_id']
+            }
+          }
         }
       },
       invalidatesTags: ['ExamSetting']

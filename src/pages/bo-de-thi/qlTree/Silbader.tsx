@@ -186,7 +186,7 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
               okText='Yes'
               cancelText='No'
             >
-              <Button styleClass='py-1 '>Chọn</Button>
+              <Button styleClass='py-1 '>Move</Button>
             </Popconfirm>
           </div>
         )

@@ -30,7 +30,7 @@ const ExamsQuestion = () => {
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
   const search: string | null = queryParameters.get('search')
-  
+
   const {
     data: dataIdExmas,
     isLoading,
@@ -130,7 +130,7 @@ const ExamsQuestion = () => {
       key: 'name'
     },
     {
-      title: <p className='flex justify-center text-danger font-semibold text-xl'>tác vụ</p>,
+      title: <p className='flex justify-center text-black font-semibold text-xl'>tác vụ</p>,
       render: ({ key: id }: { key: string }) => {
         return (
           <div className='flex space-x-2 items-center justify-center gap-3'>
@@ -187,7 +187,7 @@ const ExamsQuestion = () => {
       }
     },
     {
-      title: <p className='flex justify-center text-danger font-semibold text-xl'>tác vụ</p>,
+      title: <p className='flex justify-center text-black text-md'>tác vụ</p>,
       render: ({ key: id, isEdit }: { key: string; isEdit: string }) => {
         return (
           <div className='2xl:flex grid grid-cols-2 items-center justify-center gap-3'>
@@ -238,12 +238,20 @@ const ExamsQuestion = () => {
                 />
               </Tooltip>
             </div>
+          </div>
+        )
+      }
+    },
+    {
+      title: 'trạng thái',
+      render: ({ key: id, isEdit }: { key: string; isEdit: string }) => {
+        return (
+          <p>
             {isEdit && isEdit != '0' ? (
               <div className='p-2  flex items-center focus:outline-none hover:scale-105'>
                 <Tooltip title='tiếp tục với đề đang tạo trước đó'>
                   <p
                     onClick={() => {
-                      //create-exams
                       navigate({
                         pathname: 'create-exams',
                         search: createSearchParams({
@@ -254,14 +262,14 @@ const ExamsQuestion = () => {
                     }}
                     className='text-black font-medium underline cursor-pointer'
                   >
-                    tiếp tục tạo
+                    tiếp tục
                   </p>
                 </Tooltip>
               </div>
             ) : (
               ''
             )}
-          </div>
+          </p>
         )
       }
     }
@@ -366,6 +374,8 @@ const ExamsQuestion = () => {
         <Footer className='mt-5 flex justify-between dark:bg-black '>
           <div className='text-md font-semibold text-center dark:text-white'>
             Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
+            <br />
+            Design by thanhdo
           </div>
           <div>
             <Pagination pageSize={dataIdExmas?.totalPages} queryConfig={queryConfig} />
@@ -389,7 +399,7 @@ const ExamsQuestion = () => {
                       }).toString()
                     })
                   }}
-                  styleClass='py-1 px-1 hover:bg-opacity-80'
+                  styleClass='!py-1 !px-2  hover:bg-opacity-80'
                 >
                   Áp dụng
                 </Button>

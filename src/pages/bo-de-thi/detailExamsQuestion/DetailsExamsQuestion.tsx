@@ -1,10 +1,26 @@
 import React, { useState } from 'react'
 import dayjs from 'dayjs'
 import { Button } from '~/components'
-import { DatePicker, Divider, Drawer, Empty, Form, Image, Input, InputNumber, Skeleton, Space, Table, Tag } from 'antd'
+import {
+  DatePicker,
+  Divider,
+  Drawer,
+  Empty,
+  Form,
+  Image,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Skeleton,
+  Space,
+  Table,
+  Tag
+} from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useGetTopicExamsIDQuery } from '~/apis/examSetting/examSetting'
+import DeleteIcon from '~/components/Icons/DeleteIcon'
+import MemberDepartment from '~/layouts/otherAdmin/MemberDepartment'
 type FieldType = {
   keyword?: string
 }
@@ -18,24 +34,24 @@ interface DataType {
 }
 const DetailsExamsQuestion = () => {
   const [open, setOpen] = useState(false)
+  const [checkMember, setCheckMember] = useState(true)
   const [queryParameters] = useSearchParams()
   const search: string | null = queryParameters.get('search')
   const { pathname } = useLocation()
 
   const checkPath = pathname.includes('edit')
+
   const showDrawer = () => {
     setOpen(true)
   }
   const onClose = () => {
     setOpen(false)
+    setCheckMember(true)
   }
   const { Column, ColumnGroup } = Table
   const { id } = useParams()
   const uri = import.meta.env.VITE_API
-  console.log(id)
-  // const onDateChange: RangePickerProps['onChange'] = (_, dateString) => {
-  //   console.log(dateString)
-  // }
+
   const navigate = useNavigate()
   const {
     data: dataIdExmasDetails,
@@ -49,10 +65,24 @@ const DetailsExamsQuestion = () => {
   const initName = dataIdExmasDetails?.data?.name
   const [name, setName] = useState(initName)
   console.log(name)
-  const [dates, setDates] = useState([
-    dayjs(dataIdExmasDetails?.data?.startDate?.split('T')[0]),
-    dayjs(dataIdExmasDetails?.data?.endDate?.split('T')[0])
-  ])
+  const [dataExamsEdit, setDataExamsEdit] = useState({
+    name: '',
+    status: '',
+    startDate: '',
+    endDate: '',
+    idQuestion: [],
+    users: {
+      add: [],
+      remove: [] as string[]
+    }
+  })
+  const onDateChange: RangePickerProps['onChange'] = (_, dateString) => {
+    setDataExamsEdit({
+      ...dataExamsEdit,
+      startDate: dateString[0],
+      endDate: dateString[1]
+    })
+  }
   const [time, setTime] = useState(dataIdExmasDetails?.data?.time || 0)
   const dateFormat = 'YYYY/MM/DD'
   const data: DataType[] = dataIdExmasDetails?.data?.question.map((items: any) => {
@@ -72,6 +102,15 @@ const DetailsExamsQuestion = () => {
     username: items.username,
     avatar: items.avatar
   }))
+  const confirm = (id: string) => {
+    setDataExamsEdit({
+      ...dataExamsEdit,
+      users: {
+        ...dataExamsEdit.users,
+        remove: [...dataExamsEdit.users.remove, id] as string[]
+      }
+    })
+  }
   const columnsUser = [
     {
       title: 'code',
@@ -94,17 +133,42 @@ const DetailsExamsQuestion = () => {
     {
       title: <p>{checkPath ? 'tác vụ' : ''}</p>,
       render: ({ key: id }: { key: string }) => {
-        return <>{checkPath ? <Button styleClass='w-[55px]'>xóa</Button> : ''}</>
+        return (
+          <>
+            {checkPath ? (
+              <Popconfirm
+                title='Delete the member'
+                description='Are you sure to delete this member?'
+                okButtonProps={{
+                  style: { backgroundColor: 'blue', marginRight: '20px' }
+                }}
+                onConfirm={() => confirm(id)}
+                okText='Yes'
+                cancelText='No'
+              >
+                <Button styleClass='!py-0 !px-2  flex items-center '>
+                  <span>
+                    <DeleteIcon />
+                  </span>
+                  <Button styleClass=''>xóa</Button>
+                </Button>
+              </Popconfirm>
+            ) : (
+              ''
+            )}
+          </>
+        )
       }
     }
   ]
-  const onNameChange = (e) => {
+  const onNameChange = (e: any) => {
     setName(e.target.value)
+    setDataExamsEdit({
+      ...dataExamsEdit,
+      name: e.target.value
+    })
   }
-  const onDateChange = (_,date) => {
-    console.log(date)
-  }
-  const onTimeChange = (value) => {
+  const onTimeChange = (value: any) => {
     setTime(value)
   }
   const onFinish = ({ keyword }: any) => {
@@ -123,31 +187,54 @@ const DetailsExamsQuestion = () => {
       }).toString()
     })
   }
-  console.log(dates)
+  const handleDataFromChild = (data: any) => {
+    if (data) setOpen(false)
+    console.log(data)
+    setDataExamsEdit({
+      ...dataExamsEdit,
+      users: {
+        ...dataExamsEdit.users,
+        add: data
+      }
+    })
+  }
+  console.log(dataExamsEdit)
   return (
     <div className='w-full'>
-      <Drawer width={700} title='danh sách người thi' placement='right' onClose={onClose} open={open}>
-        <div className=''>
-          <Form
-            className='flex gap-5  justify-center'
-            name='basic'
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ maxWidth: 700 }}
-            initialValues={{ remember: true }}
-            autoComplete='off'
-          >
-            <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your code!' }]}>
-              <Input className='h-[40px] w-[400px] xl:w-[450px] border border-[#ccc]' placeholder='Tìm Kiếm ....' />
-            </Form.Item>
-            <Button type='submit' id='keycode13' styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'>
-              Tìm Kiếm
-            </Button>
-          </Form>
-        </div>
-        <Table dataSource={dataSourceUser} columns={columnsUser} pagination={false} />
+      <Drawer width={900} title='danh sách người thi' placement='right' onClose={onClose} open={open}>
+        {checkMember ? (
+          <div className=''>
+            <Form
+              className='flex gap-5  '
+              name='basic'
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              labelCol={{ span: 8 }}
+              wrapperCol={{ span: 16 }}
+              style={{ maxWidth: 800 }}
+              initialValues={{ remember: true }}
+              autoComplete='off'
+            >
+              <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your code!' }]}>
+                <Input className='h-[40px] w-[300px] 2xl:w-[450px] border border-[#ccc]' placeholder='Tìm Kiếm ....' />
+              </Form.Item>
+              <Button type='submit' id='keycode13' styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'>
+                Tìm Kiếm
+              </Button>
+              <Button
+                onClick={() => setCheckMember(false)}
+                type='button'
+                id='keycode13'
+                styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'
+              >
+                Thêm Mới
+              </Button>
+            </Form>
+            <Table dataSource={dataSourceUser} columns={columnsUser} pagination={false} />
+          </div>
+        ) : (
+          <MemberDepartment checkMember={true} sendDataToParent={handleDataFromChild} />
+        )}
       </Drawer>
       <div className=' mt-15 flex justify-center items-center w-1/3 gap-5'>
         <Button onClick={() => navigate(-1)} styleClass='py-2  bg-[#24A19C]'>
@@ -168,7 +255,7 @@ const DetailsExamsQuestion = () => {
         <div>
           <div className='flex gap-10'>
             <div>
-              <p>Kì Thi</p>
+              <p>Tên Bài Thi</p>
               <Input
                 className='h-[32px] border mt-2 border-[#d9d9d9] text-black font-medium  w-[400px] rounded-md'
                 size='large'
@@ -179,7 +266,7 @@ const DetailsExamsQuestion = () => {
             </div>
             <div>
               <p> Hiệu lực trong</p>
-              <DatePicker.RangePicker className='mt-2' onChange={onDateChange} value={dates} />
+              <DatePicker.RangePicker className='mt-2' onChange={onDateChange} />
             </div>
             <div>
               <p>Thời Gian(phút) </p>
@@ -192,17 +279,7 @@ const DetailsExamsQuestion = () => {
               xem dánh sách
             </Button>
           </div>
-          <div className='mt-10'>
-            <p>Tên Bài Thi</p>
-            <Input
-              className='h-[32px] border mt-2 border-[#d9d9d9]  w-full rounded-md'
-              size='large'
-              placeholder='large size'
-              disabled={true}
-              value={dataIdExmasDetails?.data?.name}
-            />
-          </div>
-          <div className='border-b border-[#d9d9d9] mb-5'>
+          <div className='border-b mt-10 border-[#d9d9d9] mb-5'>
             <Divider orientation='left' plain>
               <p> Câu Hỏi</p>
             </Divider>
@@ -348,7 +425,7 @@ const DetailsExamsQuestion = () => {
                         >
                           Details
                         </a>
-                        <a className='text-danger font-medium underline'>Delete</a>
+                        {checkPath ? <a className='text-danger font-medium underline'>Delete</a> : ''}
                       </Space>
                     )
                   }}

@@ -9,7 +9,7 @@ export default defineConfig({
     include: ['esm-dep > cjs-dep'],
   },
   server: {
-    port: 6868
+    port: 3000
   },
   css: {
     devSourcemap: true

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { PiKeyReturnDuotone } from 'react-icons/pi'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useGetIdBannersQuery, useUpdateBannerMutation } from '~/apis/banner/banner.api'
+import { useGetIdBannersQuery, useUpBannerMutation, useUpdateBannerMutation } from '~/apis/banner/banner.api'
 import { Button } from '~/components'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
@@ -45,21 +45,20 @@ const EditBanner = () => {
       url: bannerData?.data?.url
     })
   }, [bannerData, form, id])
+  const [test] = useUpBannerMutation()
   const handleSubmit = async (event: any) => {
     event.preventDefault()
     const formData = new FormData()
     formData.append('banner', file)
     formData.append('bannerId', id as string)
     try {
-      await axios.post(`${uri}upload-banner`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
-        }
-      })
-      toastService.success('banner uploaded successfully')
+      test(formData)
+        .unwrap()
+        .then(() => {
+          toastService.success('banner uploaded successfully')
+        })
       setTimeout(() => {
-        window.location.reload()
+        // window.location.reload()
       }, 350)
     } catch (error) {
       console.error(error)

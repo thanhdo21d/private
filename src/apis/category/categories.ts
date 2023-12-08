@@ -7,7 +7,6 @@ const categorydepartmentAPI = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API,
     prepareHeaders: (headers, { getState }) => {
-      console.log(getState())
       const token = Cookies.get('token')
       console.log(token, 'token')
       if (token) {

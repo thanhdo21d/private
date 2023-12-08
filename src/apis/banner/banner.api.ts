@@ -1,10 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { IBanner, IBannerDocs } from '~/types/banner/banner.type'
+import { baseQueryWithReauth } from '../auth/signin.api'
 const BannerApi = createApi({
   reducerPath: 'Banner',
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['banner'],
   endpoints: (builder) => ({
     getAllBanners: builder.query<IBannerDocs, void>({
@@ -40,6 +39,14 @@ const BannerApi = createApi({
         body: banner
       }),
       invalidatesTags: ['banner']
+    }),
+    upBanner: builder.mutation({
+      query: (formData) => ({
+        url: `/upload-banner`,
+        method: 'POST',
+        body: formData
+      }),
+      invalidatesTags: ['banner']
     })
   })
 })
@@ -48,6 +55,7 @@ export const {
   useAddBannerMutation,
   useDeleteBannerMutation,
   useGetIdBannersQuery,
-  useUpdateBannerMutation
+  useUpdateBannerMutation,
+  useUpBannerMutation
 } = BannerApi
 export default BannerApi

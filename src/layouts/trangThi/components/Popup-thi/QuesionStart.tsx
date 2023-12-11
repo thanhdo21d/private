@@ -27,25 +27,27 @@ const QuesionStart = () => {
   const navigate = useNavigate()
   const [height, setHeight] = useState<any>(null)
   const [queryParameters] = useSearchParams()
+  const idSession: string | null = queryParameters.get('idSession')
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
   const [width, setWidth] = useState<any>(null)
   const confetiRef: any = useRef(null)
   const { t } = useTranslation(['header'])
+  console.log(profile?._id)
   const {
     data: dataIdExmasDetails,
     isLoading: isLoadingDetails,
     isFetching: isFetchingDetails
   } = useSessionExamsQuestionQuery({
-    id: profile?._id as string,
+    id: idSession as string,
     page: dataPageQuery as string,
     limit: datalimitQueryChange as string
   })
-  console.log(dataIdExmasDetails, 'ppp')
   useEffect(() => {
     setHeight((confetiRef.current = '2000px'))
     setWidth((confetiRef.current = '1200px'))
   }, [])
+  const uri = import.meta.env.VITE_API
   const reactQuillRef = useRef<ReactQuill>(null)
   const queryConfig = useQueryConfig()
   const handelSubmit = () => {
@@ -86,7 +88,7 @@ const QuesionStart = () => {
     )
   return (
     <div className=' mx-auto px-4'>
-      <div className=' min-w-0 h-[800px] overflow-y-scroll break-words   bg-white  shadow-xl rounded-lg relative'>
+      <div className=' min-w-0 h-[750px] 2xl:h-[800px] overflow-y-scroll break-words   bg-white  shadow-xl rounded-lg relative'>
         <Header
           style={{
             position: 'sticky',
@@ -100,7 +102,7 @@ const QuesionStart = () => {
           <div className='flex w-[100%] items-center  justify-between '>
             <div>
               <p className='text-xl  py-2 pl-5 font-bold text-white text-center items-center'>
-                {t('product.total_time')} : <Countdown date={Date.now() + 10000000} />
+                {t('product.total_time')} : {dataIdExmasDetails?.TimeLeft} (phút)
               </p>
             </div>
             <div>
@@ -121,26 +123,43 @@ const QuesionStart = () => {
             <PopupSuccess />
           ) : (
             <div>
-              <div className='text-danger'>
+              <div className=''>
                 <Divider orientation='left'>Nội Dung Câu Hỏi</Divider>
                 {dataIdExmasDetails?.questions?.map((items: any, index: number) => {
                   return (
                     <div key={items?._id}>
-                      <div className=''>
-                        <p className='text-black font-bold underline text-xl py-2'>Câu 1</p>
-                        <p>{items.question}</p>
-                      </div>
-                      {items?.choose?.map((data: any) => (
-                        <div
-                          className='w-full mt-[20px] border border-body bg-bodydark rounded-md  flex items-center text-start
-        overflow-h-scroll min-h-[60px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
-         hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5'
-                        >
-                          <Checkbox />
-                          <span className='font-bold text-xl pl-5 text-black'>A </span> :
-                          <span className='font-medium text-md'> {data?.q}</span>
+                      <div className='flex justify-between items-start'>
+                        <div className='text-black font-medium'>
+                          <p className='text-black font-bold underline text-xl py-2'>Câu {index + 1}</p>
+                          <p className=''>{items.question}</p>
                         </div>
-                      ))}
+                        <div>
+                          {items?.image.length > 0 ? (
+                            <img className='rounded-md mt-5' src={`${uri}${items?.image[0]}`} />
+                          ) : (
+                            ''
+                          )}
+                        </div>
+                      </div>
+                      {items?.choose?.map((data: any, index: number) => {
+                        console.log(data, 'cho')
+                        return (
+                          <div
+                            className='w-full mt-[20px] border border-body bg-bodydark rounded-md  flex items-center text-start
+               overflow-h-scroll min-h-[60px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
+               hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5'
+                          >
+                            <Checkbox />
+                            <span className='font-bold text-xl pl-5 text-black'>
+                              {index === 0 && <a>A</a>}
+                              {index === 1 && <a>B</a>}
+                              {index === 2 && <a>C</a>}
+                              {index === 3 && <a>D</a>}
+                            </span>
+                            :<span className='font-medium text-md'> {data?.q}</span>
+                          </div>
+                        )
+                      })}
                     </div>
                   )
                 })}

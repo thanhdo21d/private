@@ -30,14 +30,14 @@ const DsDethi = () => {
     useGetAllCategoriesDepartmentQuery({
       page: dataPageQuery || 1,
       limit: datalimitQueryChange || 10,
-      name: search || ''
+      search: search || ''
     })
   console.log(dataAllCategoriesDepartment)
   const [createCategories, { isLoading: isCreateCategoriesLoading }] = useCreateCategoriesMutation()
   const [removeCategories, { isLoading: isRemoveLoading }] = useRemoveCategoriesTreeMutation()
   const queryConfig = useQueryConfig()
   const { profile, reset } = useContext(AppContext)
-  console.log(profile?.role.name)
+  console.log(profile)
   const { data: dataUser, isLoading, isFetching } = useGetIdUserQuery(profile?._id as string)
   console.log(dataUser?.user?.role?.adminDepartMent)
   const { Option } = Select
@@ -67,6 +67,14 @@ const DsDethi = () => {
       search: createSearchParams({
         ...queryConfig,
         search: keywordSpace
+      }).toString()
+    })
+  }
+  const onFinishFailed = (errorInfo: any) => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        search: ''
       }).toString()
     })
   }
@@ -139,7 +147,13 @@ const DsDethi = () => {
       <div className=' xl:flex justify-between mb-5'>
         <div>
           {profile?.role.name == 'Admin' ? (
-            <Form onFinish={onFinishSearch} className='flex gap-5' layout='vertical' hideRequiredMark>
+            <Form
+              onFinish={onFinishSearch}
+              onFinishFailed={onFinishFailed}
+              className='flex gap-5'
+              layout='vertical'
+              hideRequiredMark
+            >
               <Form.Item
                 name='keyword'
                 className=''
@@ -272,7 +286,7 @@ const DsDethi = () => {
           <>
             <Table dataSource={dataSource} columns={columns} pagination={false} className='dark:bg-black  mt-4 ' />
             <div>
-              <Pagination pageSize={dataAllCategoriesDepartment?.options?.totalPages} queryConfig={queryConfig} />
+              <Pagination pageSize={dataAllCategoriesDepartment?.totalPages} queryConfig={queryConfig} />
             </div>
           </>
         )}

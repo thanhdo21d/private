@@ -27,14 +27,14 @@ const categorydepartmentAPI = createApi({
       providesTags: ['Category']
     }),
     getAllCategoriesDepartment: builder.query<any[], any>({
-      query: ({ page, limit, name }: { page: string; limit: string; name: string }) => {
+      query: ({ page, limit, search }: { page: string; limit: string; search: string }) => {
         return {
-          url: '/get-category/users',
+          url: '/query-department',
           method: 'GET',
           params: {
             page: page,
             limit: limit,
-            name: name || ''
+            search: search || ''
           }
         }
       },

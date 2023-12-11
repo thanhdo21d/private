@@ -45,6 +45,7 @@ const Signin = () => {
       const result = await loginApi(data)
       console.log(result, 'ok')
       if (result.data !== 'undefined') {
+        console.log(result.data)
         setProfile(result.data.checkDb)
         setProfileToLS(result.data.checkDb)
         Cookies.set('token', result.data.accessToken)

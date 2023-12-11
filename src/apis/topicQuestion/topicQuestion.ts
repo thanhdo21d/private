@@ -68,7 +68,7 @@ const topicExamsApi = createApi({
     sessionExamsQuestion: builder.query<any[], { id: string; page: string; limit: string }>({
       query: ({ id, page, limit }: { id: string; page: string; limit: string }) => {
         return {
-          url: `/check/session/${id}`,
+          url: `/examstatus/${id}`,
           method: 'GET',
           params: {
             page: page || 1,

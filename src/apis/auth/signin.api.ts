@@ -29,7 +29,7 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, Fetch
 ) => {
   const result = await baseQuery(args, api, extraOptions)
   console.log(result, 'result')
-  if (result.meta?.response?.status === 200) {
+  if (result.meta?.response?.status != 200) {
     const refreshToken = await baseQuery('/refreshToken', api, extraOptions) // Request refreshToken
     console.log(refreshToken.data, refreshToken, 'ple')
     if (refreshToken.data) {

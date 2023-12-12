@@ -6,7 +6,6 @@ import excelExport from '../../../assets/images/logo/excel2-svgrepo-com.svg'
 import { Button } from '~/components'
 import { Col, DatePicker, Divider, Drawer, Empty, Input, InputNumber, Row, Space, Table } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
-import { useCreateTopicExamsApiMutation } from '~/apis/topicQuestion/topicQuestion'
 import { useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { CategoryTreeItem } from './Silbader'
@@ -18,6 +17,7 @@ import { useGetHistoryCategoriesQuery } from '~/apis/question/ExamsEasy'
 import TableChildrend from './Chiltable'
 import axios from 'axios'
 import dayjs from 'dayjs'
+import { useCreateTopicExamsApiMutation } from '~/apis/examSetting/examSetting'
 
 const CreateExams = () => {
   const navigate = useNavigate()
@@ -50,9 +50,11 @@ const CreateExams = () => {
     id: idCate as string,
     name: searchKeyword || ''
   })
-  const { data: dataHistoryExams, isLoading: isHistoryLoading } = useGetHistoryCategoriesQuery(
-    idHistory || keepCreating || ''
-  )
+  const {
+    data: dataHistoryExams,
+    isLoading: isHistoryLoading,
+    isFetching: isHistoryFetch
+  } = useGetHistoryCategoriesQuery(idHistory || keepCreating || '')
   console.log(dataHistoryExams)
   const [dataCategoriess, setDataCategories] = useState<any[]>([])
   const [file, setFile] = useState<any>(null)
@@ -93,6 +95,7 @@ const CreateExams = () => {
     })
   }
   const dateFormat = 'YYYY/MM/DD'
+  console.log(dataExams, 'dt')
   const handelInsertExams = () => {
     const formattedCategoriesInfo = categoriesData.map((item) => ({
       categoryId: item.id,
@@ -111,12 +114,17 @@ const CreateExams = () => {
       time: dataExams.timeOut,
       user: dataFromChild,
       loopQuestion: dataExams.loopUp || null,
-      isEdit: '0'
+      isEdit: '0',
+      keepCreating: keepCreating ? keepCreating : null
     })
       .unwrap()
-      .then(() => toastService.success('created'))
+      .then(() => {
+        toastService.success('created')
+        navigate(-1)
+      })
       .catch(() => toastService.error('error'))
   }
+  console.log(dataExams)
   const handelTemporarySave = () => {
     const formattedCategoriesInfo = categoriesData.map((item) => ({
       categoryId: item.id,
@@ -140,7 +148,7 @@ const CreateExams = () => {
       .unwrap()
       .then(() => {
         toastService.success('đã lưu tạm thời')
-        window.location.reload()
+        navigate(-1)
       })
       .catch(() => toastService.error('error'))
   }
@@ -212,7 +220,7 @@ const CreateExams = () => {
   }
   useEffect(() => {
     console.log(idHistory, keepCreating)
-    if (idHistory || keepCreating) {
+    if (idHistory != null || keepCreating != null) {
       const promises = dataHistoryExams?.categoriesInfo?.map((item: any, index: number) => {
         const categoryData = {
           id: item.categoryId,
@@ -222,16 +230,24 @@ const CreateExams = () => {
         }
         return dispatch(setDataCategoires(categoryData))
       })
-      if (promises) {
-        Promise.all(promises).then(() => {
-          console.log('success')
-        })
-      }
     }
     return () => {
       dispatch(resetCategories())
     }
   }, [idHistory, keepCreating, dispatch, dataHistoryExams?.categoriesInfo])
+  useEffect(() => {
+    if (dataHistoryExams)
+      setDataExams({
+        ...dataExams,
+        endDate: dataHistoryExams?.endDate,
+        loopUp: dataHistoryExams?.loopQuestion,
+        name: dataHistoryExams?.name,
+        startDate: dataHistoryExams?.startDate,
+        timeOut: dataHistoryExams?.time
+      })
+  }, [idHistory, keepCreating, dataHistoryExams])
+  const { RangePicker } = DatePicker
+  if (isHistoryFetch || isFetching || isHistoryLoading || isLoading) return <p>loading.........</p>
   return (
     <>
       <Divider orientation='left'>Create Exams</Divider>
@@ -246,7 +262,7 @@ const CreateExams = () => {
             <div className='2xl:flex grid grid-cols-3 gap-10 items-center'>
               <div>
                 <p> Hiệu lực trong</p>
-                <DatePicker.RangePicker className='mt-2' onChange={onDateChange} />
+                <RangePicker onChange={onDateChange} format={dateFormat} />
               </div>
               <div>
                 <p className='2xl:text-center'>Thời Gian (phút) </p>
@@ -349,7 +365,6 @@ const CreateExams = () => {
           </div>
         </div>
       )}
-
       <Drawer
         title='Details Questions'
         placement={'right'}
@@ -401,7 +416,7 @@ const CreateExams = () => {
                     0
                   </div>
                 </div>
-                <div className='mt-5 mx-2'>
+                <div className='mt-5 '>
                   <div className='w-full  border rounded-md  shadow-lg bg-white bg-opacity-25'>
                     {dataCategoriess?.map((category: any) => {
                       return (

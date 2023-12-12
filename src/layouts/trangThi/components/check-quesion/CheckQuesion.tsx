@@ -5,27 +5,25 @@ import { useTranslation } from 'react-i18next'
 import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useSessionExamsQuestionQuery } from '~/apis/topicQuestion/topicQuestion'
 import { AppContext } from '~/contexts/app.contexts'
+import { useAppDispatch, useAppSelector } from '~/store/root/hook'
+import { setCount } from '~/store/slice/exams.slice'
 const CheckQuesion = () => {
   const { profile } = useContext(AppContext)
   const [queryParameters] = useSearchParams()
-  const dataPageQuery: string | null = queryParameters.get('page')
-  const datalimitQueryChange: string | null = queryParameters.get('limit')
-  const { id } = useParams()
+  const idSession: string | null = queryParameters.get('idSession')
+  const dispatch = useAppDispatch()
   const { t } = useTranslation(['header'])
-  const { data: dataQuestion } = useSessionExamsQuestionQuery({
-    id: profile?._id as string,
-    page: dataPageQuery as string,
-    limit: datalimitQueryChange as string
+  const {
+    data: dataIdExmasDetails,
+    isLoading: isLoadingDetails,
+    isFetching: isFetchingDetails
+  } = useSessionExamsQuestionQuery({
+    id: idSession as string
   })
-  const navigate = useNavigate()
-  const handelSearchQuestion = (id: string) => {
-    navigate({
-      search: createSearchParams({
-        questionID: id
-      }).toString()
-    })
+  const handelSearchQuestion = (id: number) => {
+    dispatch(setCount(id))
   }
-  console.log(Array(dataQuestion?.totalQuestions))
+  if (isLoadingDetails || isFetchingDetails) return <p>loading.........</p>
   return (
     <div>
       <div>
@@ -43,16 +41,16 @@ const CheckQuesion = () => {
               }}
             >
               <p className='text-sm 2xl:text-xl py-5 font-bold  text-white text-md text-center items-center'>
-                {t('product.all_questions')}: {dataQuestion?.totalQuestions}
+                {t('product.all_questions')}: {dataIdExmasDetails?.questions?.length}
               </p>
             </Header>
             <div className='border-t-4 w-[300px] mx-auto text-center  border-gray mb-5'></div>
             <div className='px-6 h-[5000px] '>
               <div className='grid grid-cols-3 gap-5 mx-auto'>
-                {Array(dataQuestion?.totalQuestions)?.map((items: any, index: number) => (
+                {dataIdExmasDetails?.questions?.map((items: any, index: number) => (
                   <div
                     key={items?._id}
-                    onClick={() => handelSearchQuestion(items?._id)}
+                    onClick={() => handelSearchQuestion(index)}
                     className='flex hover:scale-110 cursor-pointer justify-center items-center'
                   >
                     <Avatar className='bg-black '>{index + 1}</Avatar>

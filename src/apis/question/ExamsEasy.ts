@@ -2,6 +2,18 @@
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import Cookies from 'js-cookie'
+export interface IhistoryForm {
+  _id: string
+  categoriesInfo: any[]
+  name: string
+  idCheck: string
+  time: number | string
+  user: string[]
+  status: boolean
+  loopQuestion: string
+  endDate: string
+  startDate: string
+}
 const categoryHistoryAPI = createApi({
   reducerPath: 'history',
   keepUnusedDataFor: 0,
@@ -19,7 +31,7 @@ const categoryHistoryAPI = createApi({
   }),
   tagTypes: ['history'],
   endpoints: (builder) => ({
-    getHistoryCategories: builder.query<any[], any>({
+    getHistoryCategories: builder.query<IhistoryForm[], string>({
       query: (id) => {
         return {
           url: `/history/${id}`,

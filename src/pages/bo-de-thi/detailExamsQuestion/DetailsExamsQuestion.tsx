@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { Button } from '~/components'
 import {
@@ -38,9 +38,7 @@ const DetailsExamsQuestion = () => {
   const [queryParameters] = useSearchParams()
   const search: string | null = queryParameters.get('search')
   const { pathname } = useLocation()
-
   const checkPath = pathname.includes('edit')
-
   const showDrawer = () => {
     setOpen(true)
   }
@@ -198,7 +196,15 @@ const DetailsExamsQuestion = () => {
       }
     })
   }
-  console.log(dataExamsEdit)
+  const [form] = Form.useForm()
+  useEffect(() => {
+    console.log(dataIdExmasDetails)
+    form.setFieldsValue({
+      name: dataIdExmasDetails?.name,
+      price: dataIdExmasDetails?.price
+    })
+  }, [dataIdExmasDetails, form])
+  if (isLoadingDetails || isFetchingDetails) return <p>loading.....</p>
   return (
     <div className='w-full'>
       <Drawer width={900} title='danh sách người thi' placement='right' onClose={onClose} open={open}>
@@ -253,26 +259,30 @@ const DetailsExamsQuestion = () => {
         </div>
       ) : (
         <div>
-          <div className='flex gap-10'>
+          <Form onFinish={onFinish} autoComplete='off' form={form} className='flex gap-10'>
             <div>
               <p>Tên Bài Thi</p>
-              <Input
-                className='h-[32px] border mt-2 border-[#d9d9d9] text-black font-medium  w-[400px] rounded-md'
-                size='large'
-                placeholder='large size'
-                value={name}
-                onChange={onNameChange}
-              />
+              <Form.Item name='name'>
+                <Input
+                  className='h-[32px] border mt-2 border-[#d9d9d9] text-black font-medium  w-[400px] rounded-md'
+                  size='large'
+                  placeholder='large size'
+                />
+              </Form.Item>
             </div>
             <div>
               <p> Hiệu lực trong</p>
-              <DatePicker.RangePicker className='mt-2' onChange={onDateChange} />
+              <Form.Item name='date'>
+                <DatePicker.RangePicker className='mt-2' onChange={onDateChange} />
+              </Form.Item>
             </div>
             <div>
               <p>Thời Gian(phút) </p>
-              <InputNumber className=' mt-2 rounded-md' size='large' value={dataIdExmasDetails?.data?.time} />
+              <Form.Item name='time'>
+                <InputNumber className=' mt-2 rounded-md' size='large' value={dataIdExmasDetails?.data?.time} />
+              </Form.Item>
             </div>
-          </div>
+          </Form>
           <div className='mt-5'>
             <Divider orientation='left'>danh sách người thi</Divider>
             <Button onClick={showDrawer} styleClass='py-2'>

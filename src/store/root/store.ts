@@ -19,6 +19,7 @@ import topicExamsApi from '~/apis/topicQuestion/topicQuestion'
 import { categoriesReducer } from '../slice/checkCategories'
 import authReducer from '../slice/Auth.slice'
 import AliasApi from '~/apis/aliasFolder/aliasFolder'
+import { examsReducer } from '../slice/exams.slice'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -39,7 +40,8 @@ export const store = configureStore({
     theme: themeReducer,
     checkToken: authReducer,
     loggers: loggersReducer,
-    dataCategories: categoriesReducer
+    dataCategories: categoriesReducer,
+    examAction: examsReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

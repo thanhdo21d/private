@@ -5,7 +5,8 @@ import { GrClose } from 'react-icons/gr'
 import logoFInish from '../../../../../assets/finish-line.png'
 import doneExams from '../../../../../assets/check.png'
 import errorExams from '../../../../../assets/close.png'
-const PopupSuccess = () => {
+const PopupSuccess = ({ Question }: any) => {
+  console.log(Question)
   const navigate = useNavigate()
   return (
     <div>
@@ -21,7 +22,7 @@ const PopupSuccess = () => {
                   Xin chúc mừng, bạn hoàn thành bài thi này nhanh thứ 5 trong số những ng tham gia.
                 </p>
                 <p className='text-gray-600 text-md'>
-                  tổng điểm Trắc Nghiệm : <span className='text-success font-bold text-lg'>100</span>
+                  tổng điểm Trắc Nghiệm : <span className='text-success font-bold text-lg'>{Question?.score} điểm</span>
                 </p>
                 <p className='text-gray-600'>
                   Thời gian hoàn thành : <span className='text-success font-bold text-lg'>10.02 phút</span>
@@ -31,7 +32,7 @@ const PopupSuccess = () => {
                     <span>
                       <img className='w-[30px]' src={`${doneExams}`} alt='' />
                     </span>
-                    <span className='font-bold text-blue-500'>đúng : 10</span>
+                    <span className='font-bold text-blue-500'>Số câu đúng : {Question?.correct_answer}</span>
                   </p>
                   <p className='flex items-center gap-5 mt-2'>
                     <span>
@@ -39,9 +40,9 @@ const PopupSuccess = () => {
                     </span>
                     <span> sai : 10</span>
                   </p>
-                  <p className='flex items-center gap-5 mt-2'>
+                  <p className='flex  items-center gap-4 mt-2'>
                     <span>
-                      <MdOutlineError className='text-[34px]  text-danger font-bold' />
+                      <MdOutlineError className='text-[34px]   text-danger font-bold' />
                     </span>
                     <span>chưa trả lời : 10</span>
                   </p>

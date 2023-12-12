@@ -139,6 +139,48 @@ const ExamSetting = createApi({
         }
       },
       invalidatesTags: ['ExamSetting']
+    }),
+    createTopicExamsApi: builder.mutation<any, any>({
+      query: ({
+        id,
+        categoriesInfo,
+        name,
+        startDate,
+        endDate,
+        time,
+        loopQuestion,
+        user,
+        isEdit,
+        keepCreating
+      }: {
+        id: string
+        categoriesInfo: any[]
+        name: string
+        startDate: string
+        endDate: string
+        time: string
+        loopQuestion: string
+        user: any[]
+        isEdit: string
+        keepCreating: string | null
+      }) => {
+        return {
+          url: `/topicExams/create/${id}`,
+          method: 'POST',
+          body: {
+            name: name,
+            categoriesInfo: categoriesInfo,
+            startDate: startDate,
+            endDate: endDate,
+            time: time,
+            user: user,
+            loopQuestion: loopQuestion || null,
+            isEdit: isEdit || '0',
+            keepCreating: keepCreating || null
+          }
+        }
+      },
+      invalidatesTags: ['ExamSetting']
     })
   })
 })
@@ -150,6 +192,7 @@ export const {
   useRemoveTopicExamsMutation,
   useCreateTopicExamsMutation,
   useGetTopicExamsIDQuery,
-  useEditTopicExamIdMutation
+  useEditTopicExamIdMutation,
+  useCreateTopicExamsApiMutation
 } = ExamSetting
 export default ExamSetting

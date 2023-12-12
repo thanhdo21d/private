@@ -1,6 +1,5 @@
 import { Footer, Header } from 'antd/es/layout/layout'
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import Countdown from 'react-countdown'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '~/components'
@@ -10,39 +9,48 @@ import Confetti from 'react-confetti'
 import Pagination from '~/pages/roles/Pagination'
 import { AiOutlineEnter } from 'react-icons/ai'
 import { TiTick } from 'react-icons/ti'
+import turnLeft from '../../../../assets/turn-left.png'
+import turnright from '../../../../assets/turn-right.png'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { Checkbox, Divider, Form, Skeleton } from 'antd'
+import { Checkbox, Divider, Form, Image, Skeleton } from 'antd'
 import { container, formats } from '~/utils/quill'
 import Spreadsheet from 'react-spreadsheet'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
-import { useSessionExamsQuestionQuery } from '~/apis/topicQuestion/topicQuestion'
+import { useSessionExamsQuestionQuery, useSubmitExamsQuestionMutation } from '~/apis/topicQuestion/topicQuestion'
 import { AppContext } from '~/contexts/app.contexts'
 import { Loader } from '~/common'
+import { useAppDispatch, useAppSelector } from '~/store/root/hook'
+import { decrementCount, incrementCount, setExamsData } from '~/store/slice/exams.slice'
+import axios from 'axios'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
-  const [Question, setQuestion] = useState<boolean>(false)
+  const [Question, setQuestion] = useState<any[]>([])
   const { profile } = useContext(AppContext)
   const { id } = useParams()
   const navigate = useNavigate()
   const [height, setHeight] = useState<any>(null)
   const [queryParameters] = useSearchParams()
   const idSession: string | null = queryParameters.get('idSession')
-  const dataPageQuery: string | null = queryParameters.get('page')
-  const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const [actionSubmit] = useSubmitExamsQuestionMutation()
   const [width, setWidth] = useState<any>(null)
   const confetiRef: any = useRef(null)
   const { t } = useTranslation(['header'])
+  const dispatch = useAppDispatch()
+  const { count: countAction } = useAppSelector((state) => state.examAction)
+  const { examsData } = useAppSelector((state) => state.examAction)
   console.log(profile?._id)
   const {
     data: dataIdExmasDetails,
     isLoading: isLoadingDetails,
     isFetching: isFetchingDetails
   } = useSessionExamsQuestionQuery({
-    id: idSession as string,
-    page: dataPageQuery as string,
-    limit: datalimitQueryChange as string
+    id: idSession as string
   })
+  useEffect(() => {
+    if (dataIdExmasDetails) dispatch(setExamsData(dataIdExmasDetails?.questions[countAction]))
+  }, [dispatch, idSession, dataIdExmasDetails?.questions, dataIdExmasDetails, countAction])
+  console.log(examsData)
   useEffect(() => {
     setHeight((confetiRef.current = '2000px'))
     setWidth((confetiRef.current = '1200px'))
@@ -54,9 +62,22 @@ const QuesionStart = () => {
     const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
     if (confirm) {
       setShowPop(true)
+      actionSubmit({
+        id: idSession as string,
+        data: {
+          '1': 'A',
+          '2': 'B',
+          '3': 'C'
+        }
+      })
+        .unwrap()
+        .then((data) => {
+          setQuestion(data)
+        })
+        .catch((error) => console.error(error))
       toastService.success('Xin chúc mừng, bạn hoàn thành câu hỏi này nhanh thứ mấy trong số những ng tham gia')
       setTimeout(() => {
-        navigate('/')
+        // navigate('/')
       }, 10000)
     }
   }
@@ -74,6 +95,13 @@ const QuesionStart = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [])
+
+  const incrementCountData = () => {
+    dispatch(incrementCount())
+  }
+  const decrementCountData = () => {
+    dispatch(decrementCount())
+  }
   const canvasRef = useRef<any>(null)
   if (isLoadingDetails || isFetchingDetails)
     return (
@@ -120,49 +148,49 @@ const QuesionStart = () => {
         </Header>
         <div className='px-6 gird mt-10 h-[10000px] grid-cols-5  gap-3 '>
           {showPop ? (
-            <PopupSuccess />
+            <PopupSuccess Question={Question} />
           ) : (
             <div>
               <div className=''>
-                <Divider orientation='left'>Nội Dung Câu Hỏi</Divider>
-                {dataIdExmasDetails?.questions?.map((items: any, index: number) => {
-                  return (
-                    <div key={items?._id}>
-                      <div className='flex justify-between items-start'>
-                        <div className='text-black font-medium'>
-                          <p className='text-black font-bold underline text-xl py-2'>Câu {index + 1}</p>
-                          <p className=''>{items.question}</p>
+                <Divider orientation='left'>Nội Dung Câu Hỏi </Divider>
+                <div>
+                  <div className='flex justify-between items-start'>
+                    <div className='text-black font-medium'>
+                      <p className='text-black font-bold underline text-xl py-2'>Câu {countAction + 1}</p>
+                      <p className=''>{examsData?.question}</p>
+                    </div>
+                    <div>
+                      {examsData?.image?.length > 0 ? (
+                        <Image className='rounded-md ' src={`${uri}${examsData?.image[0]}`} />
+                      ) : (
+                        ''
+                      )}
+                    </div>
+                  </div>
+                  {examsData?.choose?.map((data: any, index: number) => {
+                    const mutipleChoice = data
+                    return (
+                      <div className=''>
+                        <div
+                          className='w-full mt-[20px] border border-body  rounded-md  flex items-center text-start
+               overflow-h-scroll min-h-[70px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
+               hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5'
+                        >
+                          <span className='font-bold text-xl pl-5 text-black'>
+                            {index === 0 && <a>A</a>}
+                            {index === 1 && <a>B</a>}
+                            {index === 2 && <a>C</a>}
+                            {index === 3 && <a>D</a>}
+                          </span>
+                          : <span className='font-medium text-md text-black'> {data?.q}</span>
                         </div>
-                        <div>
-                          {items?.image.length > 0 ? (
-                            <img className='rounded-md mt-5' src={`${uri}${items?.image[0]}`} />
-                          ) : (
-                            ''
-                          )}
+                        <div className='mt-5'>
+                          {data?.img ? <Image className='!w-[205px] rounded-md' src={`${uri}${data?.img}`} /> : ''}
                         </div>
                       </div>
-                      {items?.choose?.map((data: any, index: number) => {
-                        console.log(data, 'cho')
-                        return (
-                          <div
-                            className='w-full mt-[20px] border border-body bg-bodydark rounded-md  flex items-center text-start
-               overflow-h-scroll min-h-[60px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
-               hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5'
-                          >
-                            <Checkbox />
-                            <span className='font-bold text-xl pl-5 text-black'>
-                              {index === 0 && <a>A</a>}
-                              {index === 1 && <a>B</a>}
-                              {index === 2 && <a>C</a>}
-                              {index === 3 && <a>D</a>}
-                            </span>
-                            :<span className='font-medium text-md'> {data?.q}</span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )
-                })}
+                    )
+                  })}
+                </div>
               </div>
               {/* {Question ? (
                 <div className='flex justify-center mx-auto !mt-10'>
@@ -215,29 +243,29 @@ const QuesionStart = () => {
             zIndex: 1,
             width: '100%',
             alignItems: 'center',
+            background: '#ccc',
             height: 140
           }}
           className='absolute bottom-0  flex justify-center'
         >
-          <div className='flex absolute top-2 mx-auto justify-center items-center gap-5 '>
-            <div className='text-md flex items-center cursor-pointer font-bold text-black'>
-              Quay Lại <AiOutlineEnter size={22} />
+          <div className='flex absolute  mx-auto justify-center items-center gap-5 '>
+            <div
+              className='flex gap-4 shadow-xl bg-white cursor-pointer border border-[#ccc] ease-linear rounded-md px-6 py-1 items-center overflow-hidden'
+              style={{
+                transition: 'background 0.3s easy'
+              }}
+              onClick={decrementCountData}
+            >
+              <img className='w-[50px] hover:scale-110' src={turnLeft} alt='left' />
+              <span className='font-bold text-black text-xl'> prev</span>
             </div>
-            <div>
-              <Button
-                onClick={() => setQuestion(!Question)}
-                styleClass='cursor-pointer btn-grad w-[200px] h-[40px] !flex items-center gap-2'
-              >
-                <span> submit</span>
-                <span>
-                  <TiTick className='text-success text-xl font-bold' />
-                </span>
-              </Button>
+            <div
+              className='flex gap-4 cursor-pointer bg-white shadow-xl border border-[#ccc] rounded-md px-6 py-1 items-center'
+              onClick={incrementCountData}
+            >
+              <span className='font-bold text-black text-xl'>next</span>
+              <img className='w-[50px] hover:scale-110 drop-shadow-2' src={turnright} alt='left' />
             </div>
-            <div className='text-md flex  items-center font-bold text-black'>hoặc ấn ENTER</div>
-          </div>
-          <div className='absolute bottom-2 mx-auto flex justify-center'>
-            <Pagination queryConfig={queryConfig} pageSize={10} />
           </div>
         </Footer>
       </div>

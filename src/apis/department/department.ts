@@ -30,7 +30,6 @@ const DepartmentAPI = createApi({
       query: (id: string) => `/department/query/${id}`,
       providesTags: ['Department']
     }),
-
     getDetailsExams: builder.query<any, any>({
       query: ({ idDepartment }: { idDepartment: string }) => {
         return {
@@ -48,6 +47,16 @@ const DepartmentAPI = createApi({
       },
       invalidatesTags: ['Department']
     }),
+    editExamsQuestion2: builder.mutation<void, any>({
+      query: ({ id, body }: { id: string; body: any }) => {
+        return {
+          url: `/question/edit/${id}`,
+          method: 'PATCH',
+          body: body
+        }
+      },
+      invalidatesTags: ['Department']
+    }),
     changeRoleOtherAdmin: builder.mutation<void, { id: string; body: string[] }>({
       query: ({ id, body }) => {
         return {
@@ -57,6 +66,14 @@ const DepartmentAPI = createApi({
         }
       },
       invalidatesTags: ['Department']
+    }),
+    uploadImageQuestion: builder.mutation({
+      query: (formData) => ({
+        url: `/upload-image/question`,
+        method: 'PATCH',
+        body: formData
+      }),
+      invalidatesTags: ['Department']
     })
   })
 })
@@ -65,6 +82,8 @@ export const {
   useGetIdDepartmentQuery,
   useGetDetailsExamsQuery,
   useDropDbExamsMutation,
-  useChangeRoleOtherAdminMutation
+  useChangeRoleOtherAdminMutation,
+  useEditExamsQuestion2Mutation,
+  useUploadImageQuestionMutation
 } = DepartmentAPI
 export default DepartmentAPI

@@ -125,15 +125,15 @@ const ExamSetting = createApi({
           url: `/topicExams/edit/${id}`,
           method: 'PATCH',
           body: {
-            name: name || 'Updated Exam Name',
-            status: status || 'inactive',
-            startDate: startDate || '2023-12-01T00:00:00.000Z',
-            endDate: endDate || '2023-12-15T00:00:00.000Z',
-            idQuestion: idQuestion || '654b3a683378a6fd9c34637d',
+            name: name,
+            status: status,
+            startDate: startDate,
+            endDate: endDate,
+            idQuestion: idQuestion,
             time: time,
             users: {
-              add: add || ['user1_id', 'user2_id'],
-              remove: remove || ['user3_id', 'user4_id']
+              add: add,
+              remove: remove
             }
           }
         }

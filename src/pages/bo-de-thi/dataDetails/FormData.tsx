@@ -7,10 +7,8 @@ import { useDropDbExamsMutation } from '~/apis/department/department'
 import { Button } from '~/components'
 import Pagination from '~/pages/roles/Pagination'
 import { toastService } from '~/utils/toask/toaskMessage'
-import { PiKeyReturnThin } from 'react-icons/pi'
 import logoBacktop from '../../../assets/images/logo/top.png'
 import { AiFillEdit, AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { PlusOutlined } from '@ant-design/icons'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
 import logoAdd from '../../../assets/plus.png'
 import leftArrow from '../../../assets/left-arrow.png'
@@ -39,7 +37,6 @@ const FormData = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDatalimitQuery(event.target.value)
   }
-  const [showExcel, setShowExcel] = useState<boolean>(false)
   const {
     data: getDetailsExams,
     isFetching,
@@ -258,177 +255,12 @@ const FormData = () => {
           open={open}
           extra={
             <Space>
-              <Button onClick={() => setShowExcel(!showExcel)}>
-                {showExcel ? 'Thêm Bằng input' : 'Thêm Bằng Excels'}
-              </Button>
+              <Button onClick={() => navigate('/question/add')}>Thêm Bằng input</Button>
               <Button onClick={onClose}>Cancel</Button>
             </Space>
           }
         >
-          {showExcel ? (
-            <DetailsDsEasy />
-          ) : (
-            <Form layout='vertical' hideRequiredMark>
-              <Divider orientation='left'>Chi Tiết Câu Hỏi</Divider>
-              <Form.Item
-                name='name'
-                label={<p className='font-bold text-xl'>Câu Hỏi</p>}
-                rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-              >
-                <TextArea className='rounded-md border border-[#ccc] ' placeholder='vui lòng nhập Thêm Câu Hỏi ...!' />
-              </Form.Item>
-              <Divider></Divider>
-
-              <Form.Item
-                name='name'
-                label={<p className='font-bold text-xl'>Ảnh (Nếu có )</p>}
-                rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-              >
-                <Upload listType='picture-card'>
-                  <div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </div>
-                </Upload>
-              </Form.Item>
-              <Divider orientation='left'>Chi Tiết đáp án</Divider>
-
-              <div className='grid grid-cols-2 gap-5 items-center'>
-                <Form.Item
-                  name='name'
-                  label={<p className='font-bold text-xl'>Đáp án A </p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-                >
-                  <Input
-                    className='rounded-md border w-full  border-[#ccc] '
-                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
-                  />
-                </Form.Item>
-                <Form.Item
-                  name='name'
-                  style={{ display: 'flex', justifyContent: 'center' }}
-                  label={<p className='font-bold text-xl'>Ảnh Đáp án A (Nếu Có )</p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-                >
-                  <Upload listType='picture-card'>
-                    <div>
-                      <PlusOutlined />
-                      <div style={{ marginTop: 8 }}>Upload</div>
-                    </div>
-                  </Upload>
-                </Form.Item>
-              </div>
-              <Divider></Divider>
-
-              <div className='grid grid-cols-2 gap-5 items-center'>
-                <Form.Item
-                  name='name'
-                  label={<p className='font-bold text-xl'>Đáp án B </p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-                >
-                  <Input
-                    className='rounded-md border w-full  border-[#ccc] '
-                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
-                  />
-                </Form.Item>
-                <Form.Item
-                  name='name'
-                  style={{ display: 'flex', justifyContent: 'center' }}
-                  label={<p className='font-bold text-xl'>Ảnh Đáp án B (Nếu Có )</p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-                >
-                  <Upload listType='picture-card'>
-                    <div>
-                      <PlusOutlined />
-                      <div style={{ marginTop: 8 }}>Upload</div>
-                    </div>
-                  </Upload>
-                </Form.Item>
-              </div>
-              <Divider></Divider>
-
-              <div className='grid grid-cols-2 gap-5 items-center'>
-                <Form.Item
-                  name='name'
-                  label={<p className='font-bold text-xl'>Đáp án C </p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-                >
-                  <Input
-                    className='rounded-md border w-full  border-[#ccc] '
-                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
-                  />
-                </Form.Item>
-                <Form.Item
-                  name='name'
-                  style={{ display: 'flex', justifyContent: 'center' }}
-                  label={<p className='font-bold text-xl'>Ảnh Đáp án D (Nếu Có )</p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-                >
-                  <Upload listType='picture-card'>
-                    <div>
-                      <PlusOutlined />
-                      <div style={{ marginTop: 8 }}>Upload</div>
-                    </div>
-                  </Upload>
-                </Form.Item>
-              </div>
-              <Divider></Divider>
-
-              <div className='grid grid-cols-2 gap-5 items-center'>
-                <Form.Item
-                  name='name'
-                  label={<p className='font-bold text-xl'>Đáp án D </p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-                >
-                  <Input
-                    className='rounded-md border w-full  border-[#ccc] '
-                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
-                  />
-                </Form.Item>
-                <Form.Item
-                  name='name'
-                  style={{ display: 'flex', justifyContent: 'center' }}
-                  label={<p className='font-bold text-xl'>Ảnh Đáp án D (Nếu Có )</p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-                >
-                  <Upload listType='picture-card'>
-                    <div>
-                      <PlusOutlined />
-                      <div style={{ marginTop: 8 }}>Upload</div>
-                    </div>
-                  </Upload>
-                </Form.Item>
-              </div>
-              <Divider></Divider>
-
-              <div className='grid grid-cols-2 gap-10'>
-                <Form.Item
-                  name='name'
-                  label={<p className='font-bold text-xl'>Đáp án Đúng </p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-                >
-                  <Input
-                    className='rounded-md border w-full  border-[#ccc] '
-                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
-                  />
-                </Form.Item>
-                <Form.Item
-                  name='name'
-                  label={<p className='font-bold text-xl'>Điểm</p>}
-                  rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-                >
-                  <Input
-                    className='rounded-md border w-full  border-[#ccc] '
-                    placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
-                  />
-                </Form.Item>
-              </div>
-
-              <Button type='submit' styleClass='  w-full '>
-                Submit
-              </Button>
-            </Form>
-          )}
+          <DetailsDsEasy />
         </Drawer>
       </>
       <div>

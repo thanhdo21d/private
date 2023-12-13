@@ -107,6 +107,7 @@ export const routers = createBrowserRouter([
   { path: 'details-exams/:id', element: <DetailsExams /> },
   { path: '/GuideLine', element: <GuideLine /> },
   { path: 'question/edit/:id', element: <EditQuestionExams /> },
+  { path: 'question/add', element: <EditQuestionExams /> },
   { path: 'action/home', element: <Home /> },
   {
     path: '/',

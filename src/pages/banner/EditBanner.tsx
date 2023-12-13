@@ -57,9 +57,7 @@ const EditBanner = () => {
         .then(() => {
           toastService.success('banner uploaded successfully')
         })
-      setTimeout(() => {
-        // window.location.reload()
-      }, 350)
+        .catch(() => toastService.error('error uploading'))
     } catch (error) {
       console.error(error)
     }

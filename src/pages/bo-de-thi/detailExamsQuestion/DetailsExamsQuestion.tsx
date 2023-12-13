@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { Button } from '~/components'
 import {
+  Checkbox,
   DatePicker,
   Divider,
   Drawer,
@@ -18,9 +19,10 @@ import {
 } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { useGetTopicExamsIDQuery } from '~/apis/examSetting/examSetting'
+import { useEditTopicExamIdMutation, useGetTopicExamsIDQuery } from '~/apis/examSetting/examSetting'
 import DeleteIcon from '~/components/Icons/DeleteIcon'
 import MemberDepartment from '~/layouts/otherAdmin/MemberDepartment'
+import { toastService } from '~/utils/toask/toaskMessage'
 type FieldType = {
   keyword?: string
 }
@@ -37,8 +39,10 @@ const DetailsExamsQuestion = () => {
   const [checkMember, setCheckMember] = useState(true)
   const [queryParameters] = useSearchParams()
   const search: string | null = queryParameters.get('search')
+  const [editTopexamsId] = useEditTopicExamIdMutation()
   const { pathname } = useLocation()
   const checkPath = pathname.includes('edit')
+  const [dataToSend, setDataToSend] = useState<any[]>([])
   const showDrawer = () => {
     setOpen(true)
   }
@@ -68,6 +72,7 @@ const DetailsExamsQuestion = () => {
     status: '',
     startDate: '',
     endDate: '',
+    time: '',
     idQuestion: [],
     users: {
       add: [],
@@ -81,7 +86,6 @@ const DetailsExamsQuestion = () => {
       endDate: dateString[1]
     })
   }
-  const [time, setTime] = useState(dataIdExmasDetails?.data?.time || 0)
   const dateFormat = 'YYYY/MM/DD'
   const data: DataType[] = dataIdExmasDetails?.data?.question.map((items: any) => {
     console.log(items)
@@ -101,6 +105,7 @@ const DetailsExamsQuestion = () => {
     avatar: items.avatar
   }))
   const confirm = (id: string) => {
+    console.log(id)
     setDataExamsEdit({
       ...dataExamsEdit,
       users: {
@@ -109,6 +114,15 @@ const DetailsExamsQuestion = () => {
       }
     })
   }
+  const onChange = (id: any) => {
+    const index = dataToSend.indexOf(id)
+    if (index === -1) {
+      setDataToSend([...dataToSend, id])
+    } else {
+      setDataToSend(dataToSend.filter((item) => item !== id))
+    }
+  }
+  console.log(dataToSend, 'cc')
   const columnsUser = [
     {
       title: 'code',
@@ -166,9 +180,6 @@ const DetailsExamsQuestion = () => {
       name: e.target.value
     })
   }
-  const onTimeChange = (value: any) => {
-    setTime(value)
-  }
   const onFinish = ({ keyword }: any) => {
     const keywordSpace = keyword.trim()
     console.log(keywordSpace)
@@ -200,10 +211,34 @@ const DetailsExamsQuestion = () => {
   useEffect(() => {
     console.log(dataIdExmasDetails)
     form.setFieldsValue({
-      name: dataIdExmasDetails?.name,
-      price: dataIdExmasDetails?.price
+      name: dataIdExmasDetails?.data?.name,
+      price: dataIdExmasDetails?.price,
+      time: dataIdExmasDetails?.data?.time
     })
   }, [dataIdExmasDetails, form])
+  const handelSaveEdit = () => {
+    editTopexamsId({
+      id,
+      name: dataExamsEdit.name || dataIdExmasDetails?.data?.name,
+      status: dataExamsEdit.status || 'active',
+      startDate: dataExamsEdit.startDate || dataIdExmasDetails?.data?.startDate,
+      endDate: dataExamsEdit.endDate || dataIdExmasDetails?.data?.endDate,
+      idQuestion: dataToSend || [],
+      time: dataExamsEdit.time || dataIdExmasDetails?.data?.time,
+      add: dataExamsEdit.users.add || [],
+      remove: dataExamsEdit.users.remove || []
+    })
+      .unwrap()
+      .then(() => {
+        toastService.success('update success')
+        setTimeout(() => {
+          window.location.reload()
+        }, 400)
+      })
+      .catch(() => {
+        toastService.error('update failed')
+      })
+  }
   if (isLoadingDetails || isFetchingDetails) return <p>loading.....</p>
   return (
     <div className='w-full'>
@@ -227,14 +262,16 @@ const DetailsExamsQuestion = () => {
               <Button type='submit' id='keycode13' styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'>
                 Tìm Kiếm
               </Button>
-              <Button
-                onClick={() => setCheckMember(false)}
-                type='button'
-                id='keycode13'
-                styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'
-              >
-                Thêm Mới
-              </Button>
+              {checkPath && (
+                <Button
+                  onClick={() => setCheckMember(false)}
+                  type='button'
+                  id='keycode13'
+                  styleClass='w-[150px] h-[40px] bg-graydark hover:bg-success'
+                >
+                  Thêm Mới
+                </Button>
+              )}
             </Form>
             <Table dataSource={dataSourceUser} columns={columnsUser} pagination={false} />
           </div>
@@ -246,7 +283,11 @@ const DetailsExamsQuestion = () => {
         <Button onClick={() => navigate(-1)} styleClass='py-2  bg-[#24A19C]'>
           Quay Lại
         </Button>
-        {checkPath && <Button styleClass='bg-success px-5 py-2'>Lưu</Button>}
+        {checkPath && (
+          <Button onClick={handelSaveEdit} styleClass='bg-success px-5 py-2'>
+            Lưu
+          </Button>
+        )}
       </div>
       <Divider orientation='left'>Chi Tiết Đề Thi</Divider>
       {isLoadingDetails ? (
@@ -259,27 +300,51 @@ const DetailsExamsQuestion = () => {
         </div>
       ) : (
         <div>
-          <Form onFinish={onFinish} autoComplete='off' form={form} className='flex gap-10'>
+          <Form autoComplete='off' form={form} className=' gap-10 grid grid-cols-2'>
             <div>
               <p>Tên Bài Thi</p>
               <Form.Item name='name'>
                 <Input
+                  onChange={onNameChange}
                   className='h-[32px] border mt-2 border-[#d9d9d9] text-black font-medium  w-[400px] rounded-md'
                   size='large'
                   placeholder='large size'
                 />
               </Form.Item>
             </div>
-            <div>
-              <p> Hiệu lực trong</p>
-              <Form.Item name='date'>
-                <DatePicker.RangePicker className='mt-2' onChange={onDateChange} />
-              </Form.Item>
-            </div>
+            {checkPath ? (
+              <div>
+                <p> Hiệu lực trong</p>
+                <Form.Item name='date'>
+                  <DatePicker.RangePicker className='mt-2' onChange={onDateChange} />
+                </Form.Item>
+              </div>
+            ) : (
+              <div className='flex items-center justify-between'>
+                <div>
+                  <span className='text-black text-md font-medium'>ngày bắt đầu :</span>{' '}
+                  <span className='text-md'>{dataIdExmasDetails?.data?.startDate.split('T')[0]}</span>
+                </div>
+                <div>
+                  <span className='text-black text-md font-medium'>ngày kết thúc :</span>{' '}
+                  <span className='text-md'>{dataIdExmasDetails?.data?.endDate.split('T')[0]}</span>{' '}
+                </div>
+              </div>
+            )}
+
             <div>
               <p>Thời Gian(phút) </p>
               <Form.Item name='time'>
-                <InputNumber className=' mt-2 rounded-md' size='large' value={dataIdExmasDetails?.data?.time} />
+                <Input
+                  className='h-[32px] w-[400px] border !border-[#ccc] mt-2 rounded-md'
+                  onChange={(event) =>
+                    setDataExamsEdit({
+                      ...dataExamsEdit,
+                      time: event.target.value
+                    })
+                  }
+                  size='large'
+                />
               </Form.Item>
             </div>
           </Form>
@@ -419,13 +484,13 @@ const DetailsExamsQuestion = () => {
                 </ColumnGroup>
 
                 <Column
-                  className=''
-                  title={<p className='flex justify-center'>Action</p>}
+                  className='!w-[115px]'
+                  title={<p className=''>Action</p>}
                   key='action'
                   render={({ key: id }: { key: string }) => {
                     return (
-                      <Space size='middle'>
-                        <a
+                      <div>
+                        <p
                           onClick={() =>
                             navigate({
                               pathname: `/details-exams/${id}`
@@ -433,10 +498,18 @@ const DetailsExamsQuestion = () => {
                           }
                           className='text-success font-medium underline '
                         >
-                          Details
-                        </a>
-                        {checkPath ? <a className='text-danger font-medium underline'>Delete</a> : ''}
-                      </Space>
+                          chi tiết
+                        </p>
+                        {checkPath ? (
+                          <div className='flex items-center mt-3 gap-2'>
+                            <Checkbox checked={dataToSend.includes(id)} onChange={() => onChange(id)}>
+                              <p className='text-danger font-semibold underline'>xóa</p>
+                            </Checkbox>
+                          </div>
+                        ) : (
+                          ''
+                        )}
+                      </div>
                     )
                   }}
                 />

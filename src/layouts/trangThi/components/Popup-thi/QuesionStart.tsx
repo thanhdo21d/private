@@ -26,7 +26,26 @@ import axios from 'axios'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<any[]>([])
+   const listName = ["A","B","C","D"]
+
+  //
+  const [SubmitData, setSubmitData] = useState<any[]>([])
+  function updateChoose(counts, chooses) {
+    let newData = SubmitData
+    if (SubmitData[counts] == undefined) newData = { ...SubmitData, ...{ [counts]: [chooses] } }
+    else if (!SubmitData[counts].includes(chooses)) {
+      newData[counts].push(chooses)
+    } else if (SubmitData[counts].includes(chooses)) {
+      let arr = SubmitData[counts]
+      arr = arr.filter((item) => item != chooses)
+      newData[counts] = arr
+    }
+    setSubmitData(newData)
+    console.log(newData, 'newData')
+  }
+
   const { profile } = useContext(AppContext)
+
   const { id } = useParams()
   const navigate = useNavigate()
   const [height, setHeight] = useState<any>(null)
@@ -39,6 +58,9 @@ const QuesionStart = () => {
   const dispatch = useAppDispatch()
   const { count: countAction } = useAppSelector((state) => state.examAction)
   const { examsData } = useAppSelector((state) => state.examAction)
+  const { count } = useAppSelector((state) => state.examAction)
+  console.log(count, 'count')
+
   console.log(profile?._id)
   const {
     data: dataIdExmasDetails,
@@ -176,11 +198,13 @@ const QuesionStart = () => {
                overflow-h-scroll min-h-[70px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
                hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5'
                         >
-                          <span className='font-bold text-xl pl-5 text-black'>
-                            {index === 0 && <a>A</a>}
-                            {index === 1 && <a>B</a>}
-                            {index === 2 && <a>C</a>}
-                            {index === 3 && <a>D</a>}
+                          <span
+                            className='font-bold text-xl pl-5 text-black'
+                            onClick={() => {
+                              updateChoose(count,listName[index])
+                            }}
+                          >
+                            {listName[index]}
                           </span>
                           : <span className='font-medium text-md text-black'> {data?.q}</span>
                         </div>

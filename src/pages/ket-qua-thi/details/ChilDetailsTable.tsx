@@ -5,7 +5,7 @@ const ChilDetailsTable = (questionCheck: any) => {
   console.log(questionCheck)
   const columns = [
     {
-      title: <p className=''>comment Admin</p>,
+      title: <p className=''>Bình Luận từ Admin</p>,
       dataIndex: 'commentAdmin',
       key: 'commentAdmin',
       render: (commentAdmin: any) => {
@@ -14,7 +14,7 @@ const ChilDetailsTable = (questionCheck: any) => {
       }
     },
     {
-      title: <p className='!flex !justify-center items-center'>count</p>,
+      title: <p className='!flex !justify-center items-center'>Lựa Chọn</p>,
       dataIndex: 'count',
       key: 'count',
       render: (count: any, record: any, index: number) => (

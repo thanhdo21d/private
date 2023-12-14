@@ -111,7 +111,7 @@ export const routers = createBrowserRouter([
   { path: 'action/home', element: <Home /> },
   {
     path: '/',
-    element: <CheckCookieUserLogin />,
+    // element: <CheckCookieUserLogin />,
     children: [
       {
         element: <DefaultLayoutTrangthi />,

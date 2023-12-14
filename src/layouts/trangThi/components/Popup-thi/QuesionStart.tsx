@@ -196,11 +196,12 @@ const QuesionStart = () => {
                     </div>
                   </div>
                   {examsData?.choose?.map((data: any, index: number) => {
+                    console.log(checkDataSubmit[count + 1])
+                    //
                     return (
-                      <div className=''>
+                      <div className={``}>
                         <div
                           onClick={() => {
-                            // updateChoose(count + 1, listName[index])
                             dispatch(
                               updateSubmitData({
                                 counts: count + 1,
@@ -208,12 +209,13 @@ const QuesionStart = () => {
                               })
                             )
                           }}
-                          // ${
-                          //   checkDataSubmit[index + 1] != undefined ? 'bg-blue23' : 'bg-white'
-                          // }
                           className={`w-full mt-[20px] border border-body  rounded-md  flex items-center text-start
                overflow-h-scroll min-h-[70px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
-               hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5 `}
+               hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5 ${
+                 checkDataSubmit[count + 1]?.includes(listName[index]) && checkDataSubmit[count + 1] != undefined
+                   ? 'bg-warning'
+                   : ''
+               }`}
                         >
                           <span className='font-bold text-xl pl-5 text-black'>{listName[index]}</span>:{' '}
                           <span className='font-medium text-md text-black'> {data?.q}</span>

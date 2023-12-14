@@ -7,7 +7,6 @@ import { useAppDispatch } from '~/store/root/hook'
 
 export default function TableChildrend({ questionSet, id }: any) {
   const dispatch = useAppDispatch()
-
   const handlePlusAddClick = (index: number) => {
     dispatch(
       updatePoint({
@@ -17,7 +16,6 @@ export default function TableChildrend({ questionSet, id }: any) {
       })
     )
   }
-
   const handlePlusDeClick = (index: number) => {
     dispatch(
       updatePoint({
@@ -27,7 +25,6 @@ export default function TableChildrend({ questionSet, id }: any) {
       })
     )
   }
-
   const handlePlustClick = (index: number) => {
     dispatch(
       updateCount({
@@ -37,7 +34,6 @@ export default function TableChildrend({ questionSet, id }: any) {
       })
     )
   }
-
   const handlePlustDeClick = (index: number) => {
     dispatch(
       updateCount({
@@ -47,7 +43,6 @@ export default function TableChildrend({ questionSet, id }: any) {
       })
     )
   }
-
   const columns = [
     {
       title: <p className='!flex !justify-center'>point</p>,

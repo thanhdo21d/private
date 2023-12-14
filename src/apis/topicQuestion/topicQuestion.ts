@@ -89,6 +89,15 @@ const topicExamsApi = createApi({
         }
       },
       invalidatesTags: ['topicExams']
+    }),
+    getDetailListExam: builder.query<any[], { id: string }>({
+      query: ({ id }: { id: string }) => {
+        return {
+          url: `/get/details/listExam/${id}`,
+          method: 'GET'
+        }
+      },
+      providesTags: ['topicExams']
     })
   })
 })
@@ -96,6 +105,7 @@ export const {
   // useCreateTopicExamsApiMutation,
   useGetQuestionStartQuery,
   useSessionExamsQuestionQuery,
-  useSubmitExamsQuestionMutation
+  useSubmitExamsQuestionMutation,
+  useGetDetailListExamQuery
 } = topicExamsApi
 export default topicExamsApi

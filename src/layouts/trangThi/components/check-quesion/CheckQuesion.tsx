@@ -8,6 +8,7 @@ import { AppContext } from '~/contexts/app.contexts'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
 import { setCount } from '~/store/slice/exams.slice'
 const CheckQuesion = () => {
+  const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
   const { profile } = useContext(AppContext)
   const [queryParameters] = useSearchParams()
   const idSession: string | null = queryParameters.get('idSession')
@@ -44,18 +45,28 @@ const CheckQuesion = () => {
                 {t('product.all_questions')}: {dataIdExmasDetails?.questions?.length}
               </p>
             </Header>
-            <div className='border-t-4 w-[300px] mx-auto text-center  border-gray mb-5'></div>
+            <div className='border-t-4  mx-auto text-center  border-gray mb-5'></div>
             <div className='px-6 h-[5000px] '>
               <div className='grid grid-cols-3 gap-5 mx-auto'>
-                {dataIdExmasDetails?.questions?.map((items: any, index: number) => (
-                  <div
-                    key={items?._id}
-                    onClick={() => handelSearchQuestion(index)}
-                    className='flex hover:scale-110 cursor-pointer justify-center items-center'
-                  >
-                    <Avatar className='bg-black '>{index + 1}</Avatar>
-                  </div>
-                ))}
+                {dataIdExmasDetails?.questions?.map((items: any, index: number) => {
+                  return (
+                    <div
+                      key={items?._id}
+                      onClick={() => handelSearchQuestion(index)}
+                      className='flex hover:scale-110 cursor-pointer justify-center items-center'
+                    >
+                      <Avatar
+                        className={`${
+                          checkDataSubmit[index + 1] != undefined && checkDataSubmit[index + 1]?.length > 0
+                            ? 'bg-blue23'
+                            : 'bg-black'
+                        } `}
+                      >
+                        {index + 1}
+                      </Avatar>
+                    </div>
+                  )
+                })}
               </div>
             </div>
             <Footer

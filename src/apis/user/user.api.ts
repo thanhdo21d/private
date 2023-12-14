@@ -60,6 +60,13 @@ const UserApi = createApi({
         }
       },
       invalidatesTags: ['Users']
+    }),
+    getExamUser: builder.query<any, string>({
+      query: (id: string) => ({
+        url: `/get-exam-user/${id}`,
+        method: 'GET'
+      }),
+      providesTags: ['Users']
     })
   })
 })
@@ -69,6 +76,7 @@ export const {
   useGetAllUserQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
-  useUploadImageAvatarUserMutation
+  useUploadImageAvatarUserMutation,
+  useGetExamUserQuery
 } = UserApi
 export default UserApi

@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 interface CategoriesState {
   count: number
   examsData: any[]
+  submitData: any
 }
 const initialState: CategoriesState = {
   examsData: [],
-  count: 0
+  count: 0,
+  submitData: []
 }
 const examSlice = createSlice({
   name: 'exam',
@@ -24,8 +26,21 @@ const examSlice = createSlice({
     },
     setCount: (state, action: PayloadAction<number>) => {
       state.count = action.payload
+    },
+    updateSubmitData: (state, action: PayloadAction<{ counts: number; chooses: string }>) => {
+      const { counts, chooses } = action.payload
+      console.log(counts, chooses)
+      const newData = [...state.submitData]
+      if (newData[counts] === undefined) {
+        newData[counts] = [chooses]
+      } else if (!newData[counts].includes(chooses)) {
+        newData[counts].push(chooses)
+      } else if (newData[counts].includes(chooses)) {
+        newData[counts] = newData[counts].filter((item: any) => item !== chooses)
+      }
+      state.submitData = newData
     }
   }
 })
-export const { incrementCount, decrementCount, setExamsData, setCount } = examSlice.actions
+export const { incrementCount, decrementCount, setExamsData, setCount, updateSubmitData } = examSlice.actions
 export const examsReducer = examSlice.reducer

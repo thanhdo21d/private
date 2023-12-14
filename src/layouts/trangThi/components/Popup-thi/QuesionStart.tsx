@@ -21,29 +21,29 @@ import { useSessionExamsQuestionQuery, useSubmitExamsQuestionMutation } from '~/
 import { AppContext } from '~/contexts/app.contexts'
 import { Loader } from '~/common'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
-import { decrementCount, incrementCount, setExamsData } from '~/store/slice/exams.slice'
+import { decrementCount, incrementCount, setExamsData, updateSubmitData } from '~/store/slice/exams.slice'
 import axios from 'axios'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<any[]>([])
-   const listName = ["A","B","C","D"]
-
+  const listName = ['A', 'B', 'C', 'D']
+  const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
   //
   const [SubmitData, setSubmitData] = useState<any[]>([])
-  function updateChoose(counts, chooses) {
+  console.log(SubmitData)
+  function updateChoose(counts: number, chooses: string) {
+    console.log(counts, chooses)
     let newData = SubmitData
     if (SubmitData[counts] == undefined) newData = { ...SubmitData, ...{ [counts]: [chooses] } }
     else if (!SubmitData[counts].includes(chooses)) {
       newData[counts].push(chooses)
     } else if (SubmitData[counts].includes(chooses)) {
       let arr = SubmitData[counts]
-      arr = arr.filter((item) => item != chooses)
+      arr = arr.filter((item: any) => item != chooses)
       newData[counts] = arr
     }
     setSubmitData(newData)
-    console.log(newData, 'newData')
   }
-
   const { profile } = useContext(AppContext)
 
   const { id } = useParams()
@@ -60,7 +60,6 @@ const QuesionStart = () => {
   const { examsData } = useAppSelector((state) => state.examAction)
   const { count } = useAppSelector((state) => state.examAction)
   console.log(count, 'count')
-
   console.log(profile?._id)
   const {
     data: dataIdExmasDetails,
@@ -86,18 +85,14 @@ const QuesionStart = () => {
       setShowPop(true)
       actionSubmit({
         id: idSession as string,
-        data: {
-          '1': 'A',
-          '2': 'B',
-          '3': 'C'
-        }
+        data: checkDataSubmit
       })
         .unwrap()
         .then((data) => {
+          console.log(checkDataSubmit)
           setQuestion(data)
         })
         .catch((error) => console.error(error))
-      toastService.success('Xin chúc mừng, bạn hoàn thành câu hỏi này nhanh thứ mấy trong số những ng tham gia')
       setTimeout(() => {
         // navigate('/')
       }, 10000)
@@ -117,13 +112,24 @@ const QuesionStart = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [])
-
   const incrementCountData = () => {
     dispatch(incrementCount())
   }
   const decrementCountData = () => {
     dispatch(decrementCount())
   }
+  useEffect(() => {
+    document.onkeydown = function (event) {
+      switch (event.keyCode) {
+        case 37:
+          dispatch(decrementCount())
+          break
+        case 39:
+          dispatch(incrementCount())
+          break
+      }
+    }
+  }, [dispatch])
   const canvasRef = useRef<any>(null)
   if (isLoadingDetails || isFetchingDetails)
     return (
@@ -190,23 +196,27 @@ const QuesionStart = () => {
                     </div>
                   </div>
                   {examsData?.choose?.map((data: any, index: number) => {
-                    const mutipleChoice = data
                     return (
                       <div className=''>
                         <div
-                          className='w-full mt-[20px] border border-body  rounded-md  flex items-center text-start
+                          onClick={() => {
+                            // updateChoose(count + 1, listName[index])
+                            dispatch(
+                              updateSubmitData({
+                                counts: count + 1,
+                                chooses: listName[index]
+                              })
+                            )
+                          }}
+                          // ${
+                          //   checkDataSubmit[index + 1] != undefined ? 'bg-blue23' : 'bg-white'
+                          // }
+                          className={`w-full mt-[20px] border border-body  rounded-md  flex items-center text-start
                overflow-h-scroll min-h-[70px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
-               hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5'
+               hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5 `}
                         >
-                          <span
-                            className='font-bold text-xl pl-5 text-black'
-                            onClick={() => {
-                              updateChoose(count,listName[index])
-                            }}
-                          >
-                            {listName[index]}
-                          </span>
-                          : <span className='font-medium text-md text-black'> {data?.q}</span>
+                          <span className='font-bold text-xl pl-5 text-black'>{listName[index]}</span>:{' '}
+                          <span className='font-medium text-md text-black'> {data?.q}</span>
                         </div>
                         <div className='mt-5'>
                           {data?.img ? <Image className='!w-[205px] rounded-md' src={`${uri}${data?.img}`} /> : ''}

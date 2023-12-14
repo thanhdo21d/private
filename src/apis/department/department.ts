@@ -74,6 +74,29 @@ const DepartmentAPI = createApi({
         body: formData
       }),
       invalidatesTags: ['Department']
+    }),
+    createUploadImageQuestion: builder.mutation({
+      query: (formData) => ({
+        url: `/create-upload-image`,
+        method: 'POST',
+        body: formData
+      }),
+      invalidatesTags: ['Department']
+    }),
+    addQuestionData: builder.mutation({
+      query: ({ question, image, point, choose, answer, idCategory }: any) => ({
+        url: `/question/add`,
+        method: 'POST',
+        body: {
+          question: question,
+          image: image,
+          point: point,
+          choose: choose,
+          answer: answer,
+          idCategory: idCategory
+        }
+      }),
+      invalidatesTags: ['Department']
     })
   })
 })
@@ -84,6 +107,8 @@ export const {
   useDropDbExamsMutation,
   useChangeRoleOtherAdminMutation,
   useEditExamsQuestion2Mutation,
-  useUploadImageQuestionMutation
+  useUploadImageQuestionMutation,
+  useAddQuestionDataMutation,
+  useCreateUploadImageQuestionMutation
 } = DepartmentAPI
 export default DepartmentAPI

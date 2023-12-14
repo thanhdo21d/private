@@ -255,7 +255,18 @@ const FormData = () => {
           open={open}
           extra={
             <Space>
-              <Button onClick={() => navigate('/question/add')}>Thêm Bằng input</Button>
+              <Button
+                onClick={() => {
+                  navigate({
+                    pathname: `/question/add`,
+                    search: createSearchParams({
+                      idCategory: id as string
+                    }).toString()
+                  })
+                }}
+              >
+                Thêm Bằng input
+              </Button>
               <Button onClick={onClose}>Cancel</Button>
             </Space>
           }

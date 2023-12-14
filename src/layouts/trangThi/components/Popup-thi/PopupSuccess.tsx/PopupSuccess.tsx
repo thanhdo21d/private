@@ -5,9 +5,14 @@ import { GrClose } from 'react-icons/gr'
 import logoFInish from '../../../../../assets/finish-line.png'
 import doneExams from '../../../../../assets/check.png'
 import errorExams from '../../../../../assets/close.png'
+import { useAppSelector } from '~/store/root/hook'
 const PopupSuccess = ({ Question }: any) => {
   console.log(Question)
+  const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
+  console.log(checkDataSubmit, 'pla')
   const navigate = useNavigate()
+  const nullAction = Question?.questionCheck?.filter((items: any) => items.userChoose == undefined)
+  console.log(nullAction)
   return (
     <div>
       <div className='fixed z-50 left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10'>
@@ -38,13 +43,13 @@ const PopupSuccess = ({ Question }: any) => {
                     <span>
                       <img className='w-[30px]' src={`${errorExams}`} alt='' />
                     </span>
-                    <span> sai : 10</span>
+                    <span> Số Câu sai : {Question?.fail_answer} </span>
                   </p>
                   <p className='flex  items-center gap-4 mt-2'>
                     <span>
                       <MdOutlineError className='text-[34px]   text-danger font-bold' />
                     </span>
-                    <span>chưa trả lời : 10</span>
+                    <span>chưa trả lời : {nullAction?.length}</span>
                   </p>
                 </div>
               </div>

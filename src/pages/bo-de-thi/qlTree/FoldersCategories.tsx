@@ -38,7 +38,7 @@ const FoldersCategories = () => {
       console.log(dataCategories)
     } else {
       if (dataCategoriTree) {
-        // Kiểm tra nếu dataCategoriTree không phải null hoặc undefined
+        // Kiểm tra  dataCategoriTree không phải null hoặc undefined
         setDataCategories([dataCategoriTree])
         sessionStorage.setItem('categories', JSON.stringify([dataCategoriTree]))
       }

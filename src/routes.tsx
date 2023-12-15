@@ -49,16 +49,9 @@ import AliasFolder from './pages/aliasFolder/AliasFolder'
 import CreateAliasForder from './pages/aliasFolder/CreateAliasForder'
 import Signin from './pages/login/signin/Signin'
 import EditExamHistory from './pages/bo-de-thi/editExams/EditExamHistory'
-const CheckCookieUserLogin = () => {
-  const cookie = Cookies.get('token')
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (!cookie) {
-      navigate('/login')
-    }
-  }, [cookie, navigate])
-  return cookie ? <Outlet /> : <Navigate to='/login' />
-}
+import CheckLogin from './permissions/CheckLogin'
+import CheckOtherAdmin from './permissions/CheckOtherAdmin'
+import CheckAdmin from './permissions/CheckAdmin'
 export const PrivateRoute = () => {
   const cookie = Cookies.get('token')
   const { profile } = useContext(AppContext)
@@ -81,7 +74,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/tree-menu/:id',
-    element: <CheckCookieUserLogin />,
+    element: <CheckOtherAdmin />,
     children: [
       {
         element: <TreeMenu />,
@@ -111,7 +104,7 @@ export const routers = createBrowserRouter([
   { path: 'action/home', element: <Home /> },
   {
     path: '/',
-    element: <CheckCookieUserLogin />,
+    element: <CheckLogin />,
     children: [
       {
         element: <DefaultLayoutTrangthi />,
@@ -131,7 +124,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/user-info',
-    element: <CheckCookieUserLogin />,
+    element: <CheckLogin />,
     children: [
       {
         element: <DefaultUserInfo />,
@@ -154,7 +147,7 @@ export const routers = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <CheckCookieUserLogin />,
+    element: <CheckAdmin />,
     children: [
       {
         element: <DefaultLayout />,

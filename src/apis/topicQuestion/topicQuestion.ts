@@ -77,14 +77,17 @@ const topicExamsApi = createApi({
       },
       providesTags: ['topicExams']
     }),
-    submitExamsQuestion: builder.mutation<any[], { id: string; data: any }>({
-      query: ({ id, data }: { id: string; data: any }) => {
+    submitExamsQuestion: builder.mutation<any[], { id: string; data: any; mailUser: string }>({
+      query: ({ id, data, mailUser }: { id: string; data: any; mailUser: string }) => {
         console.log(data, 'ok')
         return {
           url: `/submit/${id}`,
           method: 'POST',
           body: {
             data: data
+          },
+          params: {
+            mailUser: mailUser
           }
         }
       },

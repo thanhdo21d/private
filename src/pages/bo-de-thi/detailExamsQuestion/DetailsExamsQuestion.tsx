@@ -388,9 +388,12 @@ const DetailsExamsQuestion = () => {
                       title={<p className='flex justify-center'>A</p>}
                       dataIndex='questionA'
                       key='questionA'
-                      render={(questionA: any) => (
-                        <p>{questionA[0].q.length > 20 ? `${questionA[0].q.slice(0, 20)}...` : questionA[0].q}</p>
-                      )}
+                      render={(questionA: any) => {
+                        console.log(questionA[0], 'ab')
+                        return (
+                          <p>{questionA[0]?.q?.length > 20 ? `${questionA[0].q.slice(0, 20)}...` : questionA[0].q}</p>
+                        )
+                      }}
                     />
                     <Column
                       title='Ảnh'
@@ -398,7 +401,9 @@ const DetailsExamsQuestion = () => {
                       className='border-r border-[#ccc]'
                       key='questionA'
                       render={(questionA: any) => {
-                        return <>{questionA[0].img && <Image width={50} src={`${uri}/${questionA[0]?.img}`}></Image>}</>
+                        return (
+                          <>{questionA[0]?.img && <Image width={50} src={`${uri}/${questionA[0]?.img}`}></Image>}</>
+                        )
                       }}
                     />
                   </ColumnGroup>
@@ -408,7 +413,7 @@ const DetailsExamsQuestion = () => {
                       dataIndex='questionA'
                       key='questionA'
                       render={(questionA: any) => (
-                        <p>{questionA[1].q.length > 20 ? `${questionA[1].q.slice(0, 20)}...` : questionA[1].q}</p>
+                        <p>{questionA[1]?.q.length > 20 ? `${questionA[1].q.slice(0, 20)}...` : questionA[1].q}</p>
                       )}
                     />
                     <Column
@@ -427,7 +432,7 @@ const DetailsExamsQuestion = () => {
                       dataIndex='questionA'
                       key='questionA'
                       render={(questionA: any) => (
-                        <p>{questionA[2].q.length > 20 ? `${questionA[2].q.slice(0, 20)}...` : questionA[2].q}</p>
+                        <p>{questionA[2]?.q.length > 20 ? `${questionA[2].q.slice(0, 20)}...` : questionA[2].q}</p>
                       )}
                     />
                     <Column

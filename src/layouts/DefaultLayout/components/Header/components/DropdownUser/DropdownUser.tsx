@@ -47,7 +47,6 @@ const DropdownUser = () => {
         </span>
         <ArrowDown />
       </Link>
-      {/* <!-- Dropdown Start --> */}
       <div
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
@@ -66,24 +65,15 @@ const DropdownUser = () => {
               My Profile
             </Link>
           </li>
-          {/* <li>
+          <button >
             <Link
-              to='#'
-              className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
-            >
-              <ContactIcon />
-              My Contacts
-            </Link>
-          </li>
-          <li>
-            <Link
-              to='/settings'
-              className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
+              to='/admin/dashboard'
+              className='flex items-center  gap-3.5  text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
             >
               <SettingIcon />
-              Account Settings
+              Trang quản trị
             </Link>
-          </li> */}
+          </button>
         </ul>
         <button
           onClick={() => {

@@ -45,7 +45,7 @@ const QuesionStart = () => {
     setSubmitData(newData)
   }
   const { profile } = useContext(AppContext)
-
+  console.log(profile?.email)
   const { id } = useParams()
   const navigate = useNavigate()
   const [height, setHeight] = useState<any>(null)
@@ -85,7 +85,8 @@ const QuesionStart = () => {
       setShowPop(true)
       actionSubmit({
         id: idSession as string,
-        data: checkDataSubmit
+        data: checkDataSubmit,
+        mailUser: profile?.email as string
       })
         .unwrap()
         .then((data) => {

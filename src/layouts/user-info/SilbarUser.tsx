@@ -4,30 +4,16 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon } from '~/components'
 import { Menu, Tooltip } from 'antd'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { items, itemsUser, settingsSystem, settingsSystemLogs } from './components'
 import { AiFillHome } from 'react-icons/ai'
-import { AppContext } from '~/contexts/app.contexts'
-import { useGetAllRolesQuery, useGetTaskRoleForUserQuery } from '~/apis/roles/roles.api'
-import { FcInfo } from 'react-icons/fc'
+import { itemsUser } from '../DefaultLayout/components/Sidebar/components'
 interface SidebarProps {
   sidebarOpen: boolean
   setSidebarOpen: (arg: boolean) => void
   textUi: string
   checkInfo?: boolean
 }
-const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProps) => {
-  const url = import.meta.env.VITE_API
-  const { pathname } = useLocation()
-  const { profile } = useContext(AppContext)
-  const navigate = useNavigate()
-  const [dataTask, setDataTask] = useState<any[]>([])
+const SilbarUser = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProps) => {
   const trigger = useRef<any>(null)
-  const [checkMenu, setCheckMenu] = useState<boolean>(false)
-  const {
-    data: dataTaskRole,
-    isLoading: taskLoading,
-    isFetching: isTaskFetching
-  } = useGetTaskRoleForUserQuery(profile?.role)
   const sidebar = useRef<any>(null)
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
@@ -41,7 +27,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
     document.addEventListener('click', clickHandler)
     return () => document.removeEventListener('click', clickHandler)
   }, [])
-  // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
       if (!sidebarOpen || keyCode !== 27) return
@@ -58,27 +43,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
       document.querySelector('body')?.classList.remove('sidebar-expanded')
     }
   }, [sidebarExpanded])
-  useEffect(() => {
-    fetch(`${url}users/${profile?._id}`)
-      .then((res: any) => res.json())
-      .then((data: any) => {
-        setDataTask(data)
-        // const demo = data.user.role.tasks.some(
-        //   ({ _id, task, path, role }: { _id: string; task: string; path: string; role: string }) => {
-        //     const lastSlashIndex = pathname.lastIndexOf('/')
-        //     if (pathname.includes('edit')) {
-        //       const modifiedUrl = pathname.substring(0, lastSlashIndex)
-        //     } else {
-        //     }
-        //     path.includes(pathname)
-        //   }
-        // )
-        if (checkMenu == false) {
-          // navigate('*')
-        }
-      })
-  }, [pathname])
-  if (taskLoading || isTaskFetching) return <p>loading......</p>
+
   return (
     <aside
       ref={sidebar}
@@ -114,46 +79,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
         <nav className='px-3 mt-5'>
           <div className='select-none'>
             <h3 className='text-bodydark2 mb-4 ml-4 text-sm font-semibold select-none'>MENU</h3>
-            {checkInfo ? (
-              <Menu
-                theme='dark'
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
-                mode='inline'
-                items={itemsUser}
-              />
-            ) : (
-              <div className='grid grid-rows-1 items-center 	gap-y-5'>
-                {dataTaskRole?.map(({ path, task, _id }: { path: string; task: string; _id: string }) => {
-                  return (
-                    <div key={_id}>
-                      <div
-                        className={`hover:bg-strokedark rounded-md flex h-[35px] ${
-                          pathname === path ? 'bg-danger' : ''
-                        }`}
-                      >
-                        <Link className='flex ml-5 gap-3 items-center' to={`${task === 'home' ? '/' : path}`}>
-                          <span className=''>
-                            <FcInfo className='text-2xl' />
-                          </span>
-                          <span
-                            className={`font-satoshi text-bodydark2 ${
-                              pathname === path ? 'text-white font-bold' : ''
-                            } `}
-                          >
-                            {task}
-                          </span>
-                        </Link>{' '}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
+            <Menu theme='dark' defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={itemsUser} />
           </div>
         </nav>
       </div>
     </aside>
   )
 }
-export default Sidebar
+export default SilbarUser

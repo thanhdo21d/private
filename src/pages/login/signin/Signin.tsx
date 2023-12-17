@@ -85,9 +85,9 @@ const Signin = () => {
           </Helmet>
           <div
             className='lg:flex w-1/2 hidden bg-gray-500 bg-no-repeat bg-cover relative items-center'
-            style={{
-              backgroundImage: `url(${uri}${dataBannerID?.data?.url})`
-            }}
+            // style={{
+            //   backgroundImage: `url(${uri}${dataBannerID?.data?.url})`
+            // }}
           >
             <div className='absolute bg-black opacity-60 inset-0 z-0' />
             <div className='w-full px-24 z-10'>
@@ -123,9 +123,9 @@ const Signin = () => {
           >
             <div
               className='absolute lg:hidden z-10 inset-0 bg-gray-500 bg-no-repeat bg-cover items-center'
-              style={{
-                backgroundImage: `url(${dataBannerID?.data?.url})`
-              }}
+              // style={{
+              //   backgroundImage: `url(${dataBannerID?.data?.url})`
+              // }}
             >
               <div className='absolute bg-black opacity-60 inset-0 z-0' />
             </div>

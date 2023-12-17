@@ -20,6 +20,7 @@ import { categoriesReducer } from '../slice/checkCategories'
 import authReducer from '../slice/Auth.slice'
 import AliasApi from '~/apis/aliasFolder/aliasFolder'
 import { examsReducer } from '../slice/exams.slice'
+import { updateStatusExamsReducer } from '../slice/errorExam'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -41,7 +42,8 @@ export const store = configureStore({
     checkToken: authReducer,
     loggers: loggersReducer,
     dataCategories: categoriesReducer,
-    examAction: examsReducer
+    examAction: examsReducer,
+    updateStatusExam: updateStatusExamsReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

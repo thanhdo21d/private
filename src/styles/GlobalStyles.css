@@ -548,6 +548,29 @@
   animation: heloUserAnimationProfile 2s infinite;
 }
 .slick-slide {
-  padding-right: 21px; 
-  padding-left: 21px; 
+  padding-right: 21px;
+  padding-left: 21px;
+}
+.tremble {
+  animation: tremble 5s infinite;
+}
+
+@keyframes tremble {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateY(-1px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateY(1px);
+  }
 }

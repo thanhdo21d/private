@@ -79,6 +79,14 @@ const RoleApi = createApi({
         }
       },
       invalidatesTags: ['role']
+    }),
+    getTaskRoleForUser: builder.query<any, string>({
+      query: (id) => {
+        return {
+          url: `/get-task/user/${id}`
+        }
+      },
+      providesTags: ['role']
     })
   })
 })
@@ -88,6 +96,7 @@ export const {
   useAddRoleMutation,
   useUpdateRoleMutation,
   useGetIdRolesQuery,
-  useSearchRoleApiGETQuery
+  useSearchRoleApiGETQuery,
+  useGetTaskRoleForUserQuery
 } = RoleApi
 export default RoleApi

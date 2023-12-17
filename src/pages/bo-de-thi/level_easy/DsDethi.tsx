@@ -25,7 +25,6 @@ const DsDethi = () => {
   const datalimitQueryChange: string | null = queryParameters.get('limit')
   const search: string | null = queryParameters.get('search')
   const navigate = useNavigate()
-  const { data: dataAllCategories, isFetching: isGetCategoriesLoading } = useGetAllCategoriesQuery()
   const { data: dataAllCategoriesDepartment, isLoading: isGetCategoriesDepartmentLoading } =
     useGetAllCategoriesDepartmentQuery({
       page: dataPageQuery || 1,
@@ -79,7 +78,7 @@ const DsDethi = () => {
     })
   }
   const dataSource =
-    profile?.role.name == 'Admin'
+    dataUser?.user?.role.name == 'Admin'
       ? dataAllCategoriesDepartment?.data?.map((data: category, index: number) => ({
           index: index + 1,
           key: data._id,
@@ -121,7 +120,7 @@ const DsDethi = () => {
               </span>
               <span className='font-medium'> xem chi tiết </span>
             </Button>
-            {profile?.role?.name == 'Admin' && (
+            {dataUser?.user?.role.name == 'Admin' && (
               <Button
                 onClick={() => {
                   const confirmTrue = window.confirm('Are you sure you want to categories')
@@ -188,14 +187,6 @@ const DsDethi = () => {
           </button>
         </div>
       </div>
-
-      {isGetCategoriesLoading && (
-        <div>
-          <Skeleton /> <Skeleton /> <Skeleton /> <Skeleton />
-          <Skeleton />
-          <Skeleton />
-        </div>
-      )}
       <Drawer
         title='Create a new department'
         width={720}

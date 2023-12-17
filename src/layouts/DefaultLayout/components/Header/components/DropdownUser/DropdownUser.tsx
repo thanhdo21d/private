@@ -6,15 +6,16 @@ import { AppContext } from '~/contexts/app.contexts'
 import { removeProfileFromLS } from '~/utils/utils'
 import imgLogo from '../../../../../../assets/images/logo/Ava_1__DXCB.jpg'
 import { useGetIdUserQuery } from '~/apis/user/user.api'
+import { Skeleton } from 'antd'
 const DropdownUser = () => {
   const navigate = useNavigate()
   const { profile, reset } = useContext(AppContext)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const { data: dataUser, isLoading, isFetching } = useGetIdUserQuery(profile?._id as string)
+  console.log(dataUser)
   const uri = import.meta.env.VITE_API
   const trigger = useRef<any>(null)
   const dropdown = useRef<any>(null)
-  // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
       if (!dropdown.current) return
@@ -32,6 +33,15 @@ const DropdownUser = () => {
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
   }, [])
+  if (isLoading ||isFetching)
+    return (
+      <div>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    )
+  console.log(dataUser?.role?.name)
   return (
     <div className='relative'>
       <Link ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='flex items-center gap-4' to='#'>
@@ -65,15 +75,17 @@ const DropdownUser = () => {
               My Profile
             </Link>
           </li>
-          <button >
-            <Link
-              to='/admin/dashboard'
-              className='flex items-center  gap-3.5  text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
-            >
-              <SettingIcon />
-              Trang quản trị
-            </Link>
-          </button>
+          {dataUser?.user?.role?.name !== 'Staff' && (
+            <button>
+              <Link
+                to='/admin/dashboard'
+                className='flex items-center  gap-3.5  text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
+              >
+                <SettingIcon />
+                Trang quản trị
+              </Link>
+            </button>
+          )}
         </ul>
         <button
           onClick={() => {

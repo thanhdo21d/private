@@ -52,6 +52,7 @@ import EditExamHistory from './pages/bo-de-thi/editExams/EditExamHistory'
 import CheckLogin from './permissions/CheckLogin'
 import CheckOtherAdmin from './permissions/CheckOtherAdmin'
 import CheckAdmin from './permissions/CheckAdmin'
+import TakingExam from './pages/takingExam'
 export const PrivateRoute = () => {
   const cookie = Cookies.get('token')
   const { profile } = useContext(AppContext)
@@ -170,7 +171,8 @@ export const routers = createBrowserRouter([
           { path: 'banner', element: <AddBanner /> },
           { path: 'banner/:id/edit', element: <EditBanner /> },
           { path: 'setting', element: <Setting /> },
-          { path: 'check-log', element: <CheckLog /> }
+          { path: 'check-log', element: <CheckLog /> },
+          { path: 'user/taking/exam', element: <TakingExam /> },
         ]
       }
     ]

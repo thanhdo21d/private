@@ -13,7 +13,7 @@ import { useAddTaskRoleMutation, useGetAllTaskRoleQuery, useRemoveTaskRoleMutati
 import { ItaskRole } from '~/types/task/task.type'
 import { MdOutlineAddCircleOutline } from 'react-icons/md'
 import { useChangeRoleOtherAdminMutation } from '~/apis/department/department'
-import { useGetAllCategoriesQuery } from '~/apis/category/categories'
+import { useGetAllCategoriesDepartmentQuery, useGetAllCategoriesQuery } from '~/apis/category/categories'
 type FieldType = {
   name?: string
   status?: string
@@ -35,9 +35,13 @@ const EditRoles: React.FC = () => {
   const [removeLoad] = useRemoveTaskRoleMutation()
   const [changeRoleOtherAmin] = useChangeRoleOtherAdminMutation()
   const { data: dataAllCategories } = useGetAllCategoriesQuery()
-  const OPTIONS = dataAllCategories?.data
-    ?.filter((items: any) => items.parentCheck !== '0')
-    .map((data: any) => ({
+    const { data: dataAllCategoriesDepartment, isLoading: isGetCategoriesDepartmentLoading } =
+    useGetAllCategoriesDepartmentQuery({
+      page:  1,
+      limit:  1000000,
+      search: ''
+    })
+  const OPTIONS = dataAllCategoriesDepartment?.data.map((data: any) => ({
       id: data._id,
       name: data.name
     }))
@@ -86,7 +90,7 @@ const EditRoles: React.FC = () => {
           }
           toastService.success('Roles updated successfully')
           setTimeout(() => {
-            window.location.reload()
+            // window.location.reload()
           }, 450)
         })
         .catch(() => toastService.error('Error updating roles'))
@@ -104,7 +108,7 @@ const EditRoles: React.FC = () => {
         .unwrap()
         .then(() => {
           toastService.success('Roles added successfully')
-          navigate('/admin/roles')
+          // navigate('/admin/roles')
         })
         .catch(() => toastService.error('Error adding roles'))
     }
@@ -231,7 +235,6 @@ const EditRoles: React.FC = () => {
               <div className='w-full h-[65px] flex items-center bg-graydark mt-5'>
                 <p className='text-2xl font-medium text-white text-left pl-5'>Phân quyền other admin</p>
               </div>
-
               <div className='mt-10'>
                 <Select
                   mode='multiple'

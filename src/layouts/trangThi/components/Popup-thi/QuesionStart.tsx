@@ -23,6 +23,7 @@ import { Loader } from '~/common'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
 import { decrementCount, incrementCount, setExamsData, updateSubmitData } from '~/store/slice/exams.slice'
 import axios from 'axios'
+import PopError from './PopError'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<any[]>([])
@@ -59,8 +60,6 @@ const QuesionStart = () => {
   const { count: countAction } = useAppSelector((state) => state.examAction)
   const { examsData } = useAppSelector((state) => state.examAction)
   const { count } = useAppSelector((state) => state.examAction)
-  console.log(count, 'count')
-  console.log(profile?._id)
   const {
     data: dataIdExmasDetails,
     isLoading: isLoadingDetails,
@@ -78,7 +77,6 @@ const QuesionStart = () => {
   }, [])
   const uri = import.meta.env.VITE_API
   const reactQuillRef = useRef<ReactQuill>(null)
-  const queryConfig = useQueryConfig()
   const handelSubmit = () => {
     const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
     if (confirm) {
@@ -104,9 +102,11 @@ const QuesionStart = () => {
   }
   useEffect(() => {
     const handleVisibilityChange = () => {
-      // if (document.hidden) {
-      //   alert('Học sinh đã thoát toàn màn hình!')
-      // }
+      if (document.hidden) {
+        alert(
+          'nhân viên đã thoát toàn màn hình! , Lưu ý việc thoát màn hình admin sẽ nhận được số lượt thoát của bạn , việc này có thể ảnh hưởng đến kết quả thi của bạn '
+        )
+      }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
     return () => {
@@ -131,7 +131,7 @@ const QuesionStart = () => {
       }
     }
   }, [dispatch])
-  const canvasRef = useRef<any>(null)
+
   if (isLoadingDetails || isFetchingDetails)
     return (
       <div>
@@ -143,8 +143,10 @@ const QuesionStart = () => {
         <Skeleton />
       </div>
     )
+  console.log(dataIdExmasDetails, '1')
   return (
     <div className=' mx-auto px-4'>
+      <div>{dataIdExmasDetails?.statusError === '1' && <PopError />}</div>
       <div className=' min-w-0 h-[750px] 2xl:h-[800px] overflow-y-scroll break-words   bg-white  shadow-xl rounded-lg relative'>
         <Header
           style={{
@@ -165,7 +167,13 @@ const QuesionStart = () => {
             <div>
               <h2 className='text-xl font-bold text-white'>{dataIdExmasDetails?.questions?.name} </h2>
             </div>
-            <div className='justify-end'>
+            <div className='justify-end flex items-center gap-5'>
+              <Button
+                styleClass=' w-[120px] 2xl:w-[200px] !px-0 text-xl font-bold h-[45px] bg-warning rounded-md shadow-xl hover:bg-warning'
+                // onClick={handelSubmit}
+              >
+                Tạm dừng
+              </Button>
               <Button
                 styleClass=' w-[120px] 2xl:w-[200px] !px-0 text-xl font-bold h-[45px] bg-[#FF3366] rounded-md shadow-xl hover:bg-warning'
                 onClick={handelSubmit}

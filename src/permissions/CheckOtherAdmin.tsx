@@ -22,7 +22,7 @@ const CheckOtherAdmin = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${uri}get/permission/otherAdmin/${profile?._id}`, {
+        const { data } = await axios.get(`${uri}get/permission/otherAdmin/${profile?.role}`, {
           params: {
             departMentId: id
           }

@@ -95,11 +95,13 @@ import { useNavigate } from 'react-router-dom'
 import { Divider } from 'antd'
 import axios from 'axios'
 import { toastService } from '~/utils/toask/toaskMessage'
+import Cookies from 'js-cookie'
 const CreateAliasFolder = () => {
   const uri = import.meta.env.VITE_API
   const idCate = localStorage.getItem('idCategories')
   const [data, setData] = useState({})
   const [name, setName] = useState('')
+  const token = Cookies.get('token')
   const navigate = useNavigate()
   const [folderName, setFolderName] = useState('')
   const handleFolderNameChange = (e: any) => {
@@ -158,7 +160,8 @@ const CreateAliasFolder = () => {
         },
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTQzMWVmODc2NzZiZTY0MjJkNWNkMGIiLCJyb2xlIjoiNjUyZTI4ZDU1ZWYyYmJhZTE2NzYxOTJiIiwiaWF0IjoxNzAxMzE3NTE1fQ.9TfbuUO7-J-kch79TyKzG_-b8RjBuvhe3clT4NzWhY8`
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
           }
         }
       )

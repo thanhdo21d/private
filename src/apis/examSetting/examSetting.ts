@@ -108,6 +108,7 @@ const ExamSetting = createApi({
         endDate,
         idQuestion,
         time,
+        secretKey,
         add,
         remove
       }: {
@@ -120,6 +121,7 @@ const ExamSetting = createApi({
         time: string
         add: string[]
         remove: string[]
+        secretKey: string
       }) => {
         return {
           url: `/topicExams/edit/${id}`,
@@ -130,6 +132,7 @@ const ExamSetting = createApi({
             startDate: startDate,
             endDate: endDate,
             idQuestion: idQuestion,
+            secret_key: secretKey,
             time: time,
             users: {
               add: add,

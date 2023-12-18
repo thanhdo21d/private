@@ -172,7 +172,7 @@ export const routers = createBrowserRouter([
           { path: 'banner/:id/edit', element: <EditBanner /> },
           { path: 'setting', element: <Setting /> },
           { path: 'check-log', element: <CheckLog /> },
-          { path: 'user/taking/exam', element: <TakingExam /> },
+          { path: 'user/taking/exam', element: <TakingExam /> }
         ]
       }
     ]

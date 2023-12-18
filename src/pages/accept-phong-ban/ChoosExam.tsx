@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react'
-import { Card, Col, Empty, Row, Skeleton } from 'antd'
+import { Card, Col, Empty, Form, Input, Row, Skeleton } from 'antd'
 import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
+import { UserOutlined, FieldTimeOutlined } from '@ant-design/icons'
 import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useGetIdExamsCategoriesQuery } from '~/apis/examSetting/examSetting'
 import { IoMdReturnLeft } from 'react-icons/io'
@@ -11,22 +12,25 @@ import Pagination from '../roles/Pagination'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import cancel from '../../assets/close.png'
+import { Button } from '~/components'
+import { toastService } from '~/utils/toask/toaskMessage'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { pause } from '~/utils/utils'
 const ChoosExam = () => {
   const navigate = useNavigate()
   const { profile } = useContext(AppContext)
+  const [checkSecret, setCheckSecret] = useState(false)
   const token = Cookies.get('token')
   console.log(`Access token: ${token}`)
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [isLoadingSecret, setIsLoading] = useState(false)
   const uri = import.meta.env.VITE_API
   const queryConfig = useQueryConfig()
-  window.onscroll = () => {
-    setIsScrolled(window.pageYOffset === 0 ? false : true)
-    return () => (window.onscroll = null)
-  }
   const { id } = useParams()
   const [queryParameters] = useSearchParams()
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const idExams: string | null = queryParameters.get('idExams')
   const search: string | null = queryParameters.get('search')
   const {
     data: dataIdExmas,
@@ -38,20 +42,43 @@ const ChoosExam = () => {
     limit: datalimitQueryChange || 3,
     search: search || ''
   })
-  console.log(dataIdExmas)
-  const handelStartExams = async (id: string) => {
-    const { data } = await axios.get(`${uri}start/${id}`, {
-      headers: {
-        Authorization: 'Bearer ' + token
+  const onFinish = async ({ secret }: { secret: string }) => {
+    try {
+      setIsLoading(true)
+      await pause(1000)
+      const { data } = await axios.post(
+        `${uri}check/secretKey/${idExams}`,
+        {
+          secret_key: secret
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      console.log(data)
+      if (data === true) {
+        const { data } = await axios.get(`${uri}start/${idExams}`, {
+          headers: {
+            Authorization: 'Bearer ' + token
+          }
+        })
+        navigate({
+          pathname: `/action-bai-thi/${idExams}`,
+          search: createSearchParams({
+            idSession: data.id
+          }).toString()
+        })
+      } else {
+        toastService.error('vui lòng nhập lại mã bảo mật')
       }
-    })
-    console.log(data)
-    navigate({
-      pathname: `/action-bai-thi/${id}`,
-      search: createSearchParams({
-        idSession: data.id
-      }).toString()
-    })
+      setIsLoading(false)
+    } catch (error) {
+      setIsLoading(false)
+      toastService.error('Error Secret')
+    }
   }
   return (
     <div className='flex justify-center'>
@@ -61,6 +88,60 @@ const ChoosExam = () => {
         </div>
       )}
       <div className='w-11/12  bg-white bg-opacity-80 shadow-2xl rounded-sm'>
+        {checkSecret && (
+          <motion.div
+            variants={fadeIn('down', 0.25)}
+            initial='hidden'
+            whileInView={'show'}
+            viewport={{ once: false, amount: 0.7 }}
+            className='relative -top-10'
+          >
+            <div className='flex justify-center'>
+              <div className='rounded-md absolute z-99999 border w-2/3 border-stroke shadow-2xl bg-white h-[220px]  dark:border-strokedark dark:bg-boxdark'>
+                <div className='border-b py-3 border-[#ccc] flex justify-between'>
+                  <h3 className='pl-4 text-black'>Thông báo bạn cần nhập mã bảo mật Code để vào thi</h3>
+                  <img
+                    onClick={() => setCheckSecret(false)}
+                    className='w-[25px] mr-5 hover:scale-110 cursor-pointer'
+                    src={cancel}
+                  />
+                </div>
+                <div className='flex items-end justify-between mt-4'>
+                  <div className='flex items-end justify-between mt-4'>
+                    <Form
+                      name='basic'
+                      onFinish={onFinish}
+                      style={{ display: 'flex', justifyContent: 'start' }}
+                      initialValues={{ remember: true }}
+                      autoComplete='off'
+                    >
+                      <Form.Item
+                        label=' mã bảo mật'
+                        name='secret'
+                        rules={[{ required: true, message: 'vui lòng nhập mã bảo mật!' }]}
+                      >
+                        <Input placeholder='Thòi gian' prefix={<FieldTimeOutlined />} />
+                      </Form.Item>
+                      <Form.Item wrapperCol={{ offset: 5, span: 11 }}>
+                        <Button styleClass='py-1.5 w-[120px]' type='submit'>
+                          {isLoadingSecret ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'Submit'}
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  </div>
+                </div>
+                <div className='flex items-center justify-end mt-4 gap-5 pr-5 border-t border-[#ccc]'>
+                  <Button
+                    onClick={() => setCheckSecret(false)}
+                    styleClass='!px-0 py-1 w-[100px] bg-[#ec971f] border border[#d58512] rounded-sm mt-5'
+                  >
+                    Từ chối
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
         <div className='grid grid-cols-3 justify-center'>
           {isLoading || isFetching ? (
             <div>
@@ -144,7 +225,14 @@ const ChoosExam = () => {
                       <div className='col-span-12 mt-20 mb-5 text-gray-100'>
                         <button
                           className='rounded hover:bg-success bg-teal-500 w-full py-3'
-                          onClick={() => handelStartExams(data?._id)}
+                          onClick={() => {
+                            setCheckSecret(true)
+                            return navigate({
+                              search: createSearchParams({
+                                idExams: data._id
+                              }).toString()
+                            })
+                          }}
                         >
                           Bắt Đầu Thi
                         </button>

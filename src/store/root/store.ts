@@ -21,6 +21,8 @@ import authReducer from '../slice/Auth.slice'
 import AliasApi from '~/apis/aliasFolder/aliasFolder'
 import { examsReducer } from '../slice/exams.slice'
 import { updateStatusExamsReducer } from '../slice/errorExam'
+import AnalyticsUser from '~/apis/analytics/analyticUser'
+import AnalyticsAdmin from '~/apis/analytics/analyticsAdmin'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -37,6 +39,8 @@ export const store = configureStore({
     [categoryHistoryAPI.reducerPath]: categoryHistoryAPI.reducer,
     [topicExamsApi.reducerPath]: topicExamsApi.reducer,
     [AliasApi.reducerPath]: AliasApi.reducer,
+    [AnalyticsUser.reducerPath]: AnalyticsUser.reducer,
+    [AnalyticsAdmin.reducerPath]: AnalyticsAdmin.reducer,
     //toolkit
     theme: themeReducer,
     checkToken: authReducer,
@@ -61,6 +65,8 @@ export const store = configureStore({
       categoryHistoryAPI.middleware,
       AliasApi.middleware,
       topicExamsApi.middleware,
+      AnalyticsAdmin.middleware,
+      AnalyticsUser.middleware,
       rtkQueryErrorLogger
     )
 })

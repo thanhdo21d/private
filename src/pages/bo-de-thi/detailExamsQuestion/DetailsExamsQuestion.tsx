@@ -64,9 +64,8 @@ const DetailsExamsQuestion = () => {
     search: search || ''
   })
   console.log(dataIdExmasDetails)
-  const initName = dataIdExmasDetails?.data?.name
-  const [name, setName] = useState(initName)
-  console.log(name)
+  const [secretKey, setSecretKey] = useState('')
+
   const [dataExamsEdit, setDataExamsEdit] = useState({
     name: '',
     status: '',
@@ -122,7 +121,6 @@ const DetailsExamsQuestion = () => {
       setDataToSend(dataToSend.filter((item) => item !== id))
     }
   }
-  console.log(dataToSend, 'cc')
   const columnsUser = [
     {
       title: 'code',
@@ -174,7 +172,6 @@ const DetailsExamsQuestion = () => {
     }
   ]
   const onNameChange = (e: any) => {
-    setName(e.target.value)
     setDataExamsEdit({
       ...dataExamsEdit,
       name: e.target.value
@@ -226,18 +223,33 @@ const DetailsExamsQuestion = () => {
       idQuestion: dataToSend || [],
       time: dataExamsEdit.time || dataIdExmasDetails?.data?.time,
       add: dataExamsEdit.users.add || [],
-      remove: dataExamsEdit.users.remove || []
+      remove: dataExamsEdit.users.remove || [],
+      secretKey: secretKey || ''
     })
       .unwrap()
       .then(() => {
         toastService.success('update success')
         setTimeout(() => {
-          window.location.reload()
+          // window.location.reload()
         }, 400)
       })
       .catch(() => {
         toastService.error('update failed')
       })
+  }
+  function makeid() {
+    const length = 10
+    let result = ''
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    const charactersLength = characters.length
+    let counter = 0
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength))
+      counter += 1
+    }
+    if (result != '') setSecretKey(result)
+    console.log(result, secretKey)
+    return result
   }
   if (isLoadingDetails || isFetchingDetails) return <p>loading.....</p>
   return (
@@ -346,6 +358,28 @@ const DetailsExamsQuestion = () => {
                   size='large'
                 />
               </Form.Item>
+            </div>
+            <div className={`${dataIdExmasDetails?.data?.secret_key !== '' ? 'flex items-center' : ''}`}>
+              {checkPath && (
+                <div className=''>
+                  {dataIdExmasDetails?.data?.secret_key && dataIdExmasDetails?.data?.secret_key !== '' ? (
+                    <div className='flex items-center gap-8'>
+                      <p>mã bảo mật </p>
+                      <p className='font-bold text-xl'>{dataIdExmasDetails?.data?.secret_key}</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>Mã bảo mật secretKey </p>
+                      <Button
+                        onClick={makeid}
+                        styleClass='!px-0 rounded-md  w-[289px] bg-[#ec971f] border border[#d58512] py-1.5  mt-1'
+                      >
+                        generate Secret key
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </Form>
           <div className='mt-5'>

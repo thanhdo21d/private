@@ -1,21 +1,25 @@
 import { Footer } from 'antd/es/layout/layout'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Pagination from '../roles/Pagination'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 import { Breadcrumb, Button } from '~/components'
-import { Divider, Form, Input, Popconfirm, Skeleton, Table, message } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { Divider, Form, Input, Popconfirm, Skeleton, Table, Tooltip, message } from 'antd'
+import { UserOutlined, FieldTimeOutlined } from '@ant-design/icons'
 import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { useGetAllUserStartExamsQuery, useUpdateStatusExamsUserMutation } from '~/apis/topicQuestion/topicQuestion'
 import startButton from '../../assets/start-button.png'
 import stopButton from '../../assets/stop.png'
 import addTime from '../../assets/time.png'
+import cancel from '../../assets/close.png'
+import doneExam from '../../assets/customer.png'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
 import { startExam, stopExam } from '~/store/slice/errorExam'
 import io from 'socket.io-client'
-
+import { motion } from 'framer-motion'
+import fadeIn from '~/utils/animation/variant'
 const TakingExam = () => {
+  const [checkTime, setCheckTime] = useState(false)
   const socket = io('http://localhost:8282', {
     transports: ['websocket', 'pulling', 'flashsocket']
   })
@@ -79,6 +83,10 @@ const TakingExam = () => {
       })
       .catch((error) => toastService.error('error updating '))
   }
+  const handelClickOutExam = () => {
+    const confirm = window.confirm('Bạn có muốn kết thúc ')
+    if (confirm) message.success('success')
+  }
   const dataSource = dataUserStart?.map((items: any) => ({
     key: items._id,
     code: items.user?.employeeCode,
@@ -132,8 +140,8 @@ const TakingExam = () => {
           <div className='flex justify-center items-center gap-5'>
             <div>
               <Popconfirm
-                title='Delete the task'
-                description='Are you sure to delete this task?'
+                title='tiếp tục'
+                description='nhân viên tiếp tục bài thi?'
                 onConfirm={() => confirmUpdate({ id: id, num: '0' })}
                 okButtonProps={{
                   style: { backgroundColor: 'blue' }
@@ -146,8 +154,8 @@ const TakingExam = () => {
             </div>
             <div>
               <Popconfirm
-                title='Delete the task'
-                description='Are you sure to delete this task?'
+                title='Dừng lại'
+                description='nhân viên Dừng lại bài thi?'
                 onConfirm={() => confirmUpdate({ id: id, num: '1' })}
                 okButtonProps={{
                   style: { backgroundColor: 'blue' }
@@ -159,7 +167,14 @@ const TakingExam = () => {
               </Popconfirm>
             </div>
             <div>
-              <img className='w-[55px]  hover:scale-105 ease-linear cursor-pointer tremble' src={addTime} alt='time' />
+              <img
+                onClick={() => {
+                  setCheckTime(true)
+                }}
+                className='w-[55px]  hover:scale-105 ease-linear cursor-pointer tremble'
+                src={addTime}
+                alt='time'
+              />
             </div>
           </div>
         )
@@ -176,11 +191,65 @@ const TakingExam = () => {
       </div>
     )
   return (
-    <div>
+    <div className='relative'>
+      <div className='flex justify-center'>
+        {checkTime && (
+          <motion.div
+            variants={fadeIn('down', 0.25)}
+            initial='hidden'
+            whileInView={'show'}
+            viewport={{ once: false, amount: 0.7 }}
+            className='rounded-md absolute z-99999 border w-2/3 border-stroke shadow-2xl bg-white h-[220px]  dark:border-strokedark dark:bg-boxdark'
+          >
+            <div className='border-b py-3 border-[#ccc] flex justify-between'>
+              <h3 className='pl-4'>Thông báo</h3>
+              <img
+                onClick={() => setCheckTime(false)}
+                className='w-[25px] mr-5 hover:scale-110 cursor-pointer'
+                src={cancel}
+              />
+            </div>
+            <div className='flex items-end justify-between mt-4'>
+              <Form
+                name='basic'
+                style={{ maxWidth: 900, display: 'flex', justifyContent: 'start' }}
+                initialValues={{ remember: true }}
+                autoComplete='off'
+              >
+                <Form.Item label=' Thời gian' name='time' rules={[{ required: true, message: 'vui lòng nhập time!' }]}>
+                  <Input placeholder='Thòi gian' prefix={<FieldTimeOutlined />} />
+                </Form.Item>
+                <Form.Item wrapperCol={{ offset: 5, span: 11 }}>
+                  <Button styleClass='py-1.5' type='submit'>
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
+            <div className='flex items-center justify-end mt-4 gap-5 pr-5 border-t border-[#ccc]'>
+              {/* <Button styleClass='!px-0 py-1 w-[100px] bg-[#ff9900] border border[#dfa854] rounded-sm mt-5'>
+              Đồng ý
+            </Button> */}
+              <Button
+                onClick={() => setCheckTime(false)}
+                styleClass='!px-0 py-1 w-[100px] bg-[#ec971f] border border[#d58512] rounded-sm mt-5'
+              >
+                Từ chối
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </div>
+
       <Breadcrumb pageName='Danh sách nhân viên đang thi' />
       <div className='mt-10'></div>
       <Divider orientation='left'>Danh sách</Divider>
-      <div className='flex justify-end mr-10'>
+      <div className='flex justify-end mr-10 items-center gap-10 mb-10'>
+        <div>
+          <Tooltip title='Xác nhận kết thúc thi'>
+            <img onClick={handelClickOutExam} className='w-[50px]' src={doneExam} />
+          </Tooltip>
+        </div>
         <Form
           name='basic'
           style={{ maxWidth: 900, display: 'flex', justifyContent: 'start' }}
@@ -199,6 +268,7 @@ const TakingExam = () => {
           </Form.Item>
         </Form>
       </div>
+
       <div>
         <Table dataSource={dataSource} columns={columns} pagination={false} />
       </div>

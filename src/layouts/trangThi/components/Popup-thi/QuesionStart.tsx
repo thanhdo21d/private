@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '~/components'
+import cancel from '../../../../assets/close.png'
 import { toastService } from '~/utils/toask/toaskMessage'
 import PopupSuccess from './PopupSuccess.tsx/PopupSuccess'
 import Confetti from 'react-confetti'
@@ -24,6 +25,7 @@ import { useAppDispatch, useAppSelector } from '~/store/root/hook'
 import { decrementCount, incrementCount, setExamsData, updateSubmitData } from '~/store/slice/exams.slice'
 import axios from 'axios'
 import PopError from './PopError'
+import Popconfirm from './Popconfirm'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<any[]>([])
@@ -67,8 +69,14 @@ const QuesionStart = () => {
   } = useSessionExamsQuestionQuery({
     id: idSession as string
   })
+  // if (!dataIdExmasDetails) {
+  //   alert('Bạn đã hết thời gian làm bài')
+  //   navigate('/')
+  // }
   useEffect(() => {
-    if (dataIdExmasDetails) dispatch(setExamsData(dataIdExmasDetails?.questions[countAction]))
+    if (dataIdExmasDetails) {
+      dispatch(setExamsData(dataIdExmasDetails?.questions[countAction]))
+    }
   }, [dispatch, idSession, dataIdExmasDetails?.questions, dataIdExmasDetails, countAction])
   console.log(examsData)
   useEffect(() => {
@@ -103,9 +111,9 @@ const QuesionStart = () => {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        alert(
-          'nhân viên đã thoát toàn màn hình! , Lưu ý việc thoát màn hình admin sẽ nhận được số lượt thoát của bạn , việc này có thể ảnh hưởng đến kết quả thi của bạn '
-        )
+        // alert(
+        //   'nhân viên đã thoát toàn màn hình! , Lưu ý việc thoát màn hình admin sẽ nhận được số lượt thoát của bạn , việc này có thể ảnh hưởng đến kết quả thi của bạn '
+        // )
       }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
@@ -143,6 +151,7 @@ const QuesionStart = () => {
         <Skeleton />
       </div>
     )
+
   console.log(dataIdExmasDetails, '1')
   return (
     <div className=' mx-auto px-4'>
@@ -168,12 +177,6 @@ const QuesionStart = () => {
               <h2 className='text-xl font-bold text-white'>{dataIdExmasDetails?.questions?.name} </h2>
             </div>
             <div className='justify-end flex items-center gap-5'>
-              <Button
-                styleClass=' w-[120px] 2xl:w-[200px] !px-0 text-xl font-bold h-[45px] bg-warning rounded-md shadow-xl hover:bg-warning'
-                // onClick={handelSubmit}
-              >
-                Tạm dừng
-              </Button>
               <Button
                 styleClass=' w-[120px] 2xl:w-[200px] !px-0 text-xl font-bold h-[45px] bg-[#FF3366] rounded-md shadow-xl hover:bg-warning'
                 onClick={handelSubmit}
@@ -205,10 +208,8 @@ const QuesionStart = () => {
                     </div>
                   </div>
                   {examsData?.choose?.map((data: any, index: number) => {
-                    console.log(checkDataSubmit[count + 1])
-                    //
                     return (
-                      <div className={``}>
+                      <div key={index} className={``}>
                         <div
                           onClick={() => {
                             dispatch(
@@ -313,6 +314,7 @@ const QuesionStart = () => {
             </div>
           </div>
         </Footer>
+        di
       </div>
     </div>
   )

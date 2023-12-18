@@ -230,7 +230,7 @@ const DetailsExamsQuestion = () => {
       .then(() => {
         toastService.success('update success')
         setTimeout(() => {
-          // window.location.reload()
+          window.location.reload()
         }, 400)
       })
       .catch(() => {
@@ -251,6 +251,7 @@ const DetailsExamsQuestion = () => {
     console.log(result, secretKey)
     return result
   }
+
   if (isLoadingDetails || isFetchingDetails) return <p>loading.....</p>
   return (
     <div className='w-full'>
@@ -399,7 +400,7 @@ const DetailsExamsQuestion = () => {
                     title='Câu Hỏi'
                     dataIndex='question'
                     key='question'
-                    render={(data: string) => <p>{data.length > 20 ? `${data.slice(0, 20)}...` : data}</p>}
+                    render={(data: string) => <p>{data?.length > 20 ? `${data?.slice(0, 20)}...` : data}</p>}
                   />
                   <Column
                     title={<p className='flex justify-center'>Ảnh</p>}
@@ -425,7 +426,11 @@ const DetailsExamsQuestion = () => {
                       render={(questionA: any) => {
                         console.log(questionA[0], 'ab')
                         return (
-                          <p>{questionA[0]?.q?.length > 20 ? `${questionA[0].q.slice(0, 20)}...` : questionA[0].q}</p>
+                          <p>
+                            {questionA[0]?.q?.toString()?.length > 20
+                              ? `${questionA[0].q.slice(0, 20)}...`
+                              : questionA[0].q}
+                          </p>
                         )
                       }}
                     />
@@ -447,7 +452,11 @@ const DetailsExamsQuestion = () => {
                       dataIndex='questionA'
                       key='questionA'
                       render={(questionA: any) => (
-                        <p>{questionA[1]?.q.length > 20 ? `${questionA[1].q.slice(0, 20)}...` : questionA[1].q}</p>
+                        <p>
+                          {questionA[1]?.q?.toString()?.length > 20
+                            ? `${questionA[1].q.slice(0, 20)}...`
+                            : questionA[1].q}
+                        </p>
                       )}
                     />
                     <Column
@@ -466,7 +475,11 @@ const DetailsExamsQuestion = () => {
                       dataIndex='questionA'
                       key='questionA'
                       render={(questionA: any) => (
-                        <p>{questionA[2]?.q.length > 20 ? `${questionA[2].q.slice(0, 20)}...` : questionA[2].q}</p>
+                        <p>
+                          {questionA[2]?.q?.toString()?.length > 20
+                            ? `${questionA[2].q.slice(0, 20)}...`
+                            : questionA[2].q}
+                        </p>
                       )}
                     />
                     <Column
@@ -485,7 +498,11 @@ const DetailsExamsQuestion = () => {
                       dataIndex='questionA'
                       key='questionA'
                       render={(questionA: any) => (
-                        <p>{questionA[3]?.q?.length > 20 ? `${questionA[3]?.q?.slice(0, 20)}...` : questionA[3].q}</p>
+                        <p>
+                          {questionA[3]?.q?.toString()?.length > 20
+                            ? `${questionA[3]?.q?.slice(0, 20)}...`
+                            : questionA[3].q}
+                        </p>
                       )}
                     />
                     <Column

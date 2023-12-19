@@ -53,6 +53,7 @@ import CheckLogin from './permissions/CheckLogin'
 import CheckOtherAdmin from './permissions/CheckOtherAdmin'
 import CheckAdmin from './permissions/CheckAdmin'
 import TakingExam from './pages/takingExam'
+import GetAllExamsDepartment from './pages/cham-thi/GetAllExamsDepartment'
 export const PrivateRoute = () => {
   const cookie = Cookies.get('token')
   const { profile } = useContext(AppContext)
@@ -89,6 +90,7 @@ export const routers = createBrowserRouter([
           { path: 'settings/edit', element: <EditTree /> },
           { path: 'all-folders/category/:id', element: <FormData /> },
           { path: 'settings/ki-thi', element: <ExamConfiguration /> },
+          { path: 'settings/cham-thi', element: <GetAllExamsDepartment /> },
           { path: 'settings/ki-thi/edit/:id', element: <EditExamsKt /> },
           { path: 'settings/ki-thi/bai-thi/:id', element: <ExamsQuestion /> },
           { path: 'settings/ki-thi/bai-thi/:id/:id/details-exams', element: <DetailsExamsQuestion /> },

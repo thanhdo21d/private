@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react'
-import { Button, Input, Table, Tooltip } from 'antd'
+import { Button, Input, Skeleton, Table, Tooltip } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import { Footer } from 'antd/es/layout/layout'
 import { useGetExamUserQuery } from '~/apis/user/user.api'
@@ -77,7 +77,15 @@ const InfoResult: React.FC = () => {
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString)
   }
-  if (isExamUSerFetching || isExamUSerFetching) return <p>loading......</p>
+  if (isExamUSerFetching || isExamuserLoading)
+    return (
+      <div>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    )
   return (
     <div>
       <div className='flex justify-between items-end'>

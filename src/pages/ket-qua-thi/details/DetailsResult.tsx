@@ -1,14 +1,19 @@
-import { Badge, Descriptions, Divider, Image, Popconfirm, Table, Tooltip } from 'antd'
-import React from 'react'
+import { Badge, Descriptions, Divider, Drawer, Image, Popconfirm, Table, Tooltip } from 'antd'
+import React, { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '~/components'
 import pdfExport from '../../../assets/images/logo/pdf-svgrepo-com.svg'
 import { useGetDetailListExamQuery } from '~/apis/topicQuestion/topicQuestion'
-import ChilDetailsTable from './ChilDetailsTable'
+import { useAppDispatch, useAppSelector } from '~/store/root/hook'
+import { showDetails } from '~/store/slice/detailsResultExam'
 const DetailsResult = () => {
   const uri = import.meta.env.VITE_API
+  const { status, indexResult } = useAppSelector((state) => state.showDetailsExam)
+  console.log(indexResult, 'cclt')
   const navigate = useNavigate()
   const { id } = useParams()
+  const [open, setOpen] = useState(false)
+  const dispatch = useAppDispatch()
   const {
     data: dataDetailsExamUser,
     isFetching,
@@ -16,11 +21,15 @@ const DetailsResult = () => {
   } = useGetDetailListExamQuery({
     id: id as string
   })
-  console.log(dataDetailsExamUser)
+  const onClose = () => {
+    setOpen(false)
+  }
+  const showDrawer = () => {
+    setOpen(true)
+  }
   const checkResultNull = dataDetailsExamUser?.questionCheck.filter(
     (checkResult: any) => checkResult.userChoose == undefined
   )
-  console.log(checkResultNull)
   let userChoose = ''
   function displayArrayElements(array: string[]) {
     if (array == undefined) {
@@ -75,6 +84,32 @@ const DetailsResult = () => {
     trueAnswer: items.trueAnswer,
     questionCheck: items
   }))
+  console.log(dataDetailsExamUser?.questionCheck[indexResult.indexResult], 'pl')
+  const dataSourceChoose = dataDetailsExamUser?.questionCheck[indexResult.indexResult]?.choose.map(
+    (items: any, index: number) => ({
+      key: index,
+      img: items.img,
+      q: items.q
+    })
+  )
+  const checkTrueFalse = dataDetailsExamUser?.questionCheck[indexResult.indexResult]
+  console.log(checkTrueFalse)
+  const columnsChoose = [
+    {
+      title: 'câu hỏi',
+      dataIndex: 'q',
+      key: 'q'
+    },
+    {
+      title: 'ảnh',
+      dataIndex: 'img',
+      key: 'img',
+      width: 200,
+      render: (items: any) => {
+        return <div>{items !== '' ? <Image className='w-[200px]' src={`${uri}${items}`} /> : ''}</div>
+      }
+    }
+  ]
   const columns = [
     {
       title: 'Câu Hỏi',
@@ -130,17 +165,52 @@ const DetailsResult = () => {
       render: (text: string) => {
         return <p className='flex justify-center font-bold text-success'>{text}</p>
       }
+    },
+    {
+      title: <p className='flex justify-center'>Tác vụ</p>,
+      render: ({ key }: { key: string }) => {
+        return (
+          <p
+            onClick={() => {
+              showDrawer()
+              return dispatch(
+                showDetails({
+                  status: true,
+                  indexResult: key
+                })
+              )
+            }}
+            className='flex justify-center font-bold text-danger underline cursor-pointer'
+          >
+            Chi tiết
+          </p>
+        )
+      }
     }
   ]
   if (isFetching || isLoading) return <p>loading......</p>
   return (
     <div>
-      <div className='flex gap-3 justify-end'>
-        <div className=' items-center text-center hover:bg-primary bg-bodydark2 rounded-lg h-[62px]'>
-          <Tooltip placement='top' title={'Export to Pdf !'}>
-            <img className='w-[50px] pt-1' src={pdfExport} />
-          </Tooltip>
+      <Drawer
+        title='chi tiết câu hỏi'
+        placement={'right'}
+        width={900}
+        onClose={onClose}
+        open={open}
+        extra={<Button onClick={onClose}>Cancel</Button>}
+      >
+        <div className='w-full'>
+          <div className='w-full'>
+            <h3 className='text-black text-md font-medium'>Bình Luận từ Admin</h3>
+            <textarea
+              className='border mt-5 mb-5 border-[#ccc] w-full pl-5 pt-1'
+              value={dataDetailsExamUser?.questionCheck[indexResult.indexResult]?.commentAdmin || ''}
+            ></textarea>
+          </div>
+          <Table bordered dataSource={dataSourceChoose} columns={columnsChoose} pagination={false} />
         </div>
+      </Drawer>
+      <div className='flex gap-3 justify-end'>
         <Button onClick={() => navigate(-1)} styleClass='bg-success'>
           Quay Lại
         </Button>
@@ -155,15 +225,7 @@ const DetailsResult = () => {
       </div>
       <div>
         <div>
-          <Table
-            bordered
-            dataSource={dataSource}
-            columns={columns}
-            pagination={false}
-            expandable={{
-              expandedRowRender: ChilDetailsTable
-            }}
-          />
+          <Table bordered dataSource={dataSource} columns={columns} pagination={false} />
         </div>
       </div>
     </div>

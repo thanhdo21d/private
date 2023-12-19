@@ -75,9 +75,10 @@ const ChoosExam = () => {
         toastService.error('vui lòng nhập lại mã bảo mật')
       }
       setIsLoading(false)
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false)
-      toastService.error('Error Secret')
+      console.log(error)
+      toastService.error(error.response.data.message)
     }
   }
   return (

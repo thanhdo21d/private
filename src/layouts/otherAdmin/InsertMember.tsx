@@ -24,7 +24,9 @@ const InsertMember = () => {
     page: dataPageQuery || 1,
     employeeCode: search || ''
   })
+  console.log(data,"d")
   const confirm = (id: string) => {
+
     inSertMember({
       id: idCate,
       idUser: id
@@ -33,12 +35,13 @@ const InsertMember = () => {
       .then(() => toastService.success('Successfully'))
       .catch((errror) => toastService.error('error'))
   }
+
   const dataSource = data?.docs.map((item: any) => ({
     key: item._id,
     name: item.username,
     avatar: item.avatar,
     employeeCode: item.employeeCode,
-    role: item.role.name
+    role: item?.role?.name
   }))
   const columns = [
     {

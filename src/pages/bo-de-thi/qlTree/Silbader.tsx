@@ -33,14 +33,11 @@ interface SidebarProps {
   checkInfo?: boolean
 }
 export const CategoryTreeItem = React.memo(({ category, level, bg, button, createExams, checkMember }: any) => {
-  console.log(category, 'category')
   const [inputFields, setInputFields] = useState<any>([{ point: '', count: '' }])
   const dispatch = useAppDispatch()
   const [generateAliasFolders] = useGenerateAliasFoldersMutation()
-  const { id } = useParams()
   const idCate = localStorage.getItem('idCategories')
   const [removeCategoriTree] = useRemoveCategoriesTreeMutation()
-  const [isChecked, setIsChecked] = useState(false)
   const [editCategoriTree] = useEditCategoriesTreeMutation()
   const [open, setOpen] = useState(false)
   const [openExams, setOpenExams] = useState(false)
@@ -464,6 +461,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
   const sidebar = useRef<any>(null)
   const isActive = location.pathname.includes(`all-folders`)
   const isActiveKT = location.pathname.includes(`ki-thi`)
+  const isActiveCT = location.pathname.includes(`cham-thi`)
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
   useEffect(() => {
@@ -543,6 +541,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
           </div>
         </nav>
       </div>
+      {/* //isActiveCT */}
       <p
         className={`${
           isActiveKT ? 'bg-success ' : ''
@@ -553,6 +552,14 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
           <img className='w-[30px]' src={examsIcons} />
         </span>
         <span className='text-md text-bodydark1 font-medium'>Kì Thi</span>
+      </p>
+      <p
+        className={`${
+          isActiveCT ? 'bg-success ' : ''
+        }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
+        onClick={() => navigate(`/tree-menu/${idCate}/settings/cham-thi`)}
+      >
+        <span className='text-md text-bodydark1 font-medium pl-9'>Chấm thi</span>
       </p>
       <Menu theme='dark' defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={settingsAlias} />
     </div>

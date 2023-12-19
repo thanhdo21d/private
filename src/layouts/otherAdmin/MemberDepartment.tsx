@@ -134,7 +134,7 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember?: boo
       dataIndex: 'avatar',
       key: 'avatar',
       render: (avatar: string) => {
-        return <img className='w-[50px] rounded-sm' src={`${uri}${avatar}`} />
+        return <div>{avatar !== '' ? <img className='w-[50px] rounded-sm' src={`${uri}${avatar}`} /> : ''}</div>
       }
     },
     {
@@ -361,7 +361,7 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember?: boo
           </div>
         </div>
       )}
-      <Footer className='mt-5 w-full  justify-between dark:bg-black absolute bottom-0'>
+      <Footer className='mt-5 w-full  justify-between dark:bg-black'>
         <div className='text-md font-semibold text-center dark:text-white'>
           Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.
         </div>

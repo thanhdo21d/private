@@ -23,6 +23,7 @@ import { examsReducer } from '../slice/exams.slice'
 import { updateStatusExamsReducer } from '../slice/errorExam'
 import AnalyticsUser from '~/apis/analytics/analyticUser'
 import AnalyticsAdmin from '~/apis/analytics/analyticsAdmin'
+import { showDetailResultsReducer } from '../slice/detailsResultExam'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -47,7 +48,8 @@ export const store = configureStore({
     loggers: loggersReducer,
     dataCategories: categoriesReducer,
     examAction: examsReducer,
-    updateStatusExam: updateStatusExamsReducer
+    updateStatusExam: updateStatusExamsReducer,
+    showDetailsExam : showDetailResultsReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

@@ -29,6 +29,7 @@ import Popconfirm from './Popconfirm'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<any[]>([])
+  const [editorContent, setEditorContent] = useState('')
   const listName = ['A', 'B', 'C', 'D']
   const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
   //
@@ -88,25 +89,22 @@ const QuesionStart = () => {
   const handelSubmit = () => {
     const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
     if (confirm) {
-      setShowPop(true)
       actionSubmit({
         id: idSession as string,
         data: checkDataSubmit,
-        mailUser: profile?.email as string
+        mailUser: profile?.email as string,
+        nameExams : ""
       })
         .unwrap()
         .then((data) => {
-          console.log(checkDataSubmit)
           setQuestion(data)
+          setShowPop(true)
         })
         .catch((error) => console.error(error))
       setTimeout(() => {
         // navigate('/')
       }, 10000)
     }
-  }
-  const handleProcedureContentChange = (content: string) => {
-    console.log(content)
   }
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -139,7 +137,9 @@ const QuesionStart = () => {
       }
     }
   }, [dispatch])
-
+  const onFinish = (values: any) => {
+    console.log(editorContent)
+  }
   if (isLoadingDetails || isFetchingDetails)
     return (
       <div>
@@ -207,8 +207,43 @@ const QuesionStart = () => {
                       )}
                     </div>
                   </div>
-                  {examsData?.choose?.map((data: any, index: number) => {
-                    return (
+                  {examsData?.choose?.every((data: any) => data.img === '' && data.q === '') ? (
+                    <div className='mt-15'>
+                      <p className='text-xl font-bold text-black mb-2'>Vui Lòng Nhập câu trả lời!</p>
+                      <Form
+                        name='basic'
+                        autoComplete='off'
+                        layout='vertical'
+                        className='dark:text-white'
+                        onFinish={onFinish}
+                      >
+                        <Form.Item
+                          className='dark:text-white mb-17'
+                          name='description'
+                          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+                        >
+                          <ReactQuill
+                            className='h-[300px]  scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'
+                            ref={reactQuillRef}
+                            onChange={(content, delta, source, editor) => setEditorContent(editor.getText().trim())}
+                            theme='snow'
+                            placeholder='Vui Lòng Nhập câu trả lời!...........'
+                            modules={{
+                              toolbar: {
+                                container: container
+                              },
+                              clipboard: {
+                                matchVisual: false
+                              }
+                            }}
+                            formats={formats}
+                          />
+                        </Form.Item>
+                        <Button type='submit'> xác nhận </Button>
+                      </Form>
+                    </div>
+                  ) : (
+                    examsData?.choose?.map((data: any, index: number) => (
                       <div key={index} className={``}>
                         <div
                           onClick={() => {
@@ -234,42 +269,10 @@ const QuesionStart = () => {
                           {data?.img ? <Image className='!w-[205px] rounded-md' src={`${uri}${data?.img}`} /> : ''}
                         </div>
                       </div>
-                    )
-                  })}
+                    ))
+                  )}
                 </div>
               </div>
-              {/* {Question ? (
-                <div className='flex justify-center mx-auto !mt-10'>
-                  <div className='grid-cols-1 cursor-pointer	mx-auto  gap-5 grid'></div>
-                </div>
-              ) : (
-                <div className='mt-15'>
-                  <p className='text-xl font-bold text-black mb-2'>Vui Lòng Nhập câu trả lời!</p>
-                  <Form.Item
-                    className='dark:text-white mb-17'
-                    name='description'
-                    rules={[{ required: true, message: 'Không được bỏ trống!' }]}
-                  >
-                    <ReactQuill
-                      className='h-[300px]  scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'
-                      ref={reactQuillRef}
-                      theme='snow'
-                      placeholder='Vui Lòng Nhập câu trả lời!...........'
-                      modules={{
-                        toolbar: {
-                          container: container
-                        },
-                        clipboard: {
-                          matchVisual: false
-                        }
-                      }}
-                      formats={formats}
-                      value={''}
-                      onChange={handleProcedureContentChange}
-                    />
-                  </Form.Item>
-                </div>
-              )} */}
             </div>
           )}
           {showPop ? (

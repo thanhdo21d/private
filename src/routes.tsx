@@ -54,6 +54,7 @@ import CheckOtherAdmin from './permissions/CheckOtherAdmin'
 import CheckAdmin from './permissions/CheckAdmin'
 import TakingExam from './pages/takingExam'
 import GetAllExamsDepartment from './pages/cham-thi/GetAllExamsDepartment'
+import GetalltaskingExams from './pages/takingExam/GetalltaskingExams'
 export const PrivateRoute = () => {
   const cookie = Cookies.get('token')
   const { profile } = useContext(AppContext)
@@ -174,7 +175,8 @@ export const routers = createBrowserRouter([
           { path: 'banner/:id/edit', element: <EditBanner /> },
           { path: 'setting', element: <Setting /> },
           { path: 'check-log', element: <CheckLog /> },
-          { path: 'user/taking/exam', element: <TakingExam /> }
+          { path: 'user/taking/exam', element: <GetalltaskingExams /> },
+          { path: 'taking/exam/:id', element: <TakingExam /> }
         ]
       }
     ]

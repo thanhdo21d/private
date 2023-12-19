@@ -45,7 +45,6 @@ const ChoosExam = () => {
   const onFinish = async ({ secret }: { secret: string }) => {
     try {
       setIsLoading(true)
-      await pause(1000)
       const { data } = await axios.post(
         `${uri}check/secretKey/${idExams}`,
         {
@@ -58,19 +57,35 @@ const ChoosExam = () => {
           }
         }
       )
-      console.log(data)
       if (data === true) {
-        const { data } = await axios.get(`${uri}start/${idExams}`, {
-          headers: {
-            Authorization: 'Bearer ' + token
+        try {
+          const { data } = await axios.get(`${uri}start/${idExams}`, {
+            headers: {
+              Authorization: 'Bearer ' + token
+            }
+          })
+          console.log(data)
+          const dataCheck = await axios.get(`${uri}examstatus/${data.id}`, {
+            headers: {
+              Authorization: 'Bearer ' + token
+            }
+          })
+          console.log(dataCheck.data)
+          if (dataCheck.data.status) {
+            navigate({
+              pathname: `/action-bai-thi/${idExams}`,
+              search: createSearchParams({
+                idSession: data.id
+              }).toString()
+            })
+          } else {
+            console.log(1)
+            toastService.error(dataCheck.data.msg)
           }
-        })
-        navigate({
-          pathname: `/action-bai-thi/${idExams}`,
-          search: createSearchParams({
-            idSession: data.id
-          }).toString()
-        })
+        } catch (error: any) {
+          console.log(error)
+          toastService.error(error.response.data.message)
+        }
       } else {
         toastService.error('vui lòng nhập lại mã bảo mật')
       }

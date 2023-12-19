@@ -5,7 +5,7 @@ import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 import { Breadcrumb, Button } from '~/components'
 import { Divider, Form, Input, Popconfirm, Skeleton, Table, Tooltip, message } from 'antd'
 import { UserOutlined, FieldTimeOutlined } from '@ant-design/icons'
-import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useGetAllUserStartExamsQuery, useUpdateStatusExamsUserMutation } from '~/apis/topicQuestion/topicQuestion'
 import startButton from '../../assets/start-button.png'
 import stopButton from '../../assets/stop.png'
@@ -18,9 +18,12 @@ import { startExam, stopExam } from '~/store/slice/errorExam'
 import io from 'socket.io-client'
 import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
+import axios from 'axios'
 const TakingExam = () => {
+  const uri = import.meta.env.VITE_API
   const [checkTime, setCheckTime] = useState(false)
-  const socket = io('http://localhost:8282', {
+  const { id } = useParams()
+  const socket = io(uri, {
     transports: ['websocket', 'pulling', 'flashsocket']
   })
   useEffect(() => {
@@ -48,12 +51,12 @@ const TakingExam = () => {
   const [updateStatusExam] = useUpdateStatusExamsUserMutation()
   const { statusError } = useAppSelector((state) => state.updateStatusExam)
   console.log(statusError)
-  const uri = import.meta.env.VITE_API
   const {
     data: dataUserStart,
     isLoading,
     isFetching
   } = useGetAllUserStartExamsQuery({
+    id: id as string,
     searchQuery: search as string
   })
   const onFinish = ({ code }: { code: string }) => {
@@ -83,9 +86,15 @@ const TakingExam = () => {
       })
       .catch((error) => toastService.error('error updating '))
   }
-  const handelClickOutExam = () => {
+  const handelClickOutExam = async () => {
     const confirm = window.confirm('Bạn có muốn kết thúc ')
-    if (confirm) message.success('success')
+    if (confirm) {
+      await axios.get(`${uri}update/done/exams/${id}`)
+      message.success('success')
+      setTimeout(() => {
+        window.location.reload()
+      }, 300)
+    }
   }
   const dataSource = dataUserStart?.map((items: any) => ({
     key: items._id,
@@ -244,6 +253,9 @@ const TakingExam = () => {
       <Breadcrumb pageName='Danh sách nhân viên đang thi' />
       <div className='mt-10'></div>
       <Divider orientation='left'>Danh sách</Divider>
+      <Button styleClass='py-1 bg-body' onClick={() => navigate(-1)}>
+        Quay lại
+      </Button>
       <div className='flex justify-end mr-10 items-center gap-10 mb-10'>
         <div>
           <Tooltip title='Xác nhận kết thúc thi'>

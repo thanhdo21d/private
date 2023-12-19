@@ -184,6 +184,20 @@ const ExamSetting = createApi({
         }
       },
       invalidatesTags: ['ExamSetting']
+    }),
+    getAllExams: builder.query<any, any>({
+      query: ({ id, page, limit, search }: { id: string; page: string; limit: string; search: string }) => {
+        return {
+          url: `/examsktRoutes/getAll`,
+          method: 'GET',
+          params: {
+            page: page,
+            limit: limit,
+            search: search || ''
+          }
+        }
+      },
+      providesTags: ['ExamSetting']
     })
   })
 })
@@ -196,6 +210,7 @@ export const {
   useCreateTopicExamsMutation,
   useGetTopicExamsIDQuery,
   useEditTopicExamIdMutation,
-  useCreateTopicExamsApiMutation
+  useCreateTopicExamsApiMutation,
+  useGetAllExamsQuery
 } = ExamSetting
 export default ExamSetting

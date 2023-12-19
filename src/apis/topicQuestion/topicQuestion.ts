@@ -77,7 +77,7 @@ const topicExamsApi = createApi({
       },
       providesTags: ['topicExams']
     }),
-    submitExamsQuestion: builder.mutation<any[], { id: string; data: any; mailUser: string , nameExams: string }>({
+    submitExamsQuestion: builder.mutation<any[], { id: string; data: any; mailUser: string; nameExams: string }>({
       query: ({ id, data, mailUser, nameExams }: { id: string; data: any; mailUser: string; nameExams: string }) => {
         console.log(data, 'ok')
         return {
@@ -103,10 +103,10 @@ const topicExamsApi = createApi({
       },
       providesTags: ['topicExams']
     }),
-    getAllUserStartExams: builder.query<any[], { searchQuery: string }>({
-      query: ({ searchQuery }: { searchQuery: string }) => {
+    getAllUserStartExams: builder.query<any[], { searchQuery: string; id: string }>({
+      query: ({ searchQuery, id }: { searchQuery: string; id: string }) => {
         return {
-          url: 'check/user/start',
+          url: 'check/user/start/' + id,
           method: 'GET',
           params: {
             searchQuery: searchQuery || ''

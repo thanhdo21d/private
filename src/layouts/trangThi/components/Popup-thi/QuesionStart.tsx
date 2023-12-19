@@ -70,10 +70,6 @@ const QuesionStart = () => {
   } = useSessionExamsQuestionQuery({
     id: idSession as string
   })
-  // if (!dataIdExmasDetails) {
-  //   alert('Bạn đã hết thời gian làm bài')
-  //   navigate('/')
-  // }
   useEffect(() => {
     if (dataIdExmasDetails) {
       dispatch(setExamsData(dataIdExmasDetails?.questions[countAction]))

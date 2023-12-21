@@ -124,6 +124,15 @@ const topicExamsApi = createApi({
       },
       providesTags: ['topicExams']
     }),
+    DoneExamsTl: builder.mutation<any[], { id: string }>({
+      query: ({ id }: { id: string }) => {
+        return {
+          url: '/done-commentByAdmin/' + id,
+          method: 'POST'
+        }
+      },
+      invalidatesTags: ['topicExams']
+    }),
     updateStatusExamsUser: builder.mutation<any[], { id: string; status: string }>({
       query: ({ id, status }: { id: string; status: string }) => {
         return {
@@ -131,6 +140,23 @@ const topicExamsApi = createApi({
           method: 'POST',
           body: {
             status: status
+          }
+        }
+      },
+      invalidatesTags: ['topicExams']
+    }),
+    updateCommentAdminExamsUser: builder.mutation<
+      any[],
+      { id: string; index: string; dataComment: string; point: string }
+    >({
+      query: ({ id, index, dataComment, point }: { id: string; index: string; dataComment: string; point: string }) => {
+        return {
+          url: `commentByAdmin/${id}`,
+          method: 'POST',
+          body: {
+            index: index,
+            dataComment: dataComment,
+            point: point
           }
         }
       },
@@ -146,6 +172,8 @@ export const {
   useGetDetailListExamQuery,
   useGetAllUserStartExamsQuery,
   useUpdateStatusExamsUserMutation,
-  useGetExamsTlQuery
+  useGetExamsTlQuery,
+  useUpdateCommentAdminExamsUserMutation,
+  useDoneExamsTlMutation
 } = topicExamsApi
 export default topicExamsApi

@@ -2,11 +2,22 @@ import { Button, Divider, Drawer, Image, Input, Result, Skeleton, Table } from '
 import { Footer } from 'antd/es/layout/layout'
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useGetExamsTlQuery } from '~/apis/topicQuestion/topicQuestion'
+import {
+  useDoneExamsTlMutation,
+  useDoneExamsTlQuery,
+  useGetExamsTlQuery,
+  useUpdateCommentAdminExamsUserMutation
+} from '~/apis/topicQuestion/topicQuestion'
+import { toastService } from '~/utils/toask/toaskMessage'
 
 const GeIDExamsDepartmentMaking = () => {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+  const [dataPoint, setDataPoint] = useState({
+    point: '',
+    commentAdmin: ''
+  })
+  const [updateCommentAdmin] = useUpdateCommentAdminExamsUserMutation()
   const [dataDetail, setDataDetail] = useState<any[]>([])
   const uri = import.meta.env.VITE_API
   const { id } = useParams()
@@ -17,6 +28,7 @@ const GeIDExamsDepartmentMaking = () => {
   } = useGetExamsTlQuery({
     id: id as string
   })
+  const [doneExam] = useDoneExamsTlMutation()
   console.log(dataDetailsExamUser)
   const showDrawer = () => {
     setOpen(true)
@@ -24,7 +36,12 @@ const GeIDExamsDepartmentMaking = () => {
   const onClose = () => {
     setOpen(false)
     setDataDetail([])
+    setDataPoint({
+      point: '',
+      commentAdmin: ''
+    })
   }
+  console.log(id)
   const dataSource = dataDetailsExamUser?.map((items: any, index: number) => ({
     key: index,
     choose: index + 1,
@@ -80,6 +97,31 @@ const GeIDExamsDepartmentMaking = () => {
       }
     }
   ]
+  const handelUpdateCommentAdmin = () => {
+    updateCommentAdmin({
+      id: id as string,
+      dataComment: dataPoint.commentAdmin,
+      index: dataDetail.questionIndex,
+      point: dataPoint.point
+    })
+      .unwrap()
+      .then(() => {
+        toastService.success(' updated successfully')
+        onClose()
+      })
+      .catch(() => toastService.error(' errror update'))
+  }
+  const handelDoneExams = () => {
+    doneExam({
+      id: id as string
+    })
+      .unwrap()
+      .then(() => {
+        toastService.success(' updated successfully')
+        navigate(-1)
+      })
+      .catch(() => toastService.error(' errror update'))
+  }
   if (isFetching || isLoading)
     return (
       <div>
@@ -87,21 +129,6 @@ const GeIDExamsDepartmentMaking = () => {
         <Skeleton />
         <Skeleton />
         <Skeleton />
-      </div>
-    )
-  if (dataDetailsExamUser?.length == 0)
-    return (
-      <div>
-        <Result
-          status='500'
-          title='204'
-          subTitle='Không có câu nào cần chấm.'
-          extra={
-            <Button onClick={() => navigate(-1)} className='bg-primary text-white'>
-              Quay lại
-            </Button>
-          }
-        />
       </div>
     )
   console.log(dataDetail)
@@ -115,16 +142,35 @@ const GeIDExamsDepartmentMaking = () => {
           <Input.TextArea value={dataDetail?.trueAnswer} disabled />
 
           <p className='mb-7 mt-4 text-black font-medium'>Số điểm bạn chấm</p>
-          <Input className='!text-black text-md font-medium border border-[#ccc]' />
+          <Input
+            onChange={(event: any) =>
+              setDataPoint({
+                ...dataPoint,
+                point: event.target.value
+              })
+            }
+            placeholder='point'
+            className='!text-black text-md font-medium border border-[#ccc]'
+          />
           <p className='mb-7 mt-4 text-black text-md font-medium'>Lý do</p>
-          <Input.TextArea />
+          <Input.TextArea
+            placeholder='comment Admin'
+            onChange={(event: any) =>
+              setDataPoint({
+                ...dataPoint,
+                commentAdmin: event.target.value
+              })
+            }
+          />
 
           <div className='flex justify-end'>
-            <Button className='bg-success text-white w-[200px] mt-5'>Xác nhận</Button>
+            <Button onClick={handelUpdateCommentAdmin} className='bg-success text-white w-[200px] mt-5'>
+              Xác nhận
+            </Button>
           </div>
         </div>
       </Drawer>
-      <div>
+      <div className='flex justify-between items-center'>
         <Button className='w-[200px]' onClick={() => navigate(-1)}>
           Quay lại
         </Button>
@@ -132,17 +178,41 @@ const GeIDExamsDepartmentMaking = () => {
       <div className='mb-5'>
         <Divider orientation='left'>Chấm thi </Divider>
       </div>
-      <div className='mt-8'>
-        <Table dataSource={dataSource} columns={columns} pagination={false} bordered />
+      <div className='flex justify-end'>
+        <Button onClick={handelDoneExams} className='w-[200px] bg-primary text-white font-medium text-md'>
+          Hoàn thành
+        </Button>
       </div>
-      <div>
-        <Footer className='mt-5  flex justify-between dark:bg-black '>
-          <div className='text-md font-semibold text-center dark:text-white'>
-            Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved. <br />
-            design by thanhdo
+      {dataDetailsExamUser?.length == 0 ? (
+        <div>
+          <div>
+            <Result
+              status='500'
+              title='204'
+              subTitle='Không có câu nào cần chấm.'
+              extra={
+                <Button onClick={() => navigate(-1)} className='bg-primary text-white'>
+                  Quay lại
+                </Button>
+              }
+            />
           </div>
-        </Footer>
-      </div>
+        </div>
+      ) : (
+        <div>
+          <div className='mt-8'>
+            <Table dataSource={dataSource} columns={columns} pagination={false} bordered />
+          </div>
+          <div>
+            <Footer className='mt-5  flex justify-between dark:bg-black '>
+              <div className='text-md font-semibold text-center dark:text-white'>
+                Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved. <br />
+                design by thanhdo
+              </div>
+            </Footer>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

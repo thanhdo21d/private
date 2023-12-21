@@ -82,9 +82,9 @@ const DetailsResult = () => {
     image: items.imageQuestion[0],
     userChoose: items.userChoose,
     trueAnswer: items.trueAnswer,
-    questionCheck: items
+    questionCheck: items,
+    point : items.point
   }))
-  console.log(dataDetailsExamUser?.questionCheck[indexResult.indexResult], 'pl')
   const dataSourceChoose = dataDetailsExamUser?.questionCheck[indexResult.indexResult]?.choose.map(
     (items: any, index: number) => ({
       key: index,
@@ -166,6 +166,14 @@ const DetailsResult = () => {
         return <p className='flex justify-center font-bold text-success'>{text}</p>
       }
     },
+    //  {
+    //   title: <p className='flex justify-center'>Điểm</p>,
+    //   dataIndex: 'point',
+    //   key: 'point',
+    //   render: (text: string) => {
+    //     return <p className='flex justify-center font-bold text-success'>{text}</p>
+    //   }
+    // },
     {
       title: <p className='flex justify-center'>Tác vụ</p>,
       render: ({ key }: { key: string }) => {

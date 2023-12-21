@@ -162,7 +162,7 @@ const QuesionStart = () => {
       </div>
     )
 
-  console.log(answers[count], '1')
+  console.log(examsData, '1')
 
   return (
     <div className=' mx-auto px-4'>

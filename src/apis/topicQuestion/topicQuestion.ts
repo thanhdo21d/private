@@ -115,6 +115,15 @@ const topicExamsApi = createApi({
       },
       providesTags: ['topicExams']
     }),
+    getExamsTl: builder.query<any[], { id: string }>({
+      query: ({ id }: { id: string }) => {
+        return {
+          url: 'getListExams/' + id,
+          method: 'GET'
+        }
+      },
+      providesTags: ['topicExams']
+    }),
     updateStatusExamsUser: builder.mutation<any[], { id: string; status: string }>({
       query: ({ id, status }: { id: string; status: string }) => {
         return {
@@ -136,6 +145,7 @@ export const {
   useSubmitExamsQuestionMutation,
   useGetDetailListExamQuery,
   useGetAllUserStartExamsQuery,
-  useUpdateStatusExamsUserMutation
+  useUpdateStatusExamsUserMutation,
+  useGetExamsTlQuery
 } = topicExamsApi
 export default topicExamsApi

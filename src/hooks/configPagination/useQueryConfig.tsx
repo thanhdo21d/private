@@ -15,6 +15,7 @@ export interface ProductListConfig {
   startDate?: string
   category?: string
   search?: string
+  nameExams?: string
 }
 export type QueryConfig = {
   [key in keyof ProductListConfig]: string
@@ -30,12 +31,13 @@ export default function useQueryConfig() {
       endDate: queryParams.endDate,
       startDate: queryParams.startDate,
       name: queryParams.name,
-      search : queryParams.search,
+      search: queryParams.search,
       order: queryParams.order,
       price_max: queryParams.price_max,
       price_min: queryParams.price_min,
       rating_filter: queryParams.rating_filter,
-      category: queryParams.category
+      category: queryParams.category,
+      nameExams: queryParams.nameExams
     },
     isUndefined
   )

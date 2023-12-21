@@ -12,6 +12,7 @@
     "format:fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
+    "fix-memory-limit": "cross-env LIMIT=8048 increase-memory-limit",
     "build-storybook": "storybook build",
     "prepare": "husky install"
   },
@@ -49,6 +50,7 @@
     "husky": "^8.0.3",
     "i18next": "^23.5.1",
     "i18next-browser-languagedetector": "^7.1.0",
+    "increase-memory-limit": "^1.0.7",
     "js-cookie": "^3.0.5",
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",

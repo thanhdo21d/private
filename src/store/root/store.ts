@@ -24,6 +24,7 @@ import { updateStatusExamsReducer } from '../slice/errorExam'
 import AnalyticsUser from '~/apis/analytics/analyticUser'
 import AnalyticsAdmin from '~/apis/analytics/analyticsAdmin'
 import { showDetailResultsReducer } from '../slice/detailsResultExam'
+import makingExamDepartmentApi from '~/apis/making/makingExamDepartment'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -42,6 +43,7 @@ export const store = configureStore({
     [AliasApi.reducerPath]: AliasApi.reducer,
     [AnalyticsUser.reducerPath]: AnalyticsUser.reducer,
     [AnalyticsAdmin.reducerPath]: AnalyticsAdmin.reducer,
+    [makingExamDepartmentApi.reducerPath]: makingExamDepartmentApi.reducer,
     //toolkit
     theme: themeReducer,
     checkToken: authReducer,
@@ -49,7 +51,7 @@ export const store = configureStore({
     dataCategories: categoriesReducer,
     examAction: examsReducer,
     updateStatusExam: updateStatusExamsReducer,
-    showDetailsExam : showDetailResultsReducer
+    showDetailsExam: showDetailResultsReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -68,6 +70,7 @@ export const store = configureStore({
       AliasApi.middleware,
       topicExamsApi.middleware,
       AnalyticsAdmin.middleware,
+      makingExamDepartmentApi.middleware,
       AnalyticsUser.middleware,
       rtkQueryErrorLogger
     )

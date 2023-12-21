@@ -1,4 +1,5 @@
 import { Drawer, Form, Input, Popconfirm, Skeleton, Space, Table, Tooltip } from 'antd'
+import { Button as ButtonAnt } from 'antd'
 import { Footer } from 'antd/es/layout/layout'
 import React, { useState } from 'react'
 import { AiFillEdit } from 'react-icons/ai'
@@ -22,6 +23,7 @@ type FieldType = {
 }
 const ExamsQuestion = () => {
   const navigate = useNavigate()
+  const idCate = localStorage.getItem('idCategories')
   const uri = import.meta.env.VITE_API
   const { id } = useParams()
   const [open, setOpen] = useState(false)
@@ -188,57 +190,74 @@ const ExamsQuestion = () => {
     },
     {
       title: <p className='flex justify-center text-black text-md'>tác vụ</p>,
-      render: ({ key: id, isEdit }: { key: string; isEdit: string }) => {
+      render: ({ key: id, isEdit, name }: { key: string; isEdit: string; name: string }) => {
         return (
-          <div className='2xl:flex grid grid-cols-2 items-center justify-center gap-3'>
-            <Link
-              to={`${id}/details-exams`}
-              id='buttonmodal'
-              className='focus:outline-none !p-2 w-[70px] rounded-md  bg-success hover:bg-warning text-white '
-            >
-              Chi Tiết
-            </Link>
-            <Button
-              onClick={() => {
-                navigate({
-                  pathname: `${id}/details-exams/edit`
-                })
-              }}
-              styleClass='p-2 w-[80px] flex items-center focus:outline-none hover:bg-warning'
-            >
-              <span>
-                <AiFillEdit />
-              </span>
-              <span>Edit</span>
-            </Button>
-            <Popconfirm
-              title='Delete the task'
-              description='Are you sure to delete this task?'
-              okButtonProps={{
-                style: { backgroundColor: 'blue', marginRight: '20px' }
-              }}
-              onConfirm={() => confirm(id)}
-              onCancel={cancel}
-              okText='Yes'
-              cancelText='No'
-            >
-              <Button styleClass='p-2 w-[80px] flex items-center focus:outline-none hover:bg-danger'>
+          <>
+            <div className='2xl:flex grid grid-cols-2 items-center justify-center gap-3'>
+              <Link
+                to={`${id}/details-exams`}
+                id='buttonmodal'
+                className='focus:outline-none !p-2 w-[70px] rounded-md  bg-success hover:bg-warning text-white '
+              >
+                Chi Tiết
+              </Link>
+              <Button
+                onClick={() => {
+                  navigate({
+                    pathname: `${id}/details-exams/edit`
+                  })
+                }}
+                styleClass='p-2 w-[80px] flex items-center focus:outline-none hover:bg-warning'
+              >
                 <span>
-                  <DeleteIcon />
+                  <AiFillEdit />
                 </span>
-                <span>{'Delete'}</span>
+                <span>Edit</span>
               </Button>
-            </Popconfirm>
-            <div className='p-2 w-[80px] flex items-center focus:outline-none hover:scale-105'>
-              <Tooltip title='Export to Pdf'>
-                <img
-                  onClick={() => handelExportPdf(id)}
-                  className='w-[50px] h-[40px] cursor-pointer'
-                  src={`${logoPdf}`}
-                />
-              </Tooltip>
+              <Popconfirm
+                title='Delete the task'
+                description='Are you sure to delete this task?'
+                okButtonProps={{
+                  style: { backgroundColor: 'blue', marginRight: '20px' }
+                }}
+                onConfirm={() => confirm(id)}
+                onCancel={cancel}
+                okText='Yes'
+                cancelText='No'
+              >
+                <Button styleClass='p-2 w-[80px] flex items-center focus:outline-none hover:bg-danger'>
+                  <span>
+                    <DeleteIcon />
+                  </span>
+                  <span>{'Delete'}</span>
+                </Button>
+              </Popconfirm>
+              <div className='p-2 w-[80px] flex items-center focus:outline-none hover:scale-105'>
+                <Tooltip title='Export to Pdf'>
+                  <img
+                    onClick={() => handelExportPdf(id)}
+                    className='w-[50px] h-[40px] cursor-pointer'
+                    src={`${logoPdf}`}
+                  />
+                </Tooltip>
+              </div>
             </div>
-          </div>
+            <div className='p-2  w-full flex items-center focus:outline-none hover:scale-105'>
+              <ButtonAnt
+                onClick={() =>
+                  navigate({
+                    pathname: `/tree-menu/${idCate}/settings/cham-thi/${id}`,
+                    search: createSearchParams({
+                      nameExams: name
+                    }).toString()
+                  })
+                }
+                className='w-full'
+              >
+                Chấm Thi
+              </ButtonAnt>
+            </div>
+          </>
         )
       }
     },

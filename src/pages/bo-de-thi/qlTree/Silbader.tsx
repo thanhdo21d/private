@@ -492,7 +492,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
   return (
     <div
       ref={sidebar}
-      className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-[#001529] duration-300 ease-linear dark:bg-[#001529] lg:static lg:translate-x-0 ${
+      className={`absolute left-0 top-0 z-1 flex h-screen w-72.5 flex-col overflow-y-hidden bg-[#001529] duration-300 ease-linear dark:bg-[#001529] lg:static lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
@@ -552,14 +552,6 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
           <img className='w-[30px]' src={examsIcons} />
         </span>
         <span className='text-md text-bodydark1 font-medium'>Kì Thi</span>
-      </p>
-      <p
-        className={`${
-          isActiveCT ? 'bg-success ' : ''
-        }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
-        onClick={() => navigate(`/tree-menu/${idCate}/settings/cham-thi`)}
-      >
-        <span className='text-md text-bodydark1 font-medium pl-9'>Chấm thi</span>
       </p>
       <Menu theme='dark' defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={settingsAlias} />
     </div>

@@ -55,6 +55,7 @@ import CheckAdmin from './permissions/CheckAdmin'
 import TakingExam from './pages/takingExam'
 import GetAllExamsDepartment from './pages/cham-thi/GetAllExamsDepartment'
 import GetalltaskingExams from './pages/takingExam/GetalltaskingExams'
+import GeIDExamsDepartmentMaking from './pages/cham-thi/GeIDExamsDepartmentMaking'
 export const PrivateRoute = () => {
   const cookie = Cookies.get('token')
   const { profile } = useContext(AppContext)
@@ -91,7 +92,8 @@ export const routers = createBrowserRouter([
           { path: 'settings/edit', element: <EditTree /> },
           { path: 'all-folders/category/:id', element: <FormData /> },
           { path: 'settings/ki-thi', element: <ExamConfiguration /> },
-          { path: 'settings/cham-thi', element: <GetAllExamsDepartment /> },
+          { path: 'settings/cham-thi/:id', element: <GetAllExamsDepartment /> },
+          { path: 'settings/cham-thi-user/:id', element: <GeIDExamsDepartmentMaking /> },
           { path: 'settings/ki-thi/edit/:id', element: <EditExamsKt /> },
           { path: 'settings/ki-thi/bai-thi/:id', element: <ExamsQuestion /> },
           { path: 'settings/ki-thi/bai-thi/:id/:id/details-exams', element: <DetailsExamsQuestion /> },

@@ -14,7 +14,7 @@ import turnLeft from '../../../../assets/turn-left.png'
 import turnright from '../../../../assets/turn-right.png'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { Checkbox, Divider, Form, Image, Skeleton } from 'antd'
+import { Checkbox, Divider, Form, Image, Input, Skeleton } from 'antd'
 import { container, formats } from '~/utils/quill'
 import Spreadsheet from 'react-spreadsheet'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
@@ -26,6 +26,7 @@ import { decrementCount, incrementCount, setExamsData, updateSubmitData } from '
 import axios from 'axios'
 import PopError from './PopError'
 import Popconfirm from './Popconfirm'
+import TextArea from 'antd/es/input/TextArea'
 const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<any[]>([])
@@ -34,9 +35,7 @@ const QuesionStart = () => {
   const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
   //
   const [SubmitData, setSubmitData] = useState<any[]>([])
-  console.log(SubmitData)
   function updateChoose(counts: number, chooses: string) {
-    console.log(counts, chooses)
     let newData = SubmitData
     if (SubmitData[counts] == undefined) newData = { ...SubmitData, ...{ [counts]: [chooses] } }
     else if (!SubmitData[counts].includes(chooses)) {
@@ -48,8 +47,8 @@ const QuesionStart = () => {
     }
     setSubmitData(newData)
   }
+  const [answers, setAnswers] = useState<any>({})
   const { profile } = useContext(AppContext)
-  console.log(profile?.email)
   const { id } = useParams()
   const navigate = useNavigate()
   const [height, setHeight] = useState<any>(null)
@@ -75,7 +74,6 @@ const QuesionStart = () => {
       dispatch(setExamsData(dataIdExmasDetails?.questions[countAction]))
     }
   }, [dispatch, idSession, dataIdExmasDetails?.questions, dataIdExmasDetails, countAction])
-  console.log(examsData)
   useEffect(() => {
     setHeight((confetiRef.current = '2000px'))
     setWidth((confetiRef.current = '1200px'))
@@ -89,7 +87,7 @@ const QuesionStart = () => {
         id: idSession as string,
         data: checkDataSubmit,
         mailUser: profile?.email as string,
-        nameExams : ""
+        nameExams: ''
       })
         .unwrap()
         .then((data) => {
@@ -136,6 +134,22 @@ const QuesionStart = () => {
   const onFinish = (values: any) => {
     console.log(editorContent)
   }
+  const handleEditorChange = (event) => {
+    const newContent = event.target.value
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [countAction]: newContent
+    }))
+  }
+  console.log(answers)
+  useEffect(() => {
+    if (examsData?.choose?.every((data) => data.img === '' && data.q === '')) {
+      setEditorContent(answers[countAction] || '')
+    }
+  }, [countAction, answers, examsData])
+  useEffect(() => {
+    setEditorContent(answers[countAction] || '')
+  }, [countAction, answers])
   if (isLoadingDetails || isFetchingDetails)
     return (
       <div>
@@ -148,7 +162,8 @@ const QuesionStart = () => {
       </div>
     )
 
-  console.log(dataIdExmasDetails, '1')
+  console.log(answers[count], '1')
+
   return (
     <div className=' mx-auto px-4'>
       <div>{dataIdExmasDetails?.statusError === '1' && <PopError />}</div>
@@ -206,37 +221,30 @@ const QuesionStart = () => {
                   {examsData?.choose?.every((data: any) => data.img === '' && data.q === '') ? (
                     <div className='mt-15'>
                       <p className='text-xl font-bold text-black mb-2'>Vui Lòng Nhập câu trả lời!</p>
-                      <Form
-                        name='basic'
-                        autoComplete='off'
-                        layout='vertical'
-                        className='dark:text-white'
-                        onFinish={onFinish}
-                      >
-                        <Form.Item
-                          className='dark:text-white mb-17'
-                          name='description'
-                          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+                      {examsData && (
+                        <Form
+                          name='basic'
+                          autoComplete='off'
+                          layout='vertical'
+                          className='dark:text-white'
+                          onFinish={onFinish}
                         >
-                          <ReactQuill
-                            className='h-[300px]  scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'
-                            ref={reactQuillRef}
-                            onChange={(content, delta, source, editor) => setEditorContent(editor.getText().trim())}
-                            theme='snow'
-                            placeholder='Vui Lòng Nhập câu trả lời!...........'
-                            modules={{
-                              toolbar: {
-                                container: container
-                              },
-                              clipboard: {
-                                matchVisual: false
-                              }
-                            }}
-                            formats={formats}
-                          />
-                        </Form.Item>
-                        <Button type='submit'> xác nhận </Button>
-                      </Form>
+                          <Form.Item
+                            key={`form-item-${countAction}`}
+                            className='dark:text-white mb-17'
+                            name='description'
+                            rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+                          >
+                            <TextArea
+                              className='h-[300px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'
+                              value={answers[countAction]}
+                              onChange={handleEditorChange}
+                              placeholder='Vui Lòng Nhập câu trả lời!...........'
+                            />
+                          </Form.Item>
+                          <Button type='submit'> xác nhận </Button>
+                        </Form>
+                      )}
                     </div>
                   ) : (
                     examsData?.choose?.map((data: any, index: number) => (

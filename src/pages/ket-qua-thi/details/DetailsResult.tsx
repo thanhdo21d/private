@@ -76,15 +76,18 @@ const DetailsResult = () => {
       children: <p>{dataDetailsExamUser?.createdAt.split('T')[0]} </p>
     }
   ]
-  const dataSource = dataDetailsExamUser?.questionCheck.map((items: any, index: number) => ({
-    key: index,
-    name: items.questionName,
-    image: items.imageQuestion[0],
-    userChoose: items.userChoose,
-    trueAnswer: items.trueAnswer,
-    questionCheck: items,
-    point : items.point
-  }))
+  const dataSource = dataDetailsExamUser?.questionCheck.map((items: any, index: number) => {
+    console.log(items, 'question')
+    return {
+      key: index,
+      name: items.questionName,
+      image: items.imageQuestion[0],
+      userChoose: items.userChoose,
+      trueAnswer: items.trueAnswer,
+      questionCheck: items,
+      point: items.point
+    }
+  })
   const dataSourceChoose = dataDetailsExamUser?.questionCheck[indexResult.indexResult]?.choose.map(
     (items: any, index: number) => ({
       key: index,
@@ -96,7 +99,7 @@ const DetailsResult = () => {
   console.log(checkTrueFalse)
   const columnsChoose = [
     {
-      title: 'câu hỏi',
+      title: 'Đáp án',
       dataIndex: 'q',
       key: 'q'
     },
@@ -116,8 +119,9 @@ const DetailsResult = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text: string) => {
+        console.log(text, 'name')
         const maxLength = 70
-        if (text.length <= maxLength) {
+        if (text?.length <= maxLength) {
           return <p className=''>{text}</p>
         }
         const chunks = []
@@ -166,14 +170,7 @@ const DetailsResult = () => {
         return <p className='flex justify-center font-bold text-success'>{text}</p>
       }
     },
-    //  {
-    //   title: <p className='flex justify-center'>Điểm</p>,
-    //   dataIndex: 'point',
-    //   key: 'point',
-    //   render: (text: string) => {
-    //     return <p className='flex justify-center font-bold text-success'>{text}</p>
-    //   }
-    // },
+
     {
       title: <p className='flex justify-center'>Tác vụ</p>,
       render: ({ key }: { key: string }) => {
@@ -211,8 +208,17 @@ const DetailsResult = () => {
           <div className='w-full'>
             <h3 className='text-black text-md font-medium'>Bình Luận từ Admin</h3>
             <textarea
-              className='border mt-5 mb-5 border-[#ccc] w-full pl-5 pt-1'
+              className='border mt-5 mb-5 border-[#ccc] w-full pl-5 pt-1 cursor-no-drop'
+              disabled={true}
               value={dataDetailsExamUser?.questionCheck[indexResult.indexResult]?.commentAdmin || ''}
+            ></textarea>
+          </div>
+          <div className='w-full'>
+            <h3 className='text-black text-md font-medium'>Điểm từ Admin</h3>
+            <textarea
+              disabled={true}
+              className='border mt-5 mb-5 border-[#ccc] w-full pl-5 pt-1 cursor-no-drop'
+              value={dataDetailsExamUser?.questionCheck[indexResult.indexResult]?.pointAdmin || ''}
             ></textarea>
           </div>
           <Table bordered dataSource={dataSourceChoose} columns={columnsChoose} pagination={false} />

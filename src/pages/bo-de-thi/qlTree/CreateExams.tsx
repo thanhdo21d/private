@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import closeIcons from '../../../assets/close.png'
 import addIcons from '../../../assets/plus.png'
 import detailsIcons from '../../../assets/file.png'
+import cancel from '../../../assets/close.png'
 import excelExport from '../../../assets/images/logo/excel2-svgrepo-com.svg'
 import { Button } from '~/components'
-import { Col, DatePicker, Divider, Drawer, Empty, Input, InputNumber, Row, Space, Table } from 'antd'
+import { DatePicker, Divider, Drawer, Empty, Input, InputNumber, Space, Table } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -17,11 +18,17 @@ import { useGetHistoryCategoriesQuery } from '~/apis/question/ExamsEasy'
 import TableChildrend from './Chiltable'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import { useCreateTopicExamsApiMutation } from '~/apis/examSetting/examSetting'
+import { motion } from 'framer-motion'
+import fadeIn from '~/utils/animation/variant'
+import { useCreateTopicExamsApiMutation, useQueryPathFolderMutation } from '~/apis/examSetting/examSetting'
 
 const CreateExams = () => {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+  const [getPath, setGetPath] = useState({
+    check: false,
+    path: ''
+  })
   const { categoriesData } = useAppSelector((state) => state.dataCategories)
   const { id } = useParams()
   const [dataExams, setDataExams] = useState({
@@ -33,6 +40,7 @@ const CreateExams = () => {
   })
   const url = import.meta.env.VITE_API
   const [addQuestion, setAddQuestion] = useState(false)
+  const [getPathData] = useQueryPathFolderMutation()
   const [dataFromChild, setDataFromChild] = useState([])
   const [queryParameters] = useSearchParams()
   const dispatch = useAppDispatch()
@@ -86,6 +94,23 @@ const CreateExams = () => {
   }
   const onChange = (value: number | null) => {
     console.log('changed', value)
+  }
+  const handelGetpath = (id: string) => {
+    console.log('handelGetpath', id)
+    getPathData({
+      id: id
+    })
+      .then((data: any) => {
+        console.log('handelGetpath', data)
+        const path = data.data.join(' / ')
+        setGetPath({
+          check: true,
+          path: path
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
   const onDateChange: RangePickerProps['onChange'] = (_, dateString) => {
     setDataExams({
@@ -152,18 +177,6 @@ const CreateExams = () => {
       })
       .catch(() => toastService.error('error'))
   }
-  // useEffect(() => {
-  //   if (idHistory) {
-  //     dispatch(
-  //       setDataCategoires({
-  //         id: dataHistoryExams?.categoriesInfo?.map((items) => items.categoryId),
-  //         name: dataHistoryExams?.categoriesInfo?.map((items) => items.categoryName),
-  //         checked: true,
-  //         questionSets: dataHistoryExams?.categoriesInfo?.map((items) => items.questionSets)
-  //       })
-  //     )
-  //   }
-  // }, [idHistory, dataHistoryExams?.categoriesInfo, dispatch])
   const orderProducts = categoriesData?.map((item: any, index: number) => ({
     key: item.id,
     id: item.id,
@@ -175,22 +188,33 @@ const CreateExams = () => {
     {
       title: '#',
       dataIndex: 'index',
-      key: 'index'
+      key: 'index',
+      width: 70
     },
     {
-      title: 'name',
-      dataIndex: 'productName',
-      key: 'productName'
+      title: <p className='flex justify-center'>Tên thư mục</p>,
+      render: ({ id, productName }: { id: string; productName: string }) => {
+        console.log(productName, id, 'cc')
+        return <p>{productName}</p>
+      }
     },
     {
       title: 'tác vụ',
+      width: 120,
       render: (item: any) => {
+        console.log(item, 'ehe')
         return (
-          <div className='mx-2'>
+          <div className='flex justify-between gap-3'>
             <img
               onClick={() => dispatch(removeSelectedCategory(item))}
               className='w-[30px] hover:scale-110 cursor-pointer'
               src={closeIcons}
+              alt='close'
+            />
+            <img
+              onClick={() => handelGetpath(item.id)}
+              className='w-[30px] hover:scale-110 cursor-pointer'
+              src={detailsIcons}
               alt='close'
             />
           </div>
@@ -388,6 +412,44 @@ const CreateExams = () => {
         <div>loading .....</div>
       ) : (
         <>
+          {getPath.check && (
+            //setGetPath
+            <div className='relative -top-10'>
+              <div className='flex justify-center'>
+                <div className='rounded-md absolute z-99999 border w-2/3 border-stroke shadow-2xl bg-white h-fit   dark:border-strokedark dark:bg-boxdark'>
+                  <div className='border-b py-3 border-[#ccc] flex justify-between'>
+                    <h3 className='pl-4 text-black'>Thông tin đường dẫn folder</h3>
+                    <img
+                      onClick={() =>
+                        setGetPath({
+                          check: false,
+                          path: ''
+                        })
+                      }
+                      className='w-[25px] mr-5 hover:scale-110 cursor-pointer'
+                      src={cancel}
+                    />
+                  </div>
+                  <div className='flex items-end justify-between mt-4'>
+                    <div className='flex items-end justify-between mt-4 pl-3'>{getPath.path}</div>
+                  </div>
+                  <div className='flex items-center justify-end mt-4 gap-5 pr-5 border-t border-[#ccc] mb-2'>
+                    <Button
+                      onClick={() =>
+                        setGetPath({
+                          check: false,
+                          path: ''
+                        })
+                      }
+                      styleClass='!px-0 py-1 w-[100px] bg-[#ec971f] border border[#d58512] rounded-sm mt-5'
+                    >
+                      Đóng
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {addQuestion && (
             <div className='flex justify-between w-full mt-15 gap-10'>
               <div className='w-1/2 border border-[#24A19C] rounded-md min-h-screen relative shadow-lg'>

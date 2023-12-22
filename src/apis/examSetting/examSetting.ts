@@ -198,6 +198,15 @@ const ExamSetting = createApi({
         }
       },
       providesTags: ['ExamSetting']
+    }),
+    queryPathFolder: builder.mutation<any, any>({
+      query: ({ id }: { id: string }) => {
+        return {
+          url: `/query-path-folder/${id}`,
+          method: 'POST'
+        }
+      },
+      invalidatesTags: ['ExamSetting']
     })
   })
 })
@@ -211,6 +220,7 @@ export const {
   useGetTopicExamsIDQuery,
   useEditTopicExamIdMutation,
   useCreateTopicExamsApiMutation,
-  useGetAllExamsQuery
+  useGetAllExamsQuery,
+  useQueryPathFolderMutation
 } = ExamSetting
 export default ExamSetting

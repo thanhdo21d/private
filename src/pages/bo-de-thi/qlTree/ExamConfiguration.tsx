@@ -1,4 +1,17 @@
-import { Breadcrumb, Col, Drawer, Form, Input, Popconfirm, Row, Skeleton, Space, Table } from 'antd'
+import {
+  Breadcrumb,
+  Col,
+  Drawer,
+  Form,
+  Input,
+  Popconfirm,
+  Radio,
+  Row,
+  Skeleton,
+  Space,
+  Table,
+  Button as ButtonAnt
+} from 'antd'
 import { SizeType } from 'antd/es/config-provider/SizeContext'
 import React, { useEffect, useState } from 'react'
 import { Button } from '~/components'
@@ -87,6 +100,7 @@ const ExamConfiguration = () => {
     })
       .unwrap()
       .then(() => toastService.success('Successfully removed'))
+      .catch(() => toastService.error('error remove'))
   }
   const dataSource = dataExamsCategories?.examsKT?.examsKT?.map((items: any, index: any) => ({
     key: items._id,
@@ -96,7 +110,7 @@ const ExamConfiguration = () => {
     start: items.startDate,
     end: items.endDate
   }))
-  const columns = [
+  const columns: any = [
     {
       title: 'STT',
       dataIndex: 'index',
@@ -108,9 +122,54 @@ const ExamConfiguration = () => {
       key: 'name'
     },
     {
-      title: 'Trạng Thái',
+      title: (
+        <div>
+          <span>Trạng Thái</span>
+        </div>
+      ),
+      filters: [
+        {
+          text: 'Hoạt động',
+          value: 'active'
+        },
+        {
+          text: 'Hết hạn',
+          value: 'inactive'
+        }
+      ],
+      defaultFilteredValue: ['active'],
+      onFilter: (value: string, record: any) => {
+        return record.status.indexOf(value) === 0
+      },
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+        <div style={{ padding: 8 }}>
+          <Radio.Group
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            value={selectedKeys[0]}
+          >
+            <Radio value='active'>Hoạt động</Radio>
+            <Radio value='inactive'>Hết hạn</Radio>
+          </Radio.Group>
+          <div className='flex justify-between mt-3'>
+            <ButtonAnt onClick={() => clearFilters()}>Làm mới</ButtonAnt>
+            <ButtonAnt onClick={() => confirm()}>Đồng ý</ButtonAnt>
+          </div>
+        </div>
+      ),
+      sortDirections: ['descend'],
       dataIndex: 'status',
-      key: 'status'
+      key: 'status',
+      render: (data: string) => {
+        return (
+          <p
+            className={`${
+              data === 'active' ? 'text-success font-semibold text-md' : 'text-danger font-semibold text-md'
+            }`}
+          >
+            {data === 'active' ? 'Hoạt động' : 'Hết hạn'}
+          </p>
+        )
+      }
     },
     {
       title: 'ngày bắt đầu',

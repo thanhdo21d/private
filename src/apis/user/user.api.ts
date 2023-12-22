@@ -61,10 +61,28 @@ const UserApi = createApi({
       },
       invalidatesTags: ['Users']
     }),
-    getExamUser: builder.query<any, string>({
-      query: (id: string) => ({
+    getExamUser: builder.query<any, { id: string; limit: string; page: string; search: string; isCheck: string }>({
+      query: ({
+        id,
+        limit,
+        page,
+        search,
+        isCheck
+      }: {
+        id: string
+        limit: string
+        page: string
+        search: string
+        isCheck: string
+      }) => ({
         url: `/get-exam-user/${id}`,
-        method: 'GET'
+        method: 'GET',
+        params: {
+          limit: limit,
+          page: page,
+          search: search || '',
+          isCheck: isCheck || '0'
+        }
       }),
       providesTags: ['Users']
     })

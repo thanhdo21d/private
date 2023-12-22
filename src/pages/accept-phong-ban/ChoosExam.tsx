@@ -168,104 +168,106 @@ const ChoosExam = () => {
             </div>
           ) : (
             <>
-              {dataIdExmas?.data?.topicExams.map((data: any) => {
-                console.log(data, 'ok')
-                return (
-                  <div
-                    key={data?._id}
-                    className='rounded bg-white bg-opacity-30  m-5 shadow-xl hover:bg-success flex flex-col text-gray-200 '
-                  >
-                    <p className='font-semibold bg-graydark rounded-t px-4 py-2'>{data?.name}</p>
-                    <div className='grid grid-cols-12 bg-body cursor-pointer px-4 gap-y-3 pt-10'>
-                      <div>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          className='h-5 w-5'
-                          fill='none'
-                          viewBox='0 0 24 24'
-                          stroke='currentColor'
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
-                        </svg>
-                      </div>
-                      <div className='col-span-11 text-sm flex items-center font-semibold pl-2'>
-                        Thời Gian Làm Bài {data?.time} <span className='text-md font-medium'> (phút)</span>
-                      </div>
-                      <div className='col-span-12 h-[1px] bg-white bg-opacity-20' />
-                      <div>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          className='h-5 w-5'
-                          fill='none'
-                          viewBox='0 0 24 24'
-                          stroke='currentColor'
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap='round' strokeLinejoin='round' d='M10 19l-7-7m0 0l7-7m-7 7h18' />
-                        </svg>
-                      </div>
-                      <div className='col-span-11 text-sm flex items-center font-light pl-2'>
-                        Hình Thức Thi : Tự Luận Trắc Nghiệm
-                      </div>
-                      <div>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          className='h-5 w-5'
-                          fill='none'
-                          viewBox='0 0 24 24'
-                          stroke='currentColor'
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
-                        </svg>
-                      </div>
-                      <div className='col-span-11 text-sm flex items-center font-light pl-2'>
-                        Tên Account : {profile?.code}
-                      </div>
-                      <div>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          className='h-5 w-5'
-                          fill='none'
-                          viewBox='0 0 24 24'
-                          stroke='currentColor'
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
-                        </svg>
-                      </div>
-                      <div className='col-span-11 text-sm flex items-center font-light pl-2'>
-                        Lưu ý : Không tự ý thoát khi làm bài
-                      </div>
-                      <div className='col-span-12 mt-20 mb-5 text-gray-100'>
-                        <button
-                          className='rounded hover:bg-success bg-teal-500 w-full py-3'
-                          onClick={() => {
-                            setCheckSecret(true)
-                            return navigate({
-                              search: createSearchParams({
-                                idExams: data._id
-                              }).toString()
-                            })
-                          }}
-                        >
-                          Bắt Đầu Thi
-                        </button>
-                        <button
-                          className='rounded hover:bg-warning bg-teal-500 w-full py-3 mt-5 flex items-center gap-3 justify-around'
-                          onClick={() => navigate('/')}
-                        >
-                          <span>Quay Lại</span>
-                          <span>
-                            <IoMdReturnLeft className='text-white font-bold text-2xl' />
-                          </span>
-                        </button>
+              {dataIdExmas?.data?.topicExams
+                ?.filter((items: any) => items.status == 'active')
+                .map((data: any) => {
+                  console.log(data, 'ok')
+                  return (
+                    <div
+                      key={data?._id}
+                      className='rounded bg-white bg-opacity-30  m-5 shadow-xl hover:bg-success flex flex-col text-gray-200 '
+                    >
+                      <p className='font-semibold bg-graydark rounded-t px-4 py-2'>{data?.name}</p>
+                      <div className='grid grid-cols-12 bg-body cursor-pointer px-4 gap-y-3 pt-10'>
+                        <div>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            className='h-5 w-5'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            stroke='currentColor'
+                            strokeWidth={2}
+                          >
+                            <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
+                          </svg>
+                        </div>
+                        <div className='col-span-11 text-sm flex items-center font-semibold pl-2'>
+                          Thời Gian Làm Bài {data?.time} <span className='text-md font-medium'> (phút)</span>
+                        </div>
+                        <div className='col-span-12 h-[1px] bg-white bg-opacity-20' />
+                        <div>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            className='h-5 w-5'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            stroke='currentColor'
+                            strokeWidth={2}
+                          >
+                            <path strokeLinecap='round' strokeLinejoin='round' d='M10 19l-7-7m0 0l7-7m-7 7h18' />
+                          </svg>
+                        </div>
+                        <div className='col-span-11 text-sm flex items-center font-light pl-2'>
+                          Hình Thức Thi : Tự Luận Trắc Nghiệm
+                        </div>
+                        <div>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            className='h-5 w-5'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            stroke='currentColor'
+                            strokeWidth={2}
+                          >
+                            <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
+                          </svg>
+                        </div>
+                        <div className='col-span-11 text-sm flex items-center font-light pl-2'>
+                          Tên Account : {profile?.code}
+                        </div>
+                        <div>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            className='h-5 w-5'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            stroke='currentColor'
+                            strokeWidth={2}
+                          >
+                            <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
+                          </svg>
+                        </div>
+                        <div className='col-span-11 text-sm flex items-center font-light pl-2'>
+                          Lưu ý : Không tự ý thoát khi làm bài
+                        </div>
+                        <div className='col-span-12 mt-20 mb-5 text-gray-100'>
+                          <button
+                            className='rounded hover:bg-success bg-teal-500 w-full py-3'
+                            onClick={() => {
+                              setCheckSecret(true)
+                              return navigate({
+                                search: createSearchParams({
+                                  idExams: data._id
+                                }).toString()
+                              })
+                            }}
+                          >
+                            Bắt Đầu Thi
+                          </button>
+                          <button
+                            className='rounded hover:bg-warning bg-teal-500 w-full py-3 mt-5 flex items-center gap-3 justify-around'
+                            onClick={() => navigate('/')}
+                          >
+                            <span>Quay Lại</span>
+                            <span>
+                              <IoMdReturnLeft className='text-white font-bold text-2xl' />
+                            </span>
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
             </>
           )}
         </div>

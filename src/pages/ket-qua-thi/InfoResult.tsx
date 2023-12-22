@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from 'react'
-import { Button, Input, Skeleton, Table, Tooltip } from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
+import { Button, Form, Input, Skeleton, Table, Tooltip } from 'antd'
+import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Footer } from 'antd/es/layout/layout'
 import { useGetExamUserQuery } from '~/apis/user/user.api'
 import { AppContext } from '~/contexts/app.contexts'
@@ -14,19 +14,30 @@ const InfoResult: React.FC = () => {
   const { profile } = useContext(AppContext)
   const queryConfig = useQueryConfig()
   const navigate = useNavigate()
+  const [queryParameters] = useSearchParams()
+  const dataisCheckQuery: string | null = queryParameters.get('isCheck')
+  const pageQuery: string | null = queryParameters.get('page')
+  const dataNameQuery: string | null = queryParameters.get('nameExams')
   const {
     data: dataExamUser,
     isFetching: isExamUSerFetching,
     isLoading: isExamuserLoading
-  } = useGetExamUserQuery(profile?._id as string)
-
-  const data = dataExamUser?.exams.map((items: any) => ({
+  } = useGetExamUserQuery({
+    id: profile?._id as string,
+    limit: '10',
+    page: (pageQuery as string) || '1',
+    search: dataNameQuery || '',
+    isCheck: dataisCheckQuery || '0'
+  })
+  console.log(dataExamUser)
+  const data = dataExamUser?.data?.exams.map((items: any) => ({
     key: items._id,
     name: items.nameExams,
     score: items.score,
     correct_answer: items.correct_answer,
     fail_answer: items.fail_answer,
-    time: items.createdAt
+    time: items.createdAt,
+    isCheck: items.isCheck
   }))
 
   const columns = [
@@ -60,6 +71,18 @@ const InfoResult: React.FC = () => {
       render: (text: string) => <a className='text-md font-bold flex justify-center'>{text.split('T')[0]}</a>
     },
     {
+      title: <p className='flex justify-center'>Trạng thái</p>,
+      dataIndex: 'isCheck',
+      key: 'isCheck',
+      render: (text: string) => {
+        return (
+          <p className={`flex justify-center font-bold ${text == '0' ? 'text-danger' : 'text-success '}`}>
+            {text == '0' ? 'Chưa Chấm' : 'Đã chấm'}
+          </p>
+        )
+      }
+    },
+    {
       title: <p className='flex mx-auto justify-center'>Hành Động</p>,
       render: ({ key: id }: { key: number | string }) => (
         <div className='flex mx-auto justify-center'>
@@ -74,8 +97,21 @@ const InfoResult: React.FC = () => {
       )
     }
   ]
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString)
+  const onFinish = ({ username }: { username: string }) => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        nameExams: username
+      }).toString()
+    })
+  }
+  const onFinishFailed = (errorInfo: any) => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        nameExams: ''
+      }).toString()
+    })
   }
   if (isExamUSerFetching || isExamuserLoading)
     return (
@@ -88,24 +124,62 @@ const InfoResult: React.FC = () => {
     )
   return (
     <div>
-      <div className='flex justify-between items-end'>
+      <div className='flex justify-between '>
         <div className='mt-10 flex gap-5'>
-          <Input
-            className='h-[40px] w-[330px] 2xl:w-[600px] rounded-md border border-[#ccc]'
-            placeholder='Nhập từ khóa tìm kiếm ....'
-          />
-          <Button className='w-[150px] h-[40px] bg-graydark text-white text-md font-medium'>Tìm Kiếm</Button>
+          <Form
+            name='basic'
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            style={{ display: 'flex', alignItems: 'center', gap: 4 }}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete='off'
+          >
+            <Form.Item name='username' rules={[{ required: true, message: 'Please input your name!' }]}>
+              <Input
+                className='h-[40px] w-[330px] 2xl:w-[600px] rounded-md border border-[#ccc]'
+                placeholder='Nhập từ khóa tìm kiếm ....'
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button htmlType='submit' className='w-[150px] h-[40px] bg-graydark text-white text-md font-medium'>
+                Tìm Kiếm
+              </Button>
+            </Form.Item>
+          </Form>
         </div>
-        <div className='flex items-center gap-8 '>
-          <span className='text-black underline font-medium'>Chọn Ngày</span>
-          <DatePicker onChange={onChange} />
+        <div className='flex justify-between items-center'>
+          <div className=' w-[250px] px-3 mb-6 md:mb-0'>
+            <label className='block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2' htmlFor='grid-state'>
+              Trạng Thái
+            </label>
+            <div className='relative'>
+              <select
+                className='block appearance-none w-full bg-white-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
+                id='grid-state'
+                onChange={(event) => {
+                  const selectedValue = event.target.value
+                  navigate({
+                    search: createSearchParams({
+                      ...queryConfig,
+                      isCheck: selectedValue
+                    }).toString()
+                  })
+                }}
+              >
+                <option value='0'>Chưa chấm</option>
+                <option value='1'>Đã chấm</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
       <hr className='mt-5' />
       <div className='mt-2'>
         <Table columns={columns} dataSource={data} pagination={false} />
         <div>
-          <Pagination pageSize={4} queryConfig={queryConfig} />
+          <Pagination pageSize={dataExamUser.totalPages} queryConfig={queryConfig} />
         </div>
       </div>
       <Footer className='mt-5 flex justify-between dark:bg-black rounded-md'>

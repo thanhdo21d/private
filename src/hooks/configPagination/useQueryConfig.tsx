@@ -10,6 +10,7 @@ export interface ProductListConfig {
   rating_filter?: number | string
   price_max?: number | string
   price_min?: number | string
+  isCheck?: string | number
   name?: string
   endDate?: string
   startDate?: string
@@ -37,6 +38,7 @@ export default function useQueryConfig() {
       price_min: queryParams.price_min,
       rating_filter: queryParams.rating_filter,
       category: queryParams.category,
+      isCheck: queryParams.isCheck,
       nameExams: queryParams.nameExams
     },
     isUndefined

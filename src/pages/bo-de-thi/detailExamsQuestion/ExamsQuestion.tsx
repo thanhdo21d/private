@@ -1,4 +1,4 @@
-import { Drawer, Form, Input, Popconfirm, Skeleton, Space, Table, Tooltip } from 'antd'
+import { Drawer, Form, Input, Popconfirm, Radio, Skeleton, Space, Table, Tooltip } from 'antd'
 import { Button as ButtonAnt } from 'antd'
 import { Footer } from 'antd/es/layout/layout'
 import React, { useState } from 'react'
@@ -44,7 +44,6 @@ const ExamsQuestion = () => {
     search: search || ''
   })
   const queryConfig = useQueryConfig()
-  const [addTopicQuestion] = useCreateTopicExamsMutation()
   const [removeTopic, { isLoading: isRemoveTopicLoading }] = useRemoveTopicExamsMutation()
   const confirm = (idExams: string) => {
     removeTopic({
@@ -127,7 +126,7 @@ const ExamsQuestion = () => {
       key: 'STT'
     },
     {
-      title: 'name',
+      title: 'Tên bài thi',
       dataIndex: 'name',
       key: 'name'
     },
@@ -148,44 +147,80 @@ const ExamsQuestion = () => {
     }
   ]
 
-  const columns = [
+  const columns: any = [
     {
       title: 'STT',
       dataIndex: 'STT',
       key: 'STT'
     },
     {
-      title: 'name',
+      title: 'Tên bài thi',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      width: 200
     },
     {
-      title: 'status',
+      title: <span>Trạng Thái</span>,
+      filters: [
+        {
+          text: 'Hoạt động',
+          value: 'active'
+        },
+        {
+          text: 'Hết hạn',
+          value: 'inactive'
+        }
+      ],
+      defaultFilteredValue: ['active'],
+      onFilter: (value: string, record: any) => {
+        return record.status.indexOf(value) === 0
+      },
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+        <div style={{ padding: 8 }}>
+          <Radio.Group
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            value={selectedKeys[0]}
+          >
+            <Radio value='active'>Hoạt động</Radio>
+            <Radio value='inactive'>Hết hạn</Radio>
+          </Radio.Group>
+          <div className='flex justify-between mt-3'>
+            <ButtonAnt onClick={() => clearFilters()}>Làm mới</ButtonAnt>
+            <ButtonAnt onClick={() => confirm()}>Đồng ý</ButtonAnt>
+          </div>
+        </div>
+      ),
+      sortDirections: ['descend'],
       dataIndex: 'status',
-      key: 'status'
+      key: 'status',
+      render: (data: string) => {
+        return (
+          <p
+            className={`${
+              data === 'active'
+                ? 'text-success font-semibold text-md flex justify-center'
+                : 'text-danger font-semibold text-md flex justify-center'
+            }`}
+          >
+            {data === 'active' ? 'Hoạt động' : 'Hết hạn'}
+          </p>
+        )
+      }
     },
     {
-      title: 'start date',
+      title: 'Ngày bắt đầu',
       dataIndex: 'startDate',
       key: 'startDate',
       render: (items: string) => {
-        return <p>{items.split('T')[0]}</p>
+        return <p className='flex justify-center'>{items.split('T')[0]}</p>
       }
     },
     {
-      title: 'end date',
+      title: 'Ngày kết thúc',
       dataIndex: 'endDate',
       key: 'endDate',
       render: (items: string) => {
-        return <p>{items.split('T')[0]}</p>
-      }
-    },
-    {
-      title: 'updatedAt',
-      dataIndex: 'updatedAt',
-      key: 'updatedAt',
-      render: (items: string) => {
-        return <p>{items.split('T')[0]}</p>
+        return <p className='flex justify-center'> {items.split('T')[0]}</p>
       }
     },
     {
@@ -242,30 +277,32 @@ const ExamsQuestion = () => {
                 </Tooltip>
               </div>
             </div>
-            <div className='p-2  w-full flex items-center focus:outline-none hover:scale-105'>
-              <ButtonAnt
-                onClick={() =>
-                  navigate({
-                    pathname: `/tree-menu/${idCate}/settings/cham-thi/${id}`,
-                    search: createSearchParams({
-                      nameExams: name
-                    }).toString()
-                  })
-                }
-                className='w-full'
-              >
-                Chấm Thi
-              </ButtonAnt>
-            </div>
+            {isEdit == '0' && (
+              <div className='p-2  w-full flex items-center focus:outline-none hover:scale-105'>
+                <ButtonAnt
+                  onClick={() =>
+                    navigate({
+                      pathname: `/tree-menu/${idCate}/settings/cham-thi/${id}`,
+                      search: createSearchParams({
+                        nameExams: name
+                      }).toString()
+                    })
+                  }
+                  className='w-full'
+                >
+                  Chấm Thi
+                </ButtonAnt>
+              </div>
+            )}
           </>
         )
       }
     },
     {
-      title: 'trạng thái',
+      title: <p className='flex justify-center'>trạng thái</p>,
       render: ({ key: id, isEdit }: { key: string; isEdit: string }) => {
         return (
-          <p>
+          <p className='flex justify-center'>
             {isEdit && isEdit != '0' ? (
               <div className='p-2  flex items-center focus:outline-none hover:scale-105'>
                 <Tooltip title='tiếp tục với đề đang tạo trước đó'>
@@ -318,7 +355,7 @@ const ExamsQuestion = () => {
           </Space>
         }
       >
-        <Table dataSource={dataSourceHistory} columns={columnsHistory} pagination={false} />
+        <Table dataSource={dataSourceHistory} columns={columnsHistory} pagination={false} bordered />
       </Drawer>
       <button
         type='submit'
@@ -385,7 +422,7 @@ const ExamsQuestion = () => {
         </div>
       ) : (
         <div className='mt-5'>
-          <Table dataSource={dataSource} columns={columns} pagination={false} />
+          <Table dataSource={dataSource} columns={columns} pagination={false} bordered />
         </div>
       )}
 

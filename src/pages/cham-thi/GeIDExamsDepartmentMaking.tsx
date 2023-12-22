@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   useDoneExamsTlMutation,
-  useDoneExamsTlQuery,
   useGetExamsTlQuery,
   useUpdateCommentAdminExamsUserMutation
 } from '~/apis/topicQuestion/topicQuestion'
@@ -136,11 +135,12 @@ const GeIDExamsDepartmentMaking = () => {
     <div>
       <Drawer title='Chi tiết' placement='top' onClose={onClose} open={open} size='large' destroyOnClose>
         <div>
+          <p className='mb-7 text-black font-medium'>Đáp án nhân viên chọn</p>
+          <Input.TextArea className='!text-black text-md font-medium' value={dataDetail?.userChoose} disabled />
           <p className='mb-7 text-black font-medium'>Điểm chuẩn</p>
           <Input className='!text-black text-md font-medium' value={dataDetail?.point} disabled />
           <p className='mb-7 mt-4 text-black text-md font-medium'>Đáp án đúng</p>
           <Input.TextArea value={dataDetail?.trueAnswer} disabled />
-
           <p className='mb-7 mt-4 text-black font-medium'>Số điểm bạn chấm</p>
           <Input
             onChange={(event: any) =>

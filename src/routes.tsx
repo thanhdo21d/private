@@ -56,6 +56,7 @@ import TakingExam from './pages/takingExam'
 import GetAllExamsDepartment from './pages/cham-thi/GetAllExamsDepartment'
 import GetalltaskingExams from './pages/takingExam/GetalltaskingExams'
 import GeIDExamsDepartmentMaking from './pages/cham-thi/GeIDExamsDepartmentMaking'
+import ProtectedRoute from './protected-route'
 export const PrivateRoute = () => {
   const cookie = Cookies.get('token')
   const { profile } = useContext(AppContext)
@@ -159,26 +160,117 @@ export const routers = createBrowserRouter([
         element: <DefaultLayout />,
         children: [
           { index: true, element: <Navigate to='dashboard' /> },
-          { path: 'dashboard', element: <Dashboard /> },
-          { path: 'roles', element: <Roles /> },
-          { path: 'roles/edit/:id', element: <EditRoles /> },
-          { path: 'de-kho', element: <DsDethi /> },
+          {
+            path: 'dashboard',
+            element: (
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: 'roles',
+            element: (
+              <ProtectedRoute>
+                <Roles />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: 'roles/edit/:id',
+            element: (
+              <ProtectedRoute>
+                <EditRoles />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: 'de-kho',
+            element: (
+              <ProtectedRoute>
+                <DsDethi />
+              </ProtectedRoute>
+            )
+          },
           { path: 'details/dethi/:id', element: <FormData /> },
           { path: 'details/dethi/edit/:id', element: <EditExams /> },
           { path: 'level_easy/details/:id', element: <DetailsDsEasy /> },
           { path: 'de-trung-binh', element: <DsDeThiTB /> },
           { path: 'de-de', element: <DsDeThiEszy /> },
           { path: 'member/:id/edit', element: <EditMember /> },
-          { path: 'all-member', element: <AllMember /> },
-          { path: 'all-member/add', element: <AddMember /> },
-          { path: 'roles/:id/memRole', element: <MemberInRole /> },
-          { path: 'roles/add', element: <EditRoles /> },
-          { path: 'banner', element: <AddBanner /> },
-          { path: 'banner/:id/edit', element: <EditBanner /> },
+          {
+            path: 'all-member',
+            element: (
+              <ProtectedRoute>
+                <AllMember />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: 'all-member/add',
+            element: (
+              <ProtectedRoute>
+                <AddMember />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: 'roles/:id/memRole',
+            element: (
+              <ProtectedRoute>
+                <MemberInRole />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: 'roles/add',
+            element: (
+              <ProtectedRoute>
+                <EditRoles />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: 'banner',
+            element: (
+              <ProtectedRoute>
+                <AddBanner />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: 'banner/:id/edit',
+            element: (
+              <ProtectedRoute>
+                <EditBanner />
+              </ProtectedRoute>
+            )
+          },
           { path: 'setting', element: <Setting /> },
-          { path: 'check-log', element: <CheckLog /> },
-          { path: 'user/taking/exam', element: <GetalltaskingExams /> },
-          { path: 'taking/exam/:id', element: <TakingExam /> }
+          {
+            path: 'check-log',
+            element: (
+              <ProtectedRoute>
+                <CheckLog />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: 'user/taking/exam',
+            element: (
+              <ProtectedRoute>
+                <GetalltaskingExams />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: 'user/taking/exam/:id',
+            element: (
+              <ProtectedRoute>
+                <TakingExam />
+              </ProtectedRoute>
+            )
+          }
         ]
       }
     ]

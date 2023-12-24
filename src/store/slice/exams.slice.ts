@@ -1,11 +1,28 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+interface IexmaData {
+  _id: string
+  question: string
+  no: string
+  point: number
+  image: string[] | []
+  choose: any[]
+}
 interface CategoriesState {
   count: number
-  examsData: any[]
+  examsData: IexmaData
   submitData: any
+  answers: string
 }
 const initialState: CategoriesState = {
-  examsData: [],
+  examsData: {
+    _id: '',
+    question: '',
+    no: '',
+    point: 0,
+    image: [],
+    choose: []
+  },
+  answers: '',
   count: 0,
   submitData: []
 }
@@ -21,11 +38,14 @@ const examSlice = createSlice({
         state.count = state.count - 1
       }
     },
-    setExamsData: (state, action: PayloadAction<any[]>) => {
+    setExamsData: (state, action: any) => {
       state.examsData = action.payload
     },
     setCount: (state, action: PayloadAction<number>) => {
       state.count = action.payload
+    },
+    setAnserCheck: (state, action: any) => {
+      state.answers = action.payload
     },
     updateSubmitData: (state, action: PayloadAction<{ counts: number; chooses: string }>) => {
       const { counts, chooses } = action.payload
@@ -42,5 +62,6 @@ const examSlice = createSlice({
     }
   }
 })
-export const { incrementCount, decrementCount, setExamsData, setCount, updateSubmitData } = examSlice.actions
+export const { incrementCount, decrementCount, setExamsData, setCount, updateSubmitData, setAnserCheck } =
+  examSlice.actions
 export const examsReducer = examSlice.reducer

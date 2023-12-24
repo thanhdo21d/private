@@ -3,18 +3,19 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '~/components'
+import io from 'socket.io-client'
 import cancel from '../../../../assets/close.png'
 import { toastService } from '~/utils/toask/toaskMessage'
 import PopupSuccess from './PopupSuccess.tsx/PopupSuccess'
+import Countdown from 'react-countdown'
 import Confetti from 'react-confetti'
 import Pagination from '~/pages/roles/Pagination'
 import { AiOutlineEnter } from 'react-icons/ai'
 import { TiTick } from 'react-icons/ti'
 import turnLeft from '../../../../assets/turn-left.png'
 import turnright from '../../../../assets/turn-right.png'
-import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { Checkbox, Divider, Form, Image, Input, Skeleton } from 'antd'
+import { Checkbox, Divider, Form, Image, Input, Skeleton, message } from 'antd'
 import { container, formats } from '~/utils/quill'
 import Spreadsheet from 'react-spreadsheet'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
@@ -28,9 +29,13 @@ import PopError from './PopError'
 import Popconfirm from './Popconfirm'
 import TextArea from 'antd/es/input/TextArea'
 const QuesionStart = () => {
+  const uri = import.meta.env.VITE_API
+  const socket = io(uri, {
+    transports: ['websocket', 'pulling', 'flashsocket']
+  })
   const [showPop, setShowPop] = useState<boolean>(false)
+  const [showStop, setShowStop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<any[]>([])
-  const [editorContent, setEditorContent] = useState('')
   const listName = ['A', 'B', 'C', 'D']
   const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
   //
@@ -62,6 +67,7 @@ const QuesionStart = () => {
   const { count: countAction } = useAppSelector((state) => state.examAction)
   const { examsData } = useAppSelector((state) => state.examAction)
   const { count } = useAppSelector((state) => state.examAction)
+  console.log(examsData, 'countl')
   const {
     data: dataIdExmasDetails,
     isLoading: isLoadingDetails,
@@ -78,8 +84,7 @@ const QuesionStart = () => {
     setHeight((confetiRef.current = '2000px'))
     setWidth((confetiRef.current = '1200px'))
   }, [])
-  const uri = import.meta.env.VITE_API
-  const reactQuillRef = useRef<ReactQuill>(null)
+
   const handelSubmit = () => {
     const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
     if (confirm) {
@@ -130,26 +135,44 @@ const QuesionStart = () => {
           break
       }
     }
-  }, [dispatch])
-  const onFinish = (values: any) => {
-    console.log(editorContent)
-  }
-  const handleEditorChange = (event) => {
+  }, [dispatch, answers, countAction, count])
+  const handleEditorChange = (event: any) => {
     const newContent = event.target.value
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
+    setAnswers({
+      ...answers,
       [countAction]: newContent
-    }))
+    })
   }
-  console.log(answers)
   useEffect(() => {
-    if (examsData?.choose?.every((data) => data.img === '' && data.q === '')) {
-      setEditorContent(answers[countAction] || '')
+    socket.connect()
+    socket.on('stopExamsUser', (data) => {
+      message.error(`admin ${data?.user} đã dừng bài thi của  bạn`)
+      setShowStop(true)
+    })
+    socket.on('startExamsUser', (data) => {
+      message.success(`nhân viên ${data?.user} đã bắt đầu lại bài thi của  bạn`)
+      setShowStop(false)
+      window.location.reload()
+    })
+    return () => {
+      socket.off('stopExamsUser')
+      socket.off('startExamsUser')
+      socket.disconnect()
     }
-  }, [countAction, answers, examsData])
-  useEffect(() => {
-    setEditorContent(answers[countAction] || '')
-  }, [countAction, answers])
+  }, [])
+  const renderer = ({ minutes, seconds, completed }) => {
+    console.log(minutes, seconds, completed)
+    if (completed) {
+      return <span>Thời gian đã hết</span>
+    } else {
+      return (
+        <span>
+          {minutes}:{seconds}
+        </span>
+      )
+    }
+  }
+
   if (isLoadingDetails || isFetchingDetails)
     return (
       <div>
@@ -161,12 +184,10 @@ const QuesionStart = () => {
         <Skeleton />
       </div>
     )
-
-  console.log(examsData, '1')
-
+  console.log(dataIdExmasDetails, 'ccc')
   return (
     <div className=' mx-auto px-4'>
-      <div>{dataIdExmasDetails?.statusError === '1' && <PopError />}</div>
+      <div>{(dataIdExmasDetails?.statusError === '1' || showStop) && <PopError />}</div>
       <div className=' min-w-0 h-[750px] 2xl:h-[800px] overflow-y-scroll break-words   bg-white  shadow-xl rounded-lg relative'>
         <Header
           style={{
@@ -180,8 +201,12 @@ const QuesionStart = () => {
         >
           <div className='flex w-[100%] items-center  justify-between '>
             <div>
-              <p className='text-xl  py-2 pl-5 font-bold text-white text-center items-center'>
+              {/* <p className='text-xl  py-2 pl-5 font-bold text-white text-center items-center'>
                 {t('product.total_time')} : {dataIdExmasDetails?.TimeLeft} (phút)
+              </p> */}
+              <p className='text-xl py-2 pl-5 font-bold text-white text-center items-center'>
+                {t('product.total_time')} :{' '}
+                <Countdown date={Date.now() + dataIdExmasDetails?.TimeLeft * 1000} renderer={renderer} />
               </p>
             </div>
             <div>
@@ -222,28 +247,30 @@ const QuesionStart = () => {
                     <div className='mt-15'>
                       <p className='text-xl font-bold text-black mb-2'>Vui Lòng Nhập câu trả lời!</p>
                       {examsData && (
-                        <Form
-                          name='basic'
-                          autoComplete='off'
-                          layout='vertical'
-                          className='dark:text-white'
-                          onFinish={onFinish}
-                        >
-                          <Form.Item
-                            key={`form-item-${countAction}`}
-                            className='dark:text-white mb-17'
-                            name='description'
-                            rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+                        <>
+                          <Input.TextArea
+                            className='text-black mt-2'
+                            onChange={handleEditorChange}
+                            rows={4}
+                            placeholder='Vui lòng điền đáp án của bạn'
+                            value={answers[count] !== undefined ? answers[count] : ''}
+                            id=''
+                          />
+                          <Button
+                            styleClass='mt-10 bg-body'
+                            onClick={() =>
+                              dispatch(
+                                updateSubmitData({
+                                  counts: count + 1,
+                                  chooses: answers[count]
+                                })
+                              )
+                            }
+                            type='submit'
                           >
-                            <TextArea
-                              className='h-[300px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'
-                              value={answers[countAction]}
-                              onChange={handleEditorChange}
-                              placeholder='Vui Lòng Nhập câu trả lời!...........'
-                            />
-                          </Form.Item>
-                          <Button type='submit'> xác nhận </Button>
-                        </Form>
+                            xác nhận
+                          </Button>
+                        </>
                       )}
                     </div>
                   ) : (

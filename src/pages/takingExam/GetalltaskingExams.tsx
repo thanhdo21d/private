@@ -8,13 +8,15 @@ import { Breadcrumb } from '~/components'
 const GetalltaskingExams = () => {
   const { data: dataAll, isFetching, isLoading } = useGetAllExamsQuery({})
   const navigate = useNavigate()
-  const dataSource = dataAll?.map((items: any) => ({
-    key: items._id,
-    name: items.name,
-    startDate: items.startDate,
-    endDate: items.endDate,
-    time: items.time
-  }))
+  const dataSource = dataAll
+    ?.filter((items: any) => items.isEdit == '0')
+    ?.map((items: any) => ({
+      key: items._id,
+      name: items.name,
+      startDate: items.startDate,
+      endDate: items.endDate,
+      time: items.time
+    }))
   const columns = [
     {
       title: 'Tên bài thi',
@@ -50,7 +52,7 @@ const GetalltaskingExams = () => {
       render: ({ key: id }: { key: string }) => {
         return (
           <div className='flex justify-center'>
-            <Button onClick={() => navigate(`/admin/taking/exam/${id}`)}>Chi tiết</Button>
+            <Button onClick={() => navigate(`/admin/user/taking/exam/${id}`)}>Chi tiết</Button>
           </div>
         )
       }

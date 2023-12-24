@@ -133,13 +133,14 @@ const topicExamsApi = createApi({
       },
       invalidatesTags: ['topicExams']
     }),
-    updateStatusExamsUser: builder.mutation<any[], { id: string; status: string }>({
-      query: ({ id, status }: { id: string; status: string }) => {
+    updateStatusExamsUser: builder.mutation<any[], { id: string; status: string; commentByAdmin: string }>({
+      query: ({ id, status, commentByAdmin }: { id: string; status: string; commentByAdmin: string }) => {
         return {
           url: `update/status/exams/${id}`,
           method: 'POST',
           body: {
-            status: status
+            status: status,
+            commentByAdmin: commentByAdmin
           }
         }
       },

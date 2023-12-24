@@ -26,6 +26,7 @@ import {
 import { toastService } from '~/utils/toask/toaskMessage'
 import { useAppDispatch } from '~/store/root/hook'
 import { setDataCategoires } from '~/store/slice/checkCategories'
+import { FcInfo } from 'react-icons/fc'
 interface SidebarProps {
   sidebarOpen: boolean
   setSidebarOpen: (arg: boolean) => void
@@ -461,7 +462,10 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
   const sidebar = useRef<any>(null)
   const isActive = location.pathname.includes(`all-folders`)
   const isActiveKT = location.pathname.includes(`ki-thi`)
-  const isActiveCT = location.pathname.includes(`cham-thi`)
+  const aliasFolder = location.pathname.includes(`alias-folder`)
+  const dashboardOtherAdmin = location.pathname.includes(`dashboard-other-admin`)
+  const isMember = location.pathname.includes(`member`)
+
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
   useEffect(() => {
@@ -518,42 +522,75 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         </button>
       </div>
       <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
-        <Menu
-          theme='dark'
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          mode='inline'
-          items={dashboardOther}
-        />
         <nav className=' mt-5'>
-          <div className='select-none'>
-            <h3
-              onClick={() => navigate(`/tree-menu/${idCate}/all-folders`)}
-              className={`${
-                isActive ? 'bg-success' : ''
-              } text-white mb-4 flex items-center  cursor-pointer    py-2 rounded-md   text-sm font-semibold select-none`}
-            >
-              <span className='pr-5 pl-7'>
-                <FaRegFolderOpen className='text-2xl' />
-              </span>
-              <span> Thư Mục</span>
-            </h3>
-          </div>
+          <p
+            className={`${
+              dashboardOtherAdmin ? 'bg-success ' : ''
+            }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
+            onClick={() => navigate(`/tree-menu/${idCate}/dashboard-other-admin`)}
+          >
+            <span className=''>
+              <FcInfo className='text-2xl' />
+            </span>
+            <span className='text-md text-bodydark1 font-medium'>dashboard</span>
+          </p>
+          <p
+            className={`${
+              isMember ? 'bg-success ' : ''
+            }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
+            onClick={() => navigate(`/tree-menu/${idCate}/member`)}
+          >
+            <span className=''>
+              <FcInfo className='text-2xl' />
+            </span>
+            <span className='text-md text-bodydark1 font-medium'>Thành Viên</span>
+          </p>
+           <p
+            className={`${
+              isActive ? 'bg-success ' : ''
+            }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
+            onClick={() => navigate(`/tree-menu/${idCate}/all-folders`)}
+          >
+            <span className=''>
+              <FcInfo className='text-2xl' />
+            </span>
+            <span className='text-md text-bodydark1 font-medium'>Thư Mục</span>
+          </p>
         </nav>
       </div>
-      {/* //isActiveCT */}
       <p
         className={`${
           isActiveKT ? 'bg-success ' : ''
         }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
         onClick={() => navigate(`/tree-menu/${idCate}/settings/ki-thi`)}
       >
-        <span>
-          <img className='w-[30px]' src={examsIcons} />
+        <span className=''>
+          <FcInfo className='text-2xl' />
         </span>
         <span className='text-md text-bodydark1 font-medium'>Kì Thi</span>
       </p>
-      <Menu theme='dark' defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={settingsAlias} />
+      <p
+        className={`${
+          aliasFolder ? 'bg-success ' : ''
+        }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
+        onClick={() => navigate(`/tree-menu/${idCate}/alias-folder`)}
+      >
+        <span className=''>
+          <FcInfo className='text-2xl' />
+        </span>
+        <span className='text-md text-bodydark1 font-medium'>Cấu hình folder</span>
+      </p>
+       {/* <p
+        className={`${
+          aliasFolder ? 'bg-success ' : ''
+        }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
+        onClick={() => navigate(`/tree-menu/${idCate}/permission`)}
+      >
+        <span className=''>
+          <FcInfo className='text-2xl' />
+        </span>
+        <span className='text-md text-bodydark1 font-medium'>Phân quyền chấm thi</span>
+      </p> */}
     </div>
   )
 }

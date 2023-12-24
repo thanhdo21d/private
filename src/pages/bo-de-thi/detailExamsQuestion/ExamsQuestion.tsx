@@ -279,17 +279,7 @@ const ExamsQuestion = () => {
             </div>
             {isEdit == '0' && (
               <div className='p-2  w-full flex items-center focus:outline-none hover:scale-105'>
-                <ButtonAnt
-                  onClick={() =>
-                    navigate({
-                      pathname: `/tree-menu/${idCate}/settings/cham-thi/${id}`,
-                      search: createSearchParams({
-                        nameExams: name
-                      }).toString()
-                    })
-                  }
-                  className='w-full'
-                >
+                <ButtonAnt onClick={() => navigate(`/tree-menu/${idCate}/settings/cham-thi/${id}`)} className='w-full'>
                   Chấm Thi
                 </ButtonAnt>
               </div>

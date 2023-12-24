@@ -34,7 +34,7 @@ const CheckOtherAdmin = () => {
       }
     }
     fetchData()
-  }, [id, profile?._id, uri])
+  }, [id, profile?._id, uri, profile?.role])
   if (loading) return <p>loading....</p>
   return permissions ? (
     <Outlet />

@@ -6,7 +6,7 @@ import { createSearchParams, useNavigate, useParams, useSearchParams } from 'rea
 import { useSessionExamsQuestionQuery } from '~/apis/topicQuestion/topicQuestion'
 import { AppContext } from '~/contexts/app.contexts'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
-import { setCount } from '~/store/slice/exams.slice'
+import { setAnserCheck, setCount } from '~/store/slice/exams.slice'
 const CheckQuesion = () => {
   const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
   const { profile } = useContext(AppContext)

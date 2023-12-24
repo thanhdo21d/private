@@ -384,6 +384,12 @@ const DetailsExamsQuestion = () => {
             </div>
           </Form>
           <div className='mt-5'>
+            <Divider orientation='left'>danh sách người chấm thi</Divider>
+            <Button  onClick={showDrawer} styleClass='py-2 bg-warning'>
+              xem dánh sách
+            </Button>
+          </div>
+          <div className='mt-5'>
             <Divider orientation='left'>danh sách người thi</Divider>
             <Button onClick={showDrawer} styleClass='py-2'>
               xem dánh sách
@@ -577,6 +583,5 @@ const DetailsExamsQuestion = () => {
     </div>
   )
 }
-
 
 export default DetailsExamsQuestion

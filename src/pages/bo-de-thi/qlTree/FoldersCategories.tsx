@@ -135,7 +135,7 @@ const FoldersCategories = () => {
             ]}
           />
           <div className='flex justify-between mb-5 mt-3'>
-            <div>
+            {/* <div>
               <Form onFinish={onFinishSearch} className='flex gap-5' layout='vertical' hideRequiredMark>
                 <Form.Item name='keyword' rules={[{ required: true, message: 'vui lòng nhập Tên Folder ...!' }]}>
                   <Input className='w-[330px] border border-[#ccc]' placeholder='vui lòng nhập Tên Folder ...!' />
@@ -146,7 +146,7 @@ const FoldersCategories = () => {
                   </button>
                 </Form.Item>
               </Form>
-            </div>
+            </div> */}
             <div className='flex items-center gap-5'>
               <button
                 className='bg-success px-8 rounded-md text-white font-medium py-2.5 flex items-center gap-3'

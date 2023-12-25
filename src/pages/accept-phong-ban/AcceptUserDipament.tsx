@@ -5,13 +5,9 @@ import { Button } from '~/components'
 import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
 import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
-import { IoMdReturnLeft } from 'react-icons/io'
 import { AppContext } from '~/contexts/app.contexts'
-import { Empty, Radio } from 'antd'
-import logoAction from '../../assets/hello.png'
-import { TypeAnimation } from 'react-type-animation'
-import { IDepartmentType, category } from '~/types/department/department.type'
-import { useGetAllCategoriesDepartmentQuery, useGetAllCategoriesQuery } from '~/apis/category/categories'
+import { IDepartmentType } from '~/types/department/department.type'
+import { useGetAllCategoriesDepartmentQuery } from '~/apis/category/categories'
 import { Footer } from 'antd/es/layout/layout'
 import Pagination from '../roles/Pagination'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
@@ -62,7 +58,7 @@ const AcceptUserDipament = () => {
             <div className=''>
               <div className='text-sm float-left leading-normal mt-0  text-blueGray-400 font-bold '>
                 <p className='my-1 px-6'>
-                  <span className='text-black font-bold'> xin chào</span> {profile?.email}{' '}
+                  <span className='text-black font-bold'> xin chào</span> {profile?.email}
                 </p>
               </div>
               <div className='mt-5 py-10 border-t border-blueGray-200 text-center'>
@@ -115,23 +111,6 @@ const AcceptUserDipament = () => {
           </div>
         </div>
       </div>
-      {profile?.role.name !== 'Staff' && dataPageQuery == null && (
-        <div className='absolute right-15 -bottom-[15rem] flex '>
-          <div className='w-[300px] h-[99px] shadow-xl rounded-md bg-white'>
-            <p className='text-black font-medium text-left pl-5 pt-3'>
-              <TypeAnimation sequence={['Quay Về Trang Quản Trị', 1000, '']} speed={50} repeat={Infinity} />
-            </p>
-            <div>
-              <Button onClick={() => navigate('/admin')} styleClass='h-[30px] rounded-sm ml-5 mt-5 hover:bg-warning'>
-                Trở Về
-              </Button>
-            </div>
-          </div>
-          <div>
-            <img className='w-[150px]' src={`${logoAction}`} />
-          </div>
-        </div>
-      )}
     </div>
   )
 }

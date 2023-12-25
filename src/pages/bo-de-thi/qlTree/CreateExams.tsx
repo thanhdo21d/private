@@ -5,7 +5,7 @@ import detailsIcons from '../../../assets/file.png'
 import cancel from '../../../assets/close.png'
 import excelExport from '../../../assets/images/logo/excel2-svgrepo-com.svg'
 import { Button } from '~/components'
-import { DatePicker, Divider, Drawer, Empty, Input, InputNumber, Space, Table } from 'antd'
+import { DatePicker, Divider, Drawer, Empty, Input, InputNumber, Modal, Space, Table } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -327,6 +327,17 @@ const CreateExams = () => {
                   Danh Sách
                 </Button>
               </div>
+              {/* <div>
+                <p className='2xl:text-center '> Người chấm thi </p>
+                <Button
+                  onClick={() => {
+                    showDrawer()
+                  }}
+                  styleClass='h-[32px] bg-meta-4'
+                >
+                  Danh Sách
+                </Button>
+              </div> */}
               <div>
                 <form onSubmit={handleSubmit}>
                   <p className='2xl:text-center'> import member </p>
@@ -413,42 +424,35 @@ const CreateExams = () => {
       ) : (
         <>
           {getPath.check && (
-            //setGetPath
-            <div className='relative -top-10'>
-              <div className='flex justify-center'>
-                <div className='rounded-md absolute z-99999 border w-2/3 border-stroke shadow-2xl bg-white h-fit   dark:border-strokedark dark:bg-boxdark'>
-                  <div className='border-b py-3 border-[#ccc] flex justify-between'>
-                    <h3 className='pl-4 text-black'>Thông tin đường dẫn folder</h3>
-                    <img
-                      onClick={() =>
-                        setGetPath({
-                          check: false,
-                          path: ''
-                        })
-                      }
-                      className='w-[25px] mr-5 hover:scale-110 cursor-pointer'
-                      src={cancel}
-                    />
-                  </div>
-                  <div className='flex items-end justify-between mt-4'>
-                    <div className='flex items-end justify-between mt-4 pl-3'>{getPath.path}</div>
-                  </div>
-                  <div className='flex items-center justify-end mt-4 gap-5 pr-5 border-t border-[#ccc] mb-2'>
-                    <Button
-                      onClick={() =>
-                        setGetPath({
-                          check: false,
-                          path: ''
-                        })
-                      }
-                      styleClass='!px-0 py-1 w-[100px] bg-[#ec971f] border border[#d58512] rounded-sm mt-5'
-                    >
-                      Đóng
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <>
+              <Modal
+                open={getPath.check}
+                title='Đường dẫn đến folders'
+                destroyOnClose
+                centered
+                onCancel={() =>
+                  setGetPath({
+                    check: false,
+                    path: ''
+                  })
+                }
+                footer={[
+                  <Button
+                    key='cancel'
+                    onClick={() =>
+                      setGetPath({
+                        check: false,
+                        path: ''
+                      })
+                    }
+                  >
+                    Đóng
+                  </Button>
+                ]}
+              >
+                <Input.TextArea placeholder='Lý do tạm dừng bài thi ...' value={getPath.path} rows={5} />
+              </Modal>
+            </>
           )}
           {addQuestion && (
             <div className='flex justify-between w-full mt-15 gap-10'>

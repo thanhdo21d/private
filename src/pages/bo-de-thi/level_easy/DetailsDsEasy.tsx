@@ -8,6 +8,7 @@ import { toastService } from '~/utils/toask/toaskMessage'
 import { Loader } from '~/common'
 const DetailsDsEasy = () => {
   const url = import.meta.env.VITE_API
+  const dymanicImport = location.pathname.includes(`dymanicImport`)
   const { pathname } = useLocation()
   const [isLoading, setIsLoading] = useState(false)
   const { id } = useParams()
@@ -38,6 +39,15 @@ const DetailsDsEasy = () => {
   return (
     <>
       <Breadcrumb pageName='Thêm Đề Thi'></Breadcrumb>
+      {dymanicImport && (
+        <p className=''>
+          <span className='text-black font-medium'>Lưu ý khi thêm dymanic :</span> <br /> Bạn cần điền đúng alias Path ,
+          lấy alias Path
+          <a href='#' className='text-blue23 underline font-bold cursor-pointer hover:scale-105 hover:ease-in-out'>
+            Tại đây
+          </a>
+        </p>
+      )}
       <Tabs defaultActiveKey='1' items={itemsDataBeardCrumb} className='text-white' />
       <div
         className='relative min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-gray-500 bg-no-repeat bg-cover '

@@ -85,7 +85,10 @@ const FormData = () => {
       idDepartment: id
     })
       .unwrap()
-      .then(() => toastService.success('Drop db successfully deleted'))
+      .then(() => {
+        toastService.success('Drop db successfully deleted')
+        window.location.reload()
+      })
   }
   const dataSource = getDetailsExams?.data?.easy.map((items: any, index: number) => ({
     key: items._id,

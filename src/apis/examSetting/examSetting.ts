@@ -110,6 +110,8 @@ const ExamSetting = createApi({
         time,
         secretKey,
         add,
+        examinerAdd,
+        examinerRemove,
         remove
       }: {
         id: string
@@ -121,6 +123,8 @@ const ExamSetting = createApi({
         time: string
         add: string[]
         remove: string[]
+        examinerAdd: string[]
+        examinerRemove: string[]
         secretKey: string
       }) => {
         return {
@@ -137,6 +141,10 @@ const ExamSetting = createApi({
             users: {
               add: add,
               remove: remove
+            },
+            examiner: {
+              add: examinerAdd,
+              remove: examinerRemove
             }
           }
         }
@@ -207,6 +215,15 @@ const ExamSetting = createApi({
         }
       },
       invalidatesTags: ['ExamSetting']
+    }),
+    checkExaminer: builder.query<any, { id: string }>({
+      query: ({ id }: { id: string }) => {
+        return {
+          url: `/check/examiner/${id}`,
+          method: 'GET'
+        }
+      },
+      providesTags: ['ExamSetting']
     })
   })
 })
@@ -221,6 +238,7 @@ export const {
   useEditTopicExamIdMutation,
   useCreateTopicExamsApiMutation,
   useGetAllExamsQuery,
-  useQueryPathFolderMutation
+  useQueryPathFolderMutation,
+  useCheckExaminerQuery
 } = ExamSetting
 export default ExamSetting

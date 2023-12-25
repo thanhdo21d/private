@@ -9,6 +9,8 @@ import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 const GetAllExamsDepartment = () => {
   const idCate = localStorage.getItem('idCategories')
   const { id } = useParams()
+  const aliasFolder = location.pathname.includes(`examiner-Exams`)
+
   const [queryParameters] = useSearchParams()
   const queryConfig = useQueryConfig()
   const dataPageQuery: string | null = queryParameters.get('marking')
@@ -101,7 +103,11 @@ const GetAllExamsDepartment = () => {
       render: ({ key: id }: { key: string }) => {
         return (
           <div className='flex justify-center'>
-            <Button onClick={() => navigate(`/tree-menu/${idCate}/settings/cham-thi-user/${id}`)}>chi tiết</Button>
+            {aliasFolder ? (
+              <Button onClick={() => navigate(`/examiner/cham-thi/${id}`)}>chi tiết</Button>
+            ) : (
+              <Button onClick={() => navigate(`/tree-menu/${idCate}/settings/cham-thi-user/${id}`)}>chi tiết</Button>
+            )}
           </div>
         )
       }
@@ -133,9 +139,15 @@ const GetAllExamsDepartment = () => {
         <Divider orientation='left'>Danh sách bài thi </Divider>
       </div>
       <div className='my-10'>
-        <Button className='w-[200px]' onClick={() => navigate(`/tree-menu/${idCate}/settings/ki-thi`)}>
-          Quay lại
-        </Button>
+        {aliasFolder ? (
+          <Button className='w-[200px]' onClick={() => navigate(`/user-info/danh-sach-bai-thi`)}>
+            Quay lại
+          </Button>
+        ) : (
+          <Button className='w-[200px]' onClick={() => navigate(`/tree-menu/${idCate}/settings/ki-thi`)}>
+            Quay lại
+          </Button>
+        )}
       </div>
       <div className='flex justify-between items-center'>
         <div className='w-full md:w-1/3 px-3 mb-6 md:mb-0'>

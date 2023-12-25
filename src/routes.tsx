@@ -57,6 +57,7 @@ import GetAllExamsDepartment from './pages/cham-thi/GetAllExamsDepartment'
 import GetalltaskingExams from './pages/takingExam/GetalltaskingExams'
 import GeIDExamsDepartmentMaking from './pages/cham-thi/GeIDExamsDepartmentMaking'
 import ProtectedRoute from './protected-route'
+import DsExamsMiner from './pages/cham-thi/DsExamsMiner'
 export const PrivateRoute = () => {
   const cookie = Cookies.get('token')
   const { profile } = useContext(AppContext)
@@ -85,6 +86,7 @@ export const routers = createBrowserRouter([
         element: <TreeMenu />,
         children: [
           { path: 'all-folders', element: <FoldersCategories /> },
+          { path: 'dymanicImport', element: <DetailsDsEasy /> },
           { path: 'alias-folder', element: <AliasFolder /> },
           { path: 'alias-folder/create', element: <CreateAliasForder /> },
           { path: 'alias-folder/edit/:id', element: <CreateAliasForder /> },
@@ -109,6 +111,8 @@ export const routers = createBrowserRouter([
   { path: 'question/edit/:id', element: <EditQuestionExams /> },
   { path: 'question/add', element: <EditQuestionExams /> },
   { path: 'action/home', element: <Home /> },
+  { path: 'examiner-Exams/:id', element: <GetAllExamsDepartment /> },
+  { path: 'examiner/cham-thi/:id', element: <GeIDExamsDepartmentMaking /> },
   {
     path: '/',
     element: <CheckLogin />,
@@ -147,7 +151,8 @@ export const routers = createBrowserRouter([
           },
           { path: 'ket-qua-thi', element: <InfoResult /> },
           { path: 'ket-qua-thi/:id', element: <DetailsResult /> },
-          { path: 'thanh-tich', element: <Achievements /> }
+          { path: 'thanh-tich', element: <Achievements /> },
+          { path: 'danh-sach-bai-thi', element: <DsExamsMiner /> }
         ]
       }
     ]

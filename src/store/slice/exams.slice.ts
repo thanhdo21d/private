@@ -6,6 +6,7 @@ interface IexmaData {
   point: number
   image: string[] | []
   choose: any[]
+  checkUserChoose: string
 }
 interface CategoriesState {
   count: number
@@ -20,7 +21,8 @@ const initialState: CategoriesState = {
     no: '',
     point: 0,
     image: [],
-    choose: []
+    choose: [],
+    checkUserChoose: ''
   },
   answers: '',
   count: 0,

@@ -74,10 +74,10 @@ const Header = (props: { sidebarOpen: string | boolean | undefined; setSidebarOp
         <div className='2xsm:gap-7 flex items-center gap-3'>
           <ul className='2xsm:gap-4 flex items-center gap-2'>
             {/* <!-- Dark Mode Toggler --> */}
-            <DarkModeSwitcher />
+            {/* <DarkModeSwitcher /> */}
 
             {/* <!-- Notification Menu Area --> */}
-            <DropdownNotification />
+            {/* <DropdownNotification /> */}
 
             {/* <!-- Chat Notification Area --> */}
             <DropdownMessage />

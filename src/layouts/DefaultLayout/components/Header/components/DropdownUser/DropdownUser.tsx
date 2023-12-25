@@ -5,13 +5,23 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AppContext } from '~/contexts/app.contexts'
 import { removeProfileFromLS } from '~/utils/utils'
 import imgLogo from '../../../../../../assets/images/logo/Ava_1__DXCB.jpg'
+import exmasLogo from '../../../../../../assets/exam (2).png'
+
 import { useGetIdUserQuery } from '~/apis/user/user.api'
 import { Skeleton } from 'antd'
+import { useCheckExaminerQuery } from '~/apis/examSetting/examSetting'
 const DropdownUser = () => {
   const navigate = useNavigate()
   const { profile, reset } = useContext(AppContext)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const { data: dataUser, isLoading, isFetching } = useGetIdUserQuery(profile?._id as string)
+  const {
+    data: dataCheckExaminer,
+    isLoading: CheckExaminerLoading,
+    isFetching: CheckExaminerFetching
+  } = useCheckExaminerQuery({
+    id: profile?._id as string
+  })
   console.log(dataUser)
   const uri = import.meta.env.VITE_API
   const trigger = useRef<any>(null)
@@ -33,7 +43,7 @@ const DropdownUser = () => {
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
   }, [])
-  if (isLoading ||isFetching)
+  if (isLoading || isFetching || CheckExaminerLoading || CheckExaminerFetching)
     return (
       <div>
         <Skeleton />
@@ -41,14 +51,14 @@ const DropdownUser = () => {
         <Skeleton />
       </div>
     )
-  console.log(dataUser?.role?.name)
+  console.log(dataUser?.role)
   return (
     <div className='relative'>
       <Link ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='flex items-center gap-4' to='#'>
         <span className='lg:block hidden text-right'>
           <span className='dark:text-white block text-sm font-medium text-black'>{profile?.email}</span>
-          <span className='flex items-center gap-2 float-right'>
-            <span className='block text-xl font-medium'>{profile?.role.name}</span>
+          <span className='flex items-center gap-6 float-right'>
+            <span className='block text-xl font-medium underline'>{dataUser?.user?.role?.name}</span>
             <span className='block text-xl font-bold text-danger'>{profile?.code}</span>
           </span>
         </span>
@@ -83,6 +93,17 @@ const DropdownUser = () => {
               >
                 <SettingIcon />
                 Trang quản trị
+              </Link>
+            </button>
+          )}
+          {dataCheckExaminer.length >= 1 && (
+            <button>
+              <Link
+                to='/user-info/danh-sach-bai-thi'
+                className='flex items-center  gap-3.5  text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
+              >
+                <img className='w-[25px]' src={exmasLogo} />
+                Chấm thi
               </Link>
             </button>
           )}

@@ -167,7 +167,10 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
     {
       title: 'Tên Categories',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      render: (name: string) => {
+        return <p> {name.length > 30 ? `${name.substring(0, 30)}...` : name}</p>
+      }
     },
     {
       title: <p className='flex justify-center'>hành động</p>,
@@ -386,7 +389,7 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
                   } hover:font-semibold flex gap-5 items-center`}
                   onClick={handleCategoryClick}
                 >
-                  {category?.name}
+                  {category?.name.length > 50 ? `${category.name.substring(0, 50)}...` : category?.name}
                   {category?.children && category.children.length > 0 && <img className='w-[30px]' src={folder} />}
                 </span>
               </div>
@@ -465,6 +468,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
   const aliasFolder = location.pathname.includes(`alias-folder`)
   const dashboardOtherAdmin = location.pathname.includes(`dashboard-other-admin`)
   const isMember = location.pathname.includes(`member`)
+  const dymanicImport = location.pathname.includes(`dymanicImport`)
 
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
@@ -545,7 +549,7 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
             </span>
             <span className='text-md text-bodydark1 font-medium'>Thành Viên</span>
           </p>
-           <p
+          <p
             className={`${
               isActive ? 'bg-success ' : ''
             }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
@@ -580,17 +584,17 @@ const SidebarTree = ({ sidebarOpen, setSidebarOpen, textUi }: SidebarProps) => {
         </span>
         <span className='text-md text-bodydark1 font-medium'>Cấu hình folder</span>
       </p>
-       {/* <p
+      <p
         className={`${
-          aliasFolder ? 'bg-success ' : ''
+          dymanicImport ? 'bg-success ' : ''
         }flex items-center gap-3 mt-3 start pl-[26px] cursor-pointer hover:bg-body py-2 rounded-md`}
-        onClick={() => navigate(`/tree-menu/${idCate}/permission`)}
+        onClick={() => navigate(`/tree-menu/${idCate}/dymanicImport`)}
       >
         <span className=''>
           <FcInfo className='text-2xl' />
         </span>
-        <span className='text-md text-bodydark1 font-medium'>Phân quyền chấm thi</span>
-      </p> */}
+        <span className='text-md text-bodydark1 font-medium'>Dymanic import</span>
+      </p>
     </div>
   )
 }

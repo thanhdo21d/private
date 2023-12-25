@@ -36,6 +36,7 @@ interface DataType {
 }
 const DetailsExamsQuestion = () => {
   const [open, setOpen] = useState(false)
+  const [checkExaminer, setCheckExaminer] = useState(false)
   const [checkMember, setCheckMember] = useState(true)
   const [queryParameters] = useSearchParams()
   const search: string | null = queryParameters.get('search')
@@ -43,8 +44,13 @@ const DetailsExamsQuestion = () => {
   const { pathname } = useLocation()
   const checkPath = pathname.includes('edit')
   const [dataToSend, setDataToSend] = useState<any[]>([])
-  const showDrawer = () => {
+  const showDrawer = (num: string) => {
     setOpen(true)
+    if (num === '1') {
+      setCheckExaminer(true)
+    } else {
+      setCheckExaminer(false)
+    }
   }
   const onClose = () => {
     setOpen(false)
@@ -65,7 +71,6 @@ const DetailsExamsQuestion = () => {
   })
   console.log(dataIdExmasDetails)
   const [secretKey, setSecretKey] = useState('')
-
   const [dataExamsEdit, setDataExamsEdit] = useState({
     name: '',
     status: '',
@@ -74,6 +79,10 @@ const DetailsExamsQuestion = () => {
     time: '',
     idQuestion: [],
     users: {
+      add: [],
+      remove: [] as string[]
+    },
+    examiner: {
       add: [],
       remove: [] as string[]
     }
@@ -103,15 +112,31 @@ const DetailsExamsQuestion = () => {
     username: items.username,
     avatar: items.avatar
   }))
+  const dataSourcExaminer = dataIdExmasDetails?.data?.examiner?.map((items: any) => ({
+    key: items._id,
+    code: items.employeeCode,
+    username: items.username,
+    avatar: items.avatar
+  }))
   const confirm = (id: string) => {
     console.log(id)
-    setDataExamsEdit({
-      ...dataExamsEdit,
-      users: {
-        ...dataExamsEdit.users,
-        remove: [...dataExamsEdit.users.remove, id] as string[]
-      }
-    })
+    if (checkExaminer) {
+      setDataExamsEdit({
+        ...dataExamsEdit,
+        examiner: {
+          ...dataExamsEdit.examiner,
+          remove: [...dataExamsEdit.examiner.remove, id] as string[]
+        }
+      })
+    } else {
+      setDataExamsEdit({
+        ...dataExamsEdit,
+        users: {
+          ...dataExamsEdit.users,
+          remove: [...dataExamsEdit.users.remove, id] as string[]
+        }
+      })
+    }
   }
   const onChange = (id: any) => {
     const index = dataToSend.indexOf(id)
@@ -196,13 +221,23 @@ const DetailsExamsQuestion = () => {
   const handleDataFromChild = (data: any) => {
     if (data) setOpen(false)
     console.log(data)
-    setDataExamsEdit({
-      ...dataExamsEdit,
-      users: {
-        ...dataExamsEdit.users,
-        add: data
-      }
-    })
+    if (checkExaminer) {
+      setDataExamsEdit({
+        ...dataExamsEdit,
+        examiner: {
+          ...dataExamsEdit.examiner,
+          add: data
+        }
+      })
+    } else {
+      setDataExamsEdit({
+        ...dataExamsEdit,
+        users: {
+          ...dataExamsEdit.users,
+          add: data
+        }
+      })
+    }
   }
   const [form] = Form.useForm()
   useEffect(() => {
@@ -222,6 +257,8 @@ const DetailsExamsQuestion = () => {
       endDate: dataExamsEdit.endDate || dataIdExmasDetails?.data?.endDate,
       idQuestion: dataToSend || [],
       time: dataExamsEdit.time || dataIdExmasDetails?.data?.time,
+      examinerAdd: dataExamsEdit.examiner.add || [],
+      examinerRemove: dataExamsEdit.examiner.remove || [],
       add: dataExamsEdit.users.add || [],
       remove: dataExamsEdit.users.remove || [],
       secretKey: secretKey || ''
@@ -286,7 +323,11 @@ const DetailsExamsQuestion = () => {
                 </Button>
               )}
             </Form>
-            <Table dataSource={dataSourceUser} columns={columnsUser} pagination={false} />
+            <Table
+              dataSource={checkExaminer ? dataSourcExaminer : dataSourceUser}
+              columns={columnsUser}
+              pagination={false}
+            />
           </div>
         ) : (
           <MemberDepartment checkMember={true} sendDataToParent={handleDataFromChild} />
@@ -385,13 +426,13 @@ const DetailsExamsQuestion = () => {
           </Form>
           <div className='mt-5'>
             <Divider orientation='left'>danh sách người chấm thi</Divider>
-            <Button  onClick={showDrawer} styleClass='py-2 bg-warning'>
+            <Button onClick={() => showDrawer('1')} styleClass='py-2 bg-warning'>
               xem dánh sách
             </Button>
           </div>
           <div className='mt-5'>
             <Divider orientation='left'>danh sách người thi</Divider>
-            <Button onClick={showDrawer} styleClass='py-2'>
+            <Button onClick={() => showDrawer('0')} styleClass='py-2'>
               xem dánh sách
             </Button>
           </div>

@@ -16,7 +16,7 @@ const AnalyticsAdmin = createApi({
   }),
   tagTypes: ['analyticsAdmin'],
   endpoints: (builder) => ({
-    getAnalyticAdmin: builder.query<any, any>({
+    getAnalyticAdmin: builder.query<any, void>({
       query: () => {
         return {
           url: `/analytics/admin`

@@ -134,7 +134,7 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember?: boo
       dataIndex: 'avatar',
       key: 'avatar',
       render: (avatar: string) => {
-        return <div>{avatar !== '' ? <img className='w-[50px] rounded-sm' src={`${uri}${avatar}`} /> : ''}</div>
+        return <div>{avatar !== '' ? <img className='w-[50px]  rounded-sm' src={`${uri}${avatar}`} /> : ''}</div>
       }
     },
     {

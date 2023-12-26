@@ -25,6 +25,7 @@ import AnalyticsUser from '~/apis/analytics/analyticUser'
 import AnalyticsAdmin from '~/apis/analytics/analyticsAdmin'
 import { showDetailResultsReducer } from '../slice/detailsResultExam'
 import makingExamDepartmentApi from '~/apis/making/makingExamDepartment'
+import AnalyticsDepartment from '~/apis/analytics/analyticDepartment'
 export const store = configureStore({
   reducer: {
     [RoleApi.reducerPath]: RoleApi.reducer,
@@ -44,6 +45,7 @@ export const store = configureStore({
     [AnalyticsUser.reducerPath]: AnalyticsUser.reducer,
     [AnalyticsAdmin.reducerPath]: AnalyticsAdmin.reducer,
     [makingExamDepartmentApi.reducerPath]: makingExamDepartmentApi.reducer,
+    [AnalyticsDepartment.reducerPath]: AnalyticsDepartment.reducer,
     //toolkit
     theme: themeReducer,
     checkToken: authReducer,
@@ -71,6 +73,7 @@ export const store = configureStore({
       topicExamsApi.middleware,
       AnalyticsAdmin.middleware,
       makingExamDepartmentApi.middleware,
+      AnalyticsDepartment.middleware,
       AnalyticsUser.middleware,
       rtkQueryErrorLogger
     )

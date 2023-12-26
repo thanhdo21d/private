@@ -4,9 +4,9 @@ import logoExam from '../../assets/exam (1).png'
 import logoDepartment from '../../assets/images/download.png'
 import logoAdmin from '../../assets/user.png'
 
-const CardOne = ({ data, user, depaermenrt, exam, path, otherAdmin }: any) => {
+const CardOne = ({ data, user, depaermenrt, exam, path, otherAdmin, datalias }: any) => {
+  const checkpath = location.pathname.includes('dashboard-other-admin')
   console.log(data)
-
   return (
     <div className='rounded-md border border-stroke bg-white py-6 px-3 shadow-default dark:border-strokedark dark:bg-boxdark'>
       <div className='flex justify-between items-center'>
@@ -33,8 +33,8 @@ const CardOne = ({ data, user, depaermenrt, exam, path, otherAdmin }: any) => {
             {exam && data.countExam}
             {otherAdmin && data.countOtherAdmin}
           </h4>
-          <Link to={`${path}`} className='text-sm pt-2 font-medium underline'>
-            Total views
+          <Link to={`${checkpath ? '' : path}`} className='text-sm pt-2 font-medium underline'>
+            {checkpath ? '' : 'Total views'}
           </Link>
         </div>
         <span className='text-meta-3 flex items-center gap-1 text-sm font-medium'>

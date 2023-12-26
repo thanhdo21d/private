@@ -225,7 +225,7 @@ const FormData = () => {
   }
   const handelExport = async () => {
     try {
-      const response = await axios.post(`${uri}export/question/${id}`, {
+      const response = await axios.get(`${uri}export/question/${id}`, {
         responseType: 'blob'
       })
       const url = window.URL.createObjectURL(new Blob([response.data]))
@@ -349,12 +349,10 @@ const FormData = () => {
                 okText='Yes'
                 cancelText='No'
               >
-                <Tooltip title='Trở Về'>
-                  <p className='text-base font-medium text-black  flex items-center gap-4'>
-                    <img className='w-[22px]' src={logoRemove} />
-                    <span className='text-white'> Xóa Tất Cả</span>
-                  </p>
-                </Tooltip>
+                <p className='text-base font-medium text-black  flex items-center gap-4'>
+                  <img className='w-[22px]' src={logoRemove} />
+                  <span className='text-white'> Xóa Tất Cả</span>
+                </p>
               </Popconfirm>
             </div>
             {/*  */}

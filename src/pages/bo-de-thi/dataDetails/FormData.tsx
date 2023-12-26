@@ -27,6 +27,7 @@ const FormData = () => {
   const uri = import.meta.env.VITE_API
   const { id } = useParams()
   const [open, setOpen] = useState(false)
+  const [exportLoading, setExportLoading] = useState(false)
   const [showImage, setShowImage] = useState<boolean>(false)
   const [Image, setImage] = useState<string>('')
   const [queryParameters] = useSearchParams()
@@ -224,6 +225,7 @@ const FormData = () => {
     })
   }
   const handelExport = async () => {
+    setExportLoading(true)
     try {
       const response = await axios.get(`${uri}export/question/${id}`, {
         responseType: 'blob'
@@ -236,8 +238,10 @@ const FormData = () => {
       link.click()
       window.URL.revokeObjectURL(url)
       document.body.removeChild(link)
+      setExportLoading(false)
     } catch (error: any) {
       console.error('Lỗi: ' + error.message)
+      setExportLoading(false)
     }
   }
   const onFinishFailed = (errorInfo: any) => {
@@ -328,9 +332,13 @@ const FormData = () => {
             Áp dụng
           </Button>
           <div>
-            <Tooltip title='export to excels'>
-              <img onClick={handelExport} className='w-[47px] cursor-pointer hover:scale-105' src={`${logoExsl}`} />
-            </Tooltip>
+            {exportLoading ? (
+              <p>loading....</p>
+            ) : (
+              <Tooltip title='export to excels'>
+                <img onClick={handelExport} className='w-[47px] cursor-pointer hover:scale-105' src={`${logoExsl}`} />
+              </Tooltip>
+            )}
           </div>
         </div>
         <div>

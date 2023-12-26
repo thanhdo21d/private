@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '~/store/root/hook'
 import { setAnserCheck, setCount } from '~/store/slice/exams.slice'
 const CheckQuesion = () => {
   const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
+  const { examsData } = useAppSelector((state) => state.examAction)
   const { profile } = useContext(AppContext)
   const [queryParameters] = useSearchParams()
   const idSession: string | null = queryParameters.get('idSession')
@@ -21,6 +22,8 @@ const CheckQuesion = () => {
   } = useSessionExamsQuestionQuery({
     id: idSession as string
   })
+
+  console.log(dataIdExmasDetails)
   const handelSearchQuestion = (id: number) => {
     dispatch(setCount(id))
   }
@@ -49,6 +52,7 @@ const CheckQuesion = () => {
             <div className='px-6 h-[5000px] '>
               <div className='grid grid-cols-3 gap-5 mx-auto'>
                 {dataIdExmasDetails?.questions?.map((items: any, index: number) => {
+                  console.log(dataIdExmasDetails.questions)
                   return (
                     <div
                       key={items?._id}
@@ -57,7 +61,9 @@ const CheckQuesion = () => {
                     >
                       <Avatar
                         className={`${
-                          checkDataSubmit[index + 1] != undefined && checkDataSubmit[index + 1]?.length > 0
+                          dataIdExmasDetails.questions[index]?.checkUserChoose != undefined &&
+                          dataIdExmasDetails.questions[index]?.checkUserChoose?.length > 0 &&
+                          dataIdExmasDetails.questions[index]?.checkUserChoose !== ''
                             ? 'bg-blue23'
                             : 'bg-black'
                         } `}

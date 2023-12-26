@@ -1,6 +1,27 @@
 ///topicExams/create/
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import Cookies from 'js-cookie'
+
+interface Iquestion {
+  _id: string
+  checkUserChoose: string
+  choose: {
+    q: string
+    img: string
+  }[]
+  image: string
+  no?: string | number
+  point: string | number
+  question: string
+}
+interface IsessionExam {
+  TimeEnd: string
+  TimeLeft: number
+  checck: string
+  status: boolean
+  statusError: string
+  questions: Iquestion[]
+}
 const topicExamsApi = createApi({
   reducerPath: 'topicExams',
   baseQuery: fetchBaseQuery({
@@ -68,7 +89,7 @@ const topicExamsApi = createApi({
       },
       providesTags: ['topicExams']
     }),
-    sessionExamsQuestion: builder.query<any[], { id: string }>({
+    sessionExamsQuestion: builder.query<IsessionExam, { id: string }>({
       query: ({ id }: { id: string }) => {
         return {
           url: `/examstatus/${id}`,
@@ -133,6 +154,19 @@ const topicExamsApi = createApi({
       },
       invalidatesTags: ['topicExams']
     }),
+    InsertUserChoose: builder.mutation<any[], { id: string; userChoose: any; index: any }>({
+      query: ({ id, userChoose, index }: { id: string; userChoose: any; index: any }) => {
+        return {
+          url: '/insert/user-choose/' + id,
+          method: 'POST',
+          body: {
+            userChoose: userChoose,
+            index: index
+          }
+        }
+      },
+      invalidatesTags: ['topicExams']
+    }),
     updateStatusExamsUser: builder.mutation<any[], { id: string; status: string; commentByAdmin: string }>({
       query: ({ id, status, commentByAdmin }: { id: string; status: string; commentByAdmin: string }) => {
         return {
@@ -175,6 +209,7 @@ export const {
   useUpdateStatusExamsUserMutation,
   useGetExamsTlQuery,
   useUpdateCommentAdminExamsUserMutation,
-  useDoneExamsTlMutation
+  useDoneExamsTlMutation,
+  useInsertUserChooseMutation
 } = topicExamsApi
 export default topicExamsApi

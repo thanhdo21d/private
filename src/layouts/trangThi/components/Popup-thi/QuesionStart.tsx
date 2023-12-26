@@ -19,7 +19,11 @@ import { Checkbox, Divider, Form, Image, Input, Skeleton, message } from 'antd'
 import { container, formats } from '~/utils/quill'
 import Spreadsheet from 'react-spreadsheet'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
-import { useSessionExamsQuestionQuery, useSubmitExamsQuestionMutation } from '~/apis/topicQuestion/topicQuestion'
+import {
+  useInsertUserChooseMutation,
+  useSessionExamsQuestionQuery,
+  useSubmitExamsQuestionMutation
+} from '~/apis/topicQuestion/topicQuestion'
 import { AppContext } from '~/contexts/app.contexts'
 import { Loader } from '~/common'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
@@ -36,22 +40,12 @@ const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [showStop, setShowStop] = useState<boolean>(false)
   const [Question, setQuestion] = useState<any[]>([])
+  const [insertUserChoose] = useInsertUserChooseMutation()
   const listName = ['A', 'B', 'C', 'D']
   const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
   //
   const [SubmitData, setSubmitData] = useState<any[]>([])
-  function updateChoose(counts: number, chooses: string) {
-    let newData = SubmitData
-    if (SubmitData[counts] == undefined) newData = { ...SubmitData, ...{ [counts]: [chooses] } }
-    else if (!SubmitData[counts].includes(chooses)) {
-      newData[counts].push(chooses)
-    } else if (SubmitData[counts].includes(chooses)) {
-      let arr = SubmitData[counts]
-      arr = arr.filter((item: any) => item != chooses)
-      newData[counts] = arr
-    }
-    setSubmitData(newData)
-  }
+
   const [answers, setAnswers] = useState<any>({})
   const { profile } = useContext(AppContext)
   const { id } = useParams()
@@ -119,7 +113,18 @@ const QuesionStart = () => {
     }
   }, [])
   const incrementCountData = () => {
+    console.log(checkDataSubmit[countAction + 1])
     dispatch(incrementCount())
+    insertUserChoose({
+      id: idSession as string,
+      index: countAction,
+      userChoose: checkDataSubmit[countAction + 1].join('')
+    })
+      .unwrap()
+      .then(() => {
+        console.log('insert success')
+      })
+      .catch(() => message.error('error'))
   }
   const decrementCountData = () => {
     dispatch(decrementCount())
@@ -160,8 +165,7 @@ const QuesionStart = () => {
       socket.disconnect()
     }
   }, [])
-  const renderer = ({ minutes, seconds, completed }) => {
-    console.log(minutes, seconds, completed)
+  const renderer = ({ minutes, seconds, completed }: any) => {
     if (completed) {
       return <span>Thời gian đã hết</span>
     } else {
@@ -184,7 +188,7 @@ const QuesionStart = () => {
         <Skeleton />
       </div>
     )
-  console.log(dataIdExmasDetails, 'ccc')
+  console.log(countAction, 'ccc')
   return (
     <div className=' mx-auto px-4'>
       <div>{(dataIdExmasDetails?.statusError === '1' || showStop) && <PopError />}</div>
@@ -253,7 +257,7 @@ const QuesionStart = () => {
                             onChange={handleEditorChange}
                             rows={4}
                             placeholder='Vui lòng điền đáp án của bạn'
-                            value={answers[count] !== undefined ? answers[count] : ''}
+                            value={answers[count] !== undefined ? answers[count] : examsData?.checkUserChoose || ''}
                             id=''
                           />
                           <Button
@@ -288,7 +292,7 @@ const QuesionStart = () => {
                           className={`w-full mt-[20px] border border-body  rounded-md  flex items-center text-start
                overflow-h-scroll min-h-[70px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
                hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5 ${
-                 checkDataSubmit[count + 1]?.includes(listName[index]) && checkDataSubmit[count + 1] != undefined
+                 examsData?.checkUserChoose?.includes(listName[index]) && examsData?.checkUserChoose != undefined
                    ? 'bg-warning'
                    : ''
                }`}
@@ -355,3 +359,16 @@ const QuesionStart = () => {
 }
 
 export default QuesionStart
+
+// function updateChoose(counts: number, chooses: string) {
+//     let newData = SubmitData
+//     if (SubmitData[counts] == undefined) newData = { ...SubmitData, ...{ [counts]: [chooses] } }
+//     else if (!SubmitData[counts].includes(chooses)) {
+//       newData[counts].push(chooses)
+//     } else if (SubmitData[counts].includes(chooses)) {
+//       let arr = SubmitData[counts]
+//       arr = arr.filter((item: any) => item != chooses)
+//       newData[counts] = arr
+//     }
+//     setSubmitData(newData)
+//   }

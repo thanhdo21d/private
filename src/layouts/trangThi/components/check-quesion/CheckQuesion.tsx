@@ -13,7 +13,9 @@ const CheckQuesion = () => {
   const { examsData } = useAppSelector((state) => state.examAction)
   const { profile } = useContext(AppContext)
   const [queryParameters] = useSearchParams()
-  const idSession: string | null = queryParameters.get('idSession')
+  // const idSession: string | null = queryParameters.get('idSession')
+  const idSession = sessionStorage.getItem('idSession2')
+
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['header'])
   const {

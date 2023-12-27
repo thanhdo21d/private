@@ -17,9 +17,18 @@ import { Button } from '~/components'
 import { toastService } from '~/utils/toask/toaskMessage'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { pause } from '~/utils/utils'
+import { useGetIdUserQuery } from '~/apis/user/user.api'
+import { useUpdateSesionUSerMutation } from '~/apis/topicQuestion/topicQuestion'
 const ChoosExam = () => {
   const navigate = useNavigate()
   const { profile } = useContext(AppContext)
+  const [updateSessionUser] = useUpdateSesionUSerMutation()
+  const {
+    data: dataUser,
+    isLoading: isUserLoading,
+    isFetching: isUserFetching
+  } = useGetIdUserQuery(profile?._id as string)
+
   const [checkSecret, setCheckSecret] = useState(false)
   const token = Cookies.get('token')
   console.log(`Access token: ${token}`)
@@ -30,7 +39,7 @@ const ChoosExam = () => {
   const [queryParameters] = useSearchParams()
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
-  const idExams: string | null = queryParameters.get('idExams')
+  const idExams = sessionStorage.getItem('idSession')
   const search: string | null = queryParameters.get('search')
   const {
     data: dataIdExmas,
@@ -72,14 +81,15 @@ const ChoosExam = () => {
           })
           console.log(dataCheck.data)
           if (dataCheck.data.status) {
-            navigate({
-              pathname: `/action-bai-thi/${idExams}`,
-              search: createSearchParams({
-                idSession: data.id
-              }).toString()
+            sessionStorage.setItem('idSession2', data.id)
+            navigate(`/action-bai-thi/${idExams}`)
+            updateSessionUser({
+              id: profile?._id as string,
+              idSessionExam: idExams as string
             })
+              .unwrap()
+              .then(() => console.log('1'))
           } else {
-            console.log(1)
             toastService.error(dataCheck.data.msg)
           }
         } catch (error: any) {
@@ -96,6 +106,15 @@ const ChoosExam = () => {
       toastService.error(error.response.data.message)
     }
   }
+  console.log(dataUser)
+  if (isUserLoading || isUserFetching)
+    return (
+      <div>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    )
   return (
     <div className='flex justify-center'>
       {dataIdExmas?.data?.topicExams?.length == 0 && (
@@ -241,20 +260,34 @@ const ChoosExam = () => {
                           Lưu ý : Không tự ý thoát khi làm bài
                         </div>
                         <div className='col-span-12 mt-20 mb-5 text-gray-100'>
-                          <button
-                            className='rounded hover:bg-success bg-teal-500 w-full py-3'
-                            onClick={() => {
-                              setCheckSecret(true)
-                              return navigate({
-                                search: createSearchParams({
-                                  ...queryConfig,
-                                  idExams: data._id
-                                }).toString()
-                              })
-                            }}
-                          >
-                            Bắt Đầu Thi
-                          </button>
+                          {data._id.toString() === dataUser.user.idSessionExam.toString() ? (
+                            <button
+                              className='rounded hover:bg-danger bg-warning w-full py-3 cursor-not-allowed'
+                              onClick={() => {
+                                alert('Bạn đã ở trong bài thi này')
+                              }}
+                            >
+                              Bạn đã ở trong bài thi này
+                            </button>
+                          ) : (
+                            <button
+                              className='rounded hover:bg-success bg-teal-500 w-full py-3'
+                              onClick={() => {
+                                setCheckSecret(true)
+                                sessionStorage.setItem('idSession', data._id)
+
+                                // return navigate({
+                                //   search: createSearchParams({
+                                //     ...queryConfig,
+                                //     idExams: data._id
+                                //   }).toString()
+                                // })
+                              }}
+                            >
+                              Bắt Đầu Thi
+                            </button>
+                          )}
+
                           <button
                             className='rounded hover:bg-warning bg-teal-500 w-full py-3 mt-5 flex items-center gap-3 justify-around'
                             onClick={() => navigate('/')}

@@ -19,7 +19,8 @@ import { Divider, Image, Input, Skeleton, message } from 'antd'
 import {
   useInsertUserChooseMutation,
   useSessionExamsQuestionQuery,
-  useSubmitExamsQuestionMutation
+  useSubmitExamsQuestionMutation,
+  useUpdateSesionUSerMutation
 } from '~/apis/topicQuestion/topicQuestion'
 import { AppContext } from '~/contexts/app.contexts'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
@@ -42,13 +43,15 @@ const QuesionStart = () => {
   const [insertUserChoose] = useInsertUserChooseMutation()
   const listName = ['A', 'B', 'C', 'D']
   const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
+  const [updateSessionUser] = useUpdateSesionUSerMutation()
   const [answers, setAnswers] = useState<any>({})
   const { profile } = useContext(AppContext)
   const { id } = useParams()
   const navigate = useNavigate()
   const [height, setHeight] = useState<any>(null)
   const [queryParameters] = useSearchParams()
-  const idSession: string | null = queryParameters.get('idSession')
+  const idSession = sessionStorage.getItem('idSession2')
+  const idExams = sessionStorage.getItem('idSession')
   const [actionSubmit] = useSubmitExamsQuestionMutation()
   const [width, setWidth] = useState<any>(null)
   const confetiRef: any = useRef(null)
@@ -90,6 +93,12 @@ const QuesionStart = () => {
           .then((data) => {
             setQuestion(data)
             setShowPop(true)
+            updateSessionUser({
+              id: profile?._id as string,
+              idSessionExam: ''
+            })
+              .unwrap()
+              .then(() => console.log('1'))
           })
           .catch((error) => console.error(error))
         setTimeout(() => {
@@ -107,6 +116,12 @@ const QuesionStart = () => {
         .then((data) => {
           setQuestion(data)
           setShowPop(true)
+          updateSessionUser({
+            id: profile?._id as string,
+            idSessionExam: ''
+          })
+            .unwrap()
+            .then(() => console.log('1'))
         })
         .catch((error) => console.error(error))
     }
@@ -196,7 +211,7 @@ const QuesionStart = () => {
   }, [])
   const renderer = ({ minutes, seconds, completed }: any) => {
     if (completed) {
-      return handelSubmit('1')
+      // return handelSubmit('1')
     } else {
       return (
         <span>
@@ -217,6 +232,7 @@ const QuesionStart = () => {
         <Skeleton />
       </div>
     )
+  console.log('1')
   return (
     <div className=' mx-auto px-4'>
       <div>{(dataIdExmasDetails?.statusError === '1' || showStop) && <PopError />}</div>

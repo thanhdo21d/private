@@ -6,7 +6,11 @@ import { Breadcrumb, Button } from '~/components'
 import { Divider, Form, Input, Modal, Popconfirm, Skeleton, Table, Tooltip, message } from 'antd'
 import { UserOutlined, FieldTimeOutlined } from '@ant-design/icons'
 import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { useGetAllUserStartExamsQuery, useUpdateStatusExamsUserMutation } from '~/apis/topicQuestion/topicQuestion'
+import {
+  useGetAllUserStartExamsQuery,
+  useUpdateSesionUSerMutation,
+  useUpdateStatusExamsUserMutation
+} from '~/apis/topicQuestion/topicQuestion'
 import startButton from '../../assets/start-button.png'
 import messageStop from '../../assets/text.png'
 import stopButton from '../../assets/stop.png'
@@ -26,6 +30,7 @@ const TakingExam = () => {
   const [checkStop, setCheckStop] = useState(false)
   const [checkMessage, setCheckMessage] = useState(false)
   const [messageByAdmin, setMessageByAdmin] = useState('')
+  const [updateSessionUser] = useUpdateSesionUSerMutation()
 
   const { id } = useParams()
   const socket = io(uri, {
@@ -66,6 +71,7 @@ const TakingExam = () => {
     id: id as string,
     searchQuery: search as string
   })
+  console.log(dataUserStart)
   const onFinish = ({ code }: { code: string }) => {
     navigate({
       search: createSearchParams({
@@ -82,7 +88,7 @@ const TakingExam = () => {
       }).toString()
     })
   }
-  const confirmUpdate = ({ id: idSession, num }: { id: string; num: string }) => {
+  const confirmUpdate = ({ id: idSession, num, userId }: { id: string; num: string; userId: string }) => {
     updateStatusExam({
       id: idSession,
       status: num,
@@ -93,6 +99,12 @@ const TakingExam = () => {
         if (data.message) toastService.success(num == '1' ? 'Đã tạm dừng bài thi' : 'Bài thi đã hoạt động')
       })
       .catch((error) => toastService.error('error updating '))
+      updateSessionUser({
+      id: userId,
+      idSessionExam: ''
+    })
+      .unwrap()
+      .then(() => console.log('1'))
   }
   const handelClickOutExam = async () => {
     const confirm = window.confirm('Bạn có muốn kết thúc ')
@@ -124,6 +136,7 @@ const TakingExam = () => {
     key: items._id,
     code: items.user?.employeeCode,
     name: items.user?.username,
+    userId: items.user?._id,
     avatar: items.user?.avatar,
     Endtime: items?.Endtime2,
     status: items?.status,
@@ -169,14 +182,24 @@ const TakingExam = () => {
     },
     {
       title: <p className='flex justify-center '>Tác vụ</p>,
-      render: ({ key: id, status, commentByAdmin }: { key: string; status: string; commentByAdmin: string }) => {
+      render: ({
+        key: id,
+        status,
+        commentByAdmin,
+        userId
+      }: {
+        key: string
+        status: string
+        commentByAdmin: string
+        userId: string
+      }) => {
         return (
           <div className='flex justify-center items-center gap-5'>
             <div>
               <Popconfirm
                 title='tiếp tục'
                 description='nhân viên tiếp tục bài thi?'
-                onConfirm={() => confirmUpdate({ id: id, num: '0' })}
+                onConfirm={() => confirmUpdate({ id: id, num: '0', userId: userId })}
                 okButtonProps={{
                   style: { backgroundColor: 'blue' }
                 }}

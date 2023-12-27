@@ -58,6 +58,7 @@ import GetalltaskingExams from './pages/takingExam/GetalltaskingExams'
 import GeIDExamsDepartmentMaking from './pages/cham-thi/GeIDExamsDepartmentMaking'
 import ProtectedRoute from './protected-route'
 import DsExamsMiner from './pages/cham-thi/DsExamsMiner'
+import CheckSessionExams from './permissions/CheckSessionExams'
 export const PrivateRoute = () => {
   const cookie = Cookies.get('token')
   const { profile } = useContext(AppContext)
@@ -123,7 +124,16 @@ export const routers = createBrowserRouter([
           { index: true, element: <Navigate to='action/home' /> },
           { path: 'home', element: <AcceptUserDipament /> },
           { path: 'choose-exam/:id', element: <ChooseExams /> },
-          { path: 'action-bai-thi/:id', element: <PopQuesion /> },
+          {
+            path: 'action-bai-thi/:id',
+            element: <CheckSessionExams></CheckSessionExams>,
+            children: [
+              {
+                index: true,
+                element: <PopQuesion />
+              }
+            ]
+          },
           { path: 'ChoosExam/:id', element: <ChoosExam /> }
         ]
       }

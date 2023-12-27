@@ -183,6 +183,18 @@ const topicExamsApi = createApi({
       },
       invalidatesTags: ['topicExams']
     }),
+    updateSesionUSer: builder.mutation<any[], { id: string; idSessionExam: string }>({
+      query: ({ id, idSessionExam }: { id: string; idSessionExam: string }) => {
+        return {
+          url: '/update-session-user/' + id,
+          method: 'PATCH',
+          body: {
+            idSessionExam: idSessionExam
+          }
+        }
+      },
+      invalidatesTags: ['topicExams']
+    }),
     InsertUserChoose: builder.mutation<any[], { id: string; userChoose: any; index: any }>({
       query: ({ id, userChoose, index }: { id: string; userChoose: any; index: any }) => {
         return {
@@ -239,6 +251,7 @@ export const {
   useGetExamsTlQuery,
   useUpdateCommentAdminExamsUserMutation,
   useDoneExamsTlMutation,
-  useInsertUserChooseMutation
+  useInsertUserChooseMutation,
+  useUpdateSesionUSerMutation
 } = topicExamsApi
 export default topicExamsApi

@@ -76,9 +76,27 @@ const QuesionStart = () => {
     setHeight((confetiRef.current = '2000px'))
     setWidth((confetiRef.current = '1200px'))
   }, [])
-  const handelSubmit = () => {
-    const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
-    if (confirm) {
+  const handelSubmit = (num: string) => {
+    if (num == '0') {
+      const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
+      if (confirm) {
+        actionSubmit({
+          id: idSession as string,
+          data: dataUserChoose,
+          mailUser: profile?.email as string,
+          nameExams: ''
+        })
+          .unwrap()
+          .then((data) => {
+            setQuestion(data)
+            setShowPop(true)
+          })
+          .catch((error) => console.error(error))
+        setTimeout(() => {
+          // navigate('/')
+        }, 10000)
+      }
+    } else {
       actionSubmit({
         id: idSession as string,
         data: dataUserChoose,
@@ -91,9 +109,6 @@ const QuesionStart = () => {
           setShowPop(true)
         })
         .catch((error) => console.error(error))
-      setTimeout(() => {
-        // navigate('/')
-      }, 10000)
     }
   }
   useEffect(() => {
@@ -181,7 +196,7 @@ const QuesionStart = () => {
   }, [])
   const renderer = ({ minutes, seconds, completed }: any) => {
     if (completed) {
-      return <span>Thời gian đã hết</span>
+      return handelSubmit('1')
     } else {
       return (
         <span>
@@ -226,7 +241,7 @@ const QuesionStart = () => {
             <div className='justify-end flex items-center gap-5'>
               <Button
                 styleClass=' w-[120px] 2xl:w-[200px] !px-0 text-xl font-bold h-[45px] bg-[#FF3366] rounded-md shadow-xl hover:bg-warning'
-                onClick={handelSubmit}
+                onClick={() => handelSubmit('0')}
               >
                 {t('product.submit_form')}
               </Button>

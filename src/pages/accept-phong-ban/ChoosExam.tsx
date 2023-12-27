@@ -39,7 +39,7 @@ const ChoosExam = () => {
   } = useGetIdExamsCategoriesQuery({
     id: id,
     page: dataPageQuery || 1,
-    limit: datalimitQueryChange || 3,
+    limit: datalimitQueryChange || 4,
     search: search || ''
   })
   const onFinish = async ({ secret }: { secret: string }) => {
@@ -247,6 +247,7 @@ const ChoosExam = () => {
                               setCheckSecret(true)
                               return navigate({
                                 search: createSearchParams({
+                                  ...queryConfig,
                                   idExams: data._id
                                 }).toString()
                               })

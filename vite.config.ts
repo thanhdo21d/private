@@ -21,7 +21,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext', // Đối tượng JavaScript mục tiêu (browserslist)
-    outDir: 'D:\\folder-build/dist',
+    outDir: 'dist',
     // Thư mục đầu ra của build
     assetsDir: 'assets', // Thư mục chứa các tài sản (hình ảnh, font chữ, ...)
     sourcemap: true // Tạo sourcemap cho mã đầu ra

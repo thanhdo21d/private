@@ -23,7 +23,13 @@ import {
 } from '~/apis/topicQuestion/topicQuestion'
 import { AppContext } from '~/contexts/app.contexts'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
-import { decrementCount, incrementCount, setExamsData, updateSubmitData } from '~/store/slice/exams.slice'
+import {
+  decrementCount,
+  incrementCount,
+  setExamsData,
+  setServerData,
+  updateSubmitData
+} from '~/store/slice/exams.slice'
 import PopError from './PopError'
 const QuesionStart = () => {
   const uri = import.meta.env.VITE_API
@@ -58,7 +64,7 @@ const QuesionStart = () => {
   } = useSessionExamsQuestionQuery({
     id: idSession as string
   })
-  const dataUserChoose = dataIdExmasDetails?.questions.map((question) => question.checkUserChoose)
+  const dataUserChoose = dataIdExmasDetails?.questions?.map((question) => question.checkUserChoose)
   dataUserChoose?.unshift('')
   console.log(dataUserChoose)
   useEffect(() => {
@@ -117,7 +123,13 @@ const QuesionStart = () => {
       })
       .catch(() => message.error('error'))
   }, [dispatch, idSession, countAction, checkDataSubmit, insertUserChoose])
-
+  useEffect(() => {
+    if (dataUserChoose !== undefined) {
+      console.log('1')
+      dispatch(setServerData(dataUserChoose))
+    }
+  }, [dispatch, idSession, dataIdExmasDetails?.questions])
+  console.log(dataUserChoose, checkDataSubmit, 'day ne')
   const decrementCountData = useCallback(() => {
     dispatch(decrementCount())
     insertUserChoose({
@@ -287,8 +299,7 @@ const QuesionStart = () => {
                           className={`w-full mt-[20px] border border-body  rounded-md  flex items-center text-start
                overflow-h-scroll min-h-[70px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
                hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5 ${
-                 (examsData?.checkUserChoose?.includes(listName[index]) && examsData?.checkUserChoose != undefined) ||
-                 (checkDataSubmit[count + 1]?.includes(listName[index]) && checkDataSubmit[count + 1] != undefined)
+                 checkDataSubmit[count + 1]?.includes(listName[index]) && checkDataSubmit[count + 1] != undefined
                    ? 'bg-warning'
                    : ''
                }`}

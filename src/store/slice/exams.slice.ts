@@ -13,7 +13,9 @@ interface CategoriesState {
   examsData: IexmaData
   submitData: any
   answers: string
+  serverData: any[]
 }
+
 const initialState: CategoriesState = {
   examsData: {
     _id: '',
@@ -26,7 +28,8 @@ const initialState: CategoriesState = {
   },
   answers: '',
   count: 0,
-  submitData: []
+  submitData: [],
+  serverData: []
 }
 const examSlice = createSlice({
   name: 'exam',
@@ -61,9 +64,19 @@ const examSlice = createSlice({
         newData[counts] = newData[counts].filter((item: any) => item !== chooses)
       }
       state.submitData = newData
+    },
+    setServerData: (state, action: PayloadAction<any>) => {
+      state.submitData = action.payload
     }
   }
 })
-export const { incrementCount, decrementCount, setExamsData, setCount, updateSubmitData, setAnserCheck } =
-  examSlice.actions
+export const {
+  incrementCount,
+  decrementCount,
+  setExamsData,
+  setCount,
+  updateSubmitData,
+  setAnserCheck,
+  setServerData
+} = examSlice.actions
 export const examsReducer = examSlice.reducer

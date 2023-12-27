@@ -292,7 +292,13 @@ const DetailsExamsQuestion = () => {
   if (isLoadingDetails || isFetchingDetails) return <p>loading.....</p>
   return (
     <div className='w-full'>
-      <Drawer width={900} title='danh sách người thi' placement='right' onClose={onClose} open={open}>
+      <Drawer
+        width={900}
+        title={`danh sách ${checkExaminer ? 'người chấm thi' : ' thi'} `}
+        placement='right'
+        onClose={onClose}
+        open={open}
+      >
         {checkMember ? (
           <div className=''>
             <Form
@@ -385,7 +391,6 @@ const DetailsExamsQuestion = () => {
                 </div>
               </div>
             )}
-
             <div>
               <p>Thời Gian(phút) </p>
               <Form.Item name='time'>

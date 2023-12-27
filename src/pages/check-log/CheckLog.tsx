@@ -100,14 +100,15 @@ const CheckLog = () => {
     })
   }
   const dataSource = dataLoggers?.docs.map(
-    ({ user, logType, contents, ipAddress, data, createdAt }: any, index: number) => ({
+    ({ user, logType, contents, ipAddress, data, createdAt, endDate }: any, index: number) => ({
       key: index + 1,
       user: user,
       logType: logType,
       contents: contents,
       data: data,
       ipAddress: ipAddress,
-      createdAt: createdAt
+      createdAt: createdAt,
+      endDate: endDate
     })
   )
   const columns = [
@@ -154,6 +155,14 @@ const CheckLog = () => {
       key: 'createdAt',
       render: (data: string) => {
         return <p>{data.split('T')[0]}</p>
+      }
+    },
+    {
+      title: <p className='text-danger font-medium'>Ngày xóa</p>,
+      dataIndex: 'endDate',
+      key: 'endDate',
+      render: (data: string) => {
+        return <p className='text-black font-bold'>{data.split('T')[0]}</p>
       }
     }
   ]

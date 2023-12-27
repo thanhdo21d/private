@@ -78,10 +78,7 @@ const CheckQuesion = () => {
                     >
                       <Avatar
                         className={`${
-                          (dataIdExmasDetails.questions[index]?.checkUserChoose != undefined &&
-                            dataIdExmasDetails.questions[index]?.checkUserChoose?.length > 0 &&
-                            dataIdExmasDetails.questions[index]?.checkUserChoose !== '') ||
-                          (checkDataSubmit[index + 1] != undefined && checkDataSubmit[index + 1]?.length > 0)
+                          checkDataSubmit?.[index + 1] != undefined && checkDataSubmit?.[index + 1]?.length > 0
                             ? 'bg-blue23'
                             : 'bg-black'
                         } `}

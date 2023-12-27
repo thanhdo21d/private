@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Form, Input, Select, Skeleton } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { Button } from '~/components'
-import { useParams } from 'react-router'
+import { useParams } from 'react-router-dom'
 import { useGetIdUserQuery } from '~/apis/user/user.api'
 import { useGetAllRolesQuery } from '~/apis/roles/roles.api'
 import { useUpdateRoleUserMutation } from '~/apis/roles/changeRoleUser'
@@ -13,7 +13,8 @@ type FieldType = {
   roles?: string
 }
 const EditMember: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
+  const { id } = useParams()
+  console.log(id)
   const navigate = useNavigate()
   const {
     data: dataMember,

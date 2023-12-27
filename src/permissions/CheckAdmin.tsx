@@ -10,7 +10,7 @@ const CheckAdmin = () => {
       navigate('/login')
     }
   }, [cookie, navigate])
-  
+
   return cookie ? <Outlet /> : <Navigate to='/login' />
 }
 

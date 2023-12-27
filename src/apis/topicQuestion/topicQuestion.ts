@@ -13,6 +13,7 @@ interface Iquestion {
   no?: string | number
   point: string | number
   question: string
+  name: string
 }
 interface IsessionExam {
   TimeEnd: string
@@ -21,6 +22,34 @@ interface IsessionExam {
   status: boolean
   statusError: string
   questions: Iquestion[]
+}
+interface IquestionCheck {
+  choose: {
+    q: string
+    img: string
+  }[]
+  commentAdmin: string | null
+  imageQuestion: string[]
+  point: number
+  pointAdmin: string | null | number
+  questionName: string
+  trueAnswer: string
+  userChoose: string[]
+}
+interface Idetails {
+  _id: string
+  user: string
+  updateAt: string
+  score: string
+  nameExams: string
+  isCheck: string
+  idExams: string
+  fail_answer: string
+  examiner: string[]
+  createdAt: string
+  correct_answer: string
+  admin: string
+  questionCheck: IquestionCheck[]
 }
 const topicExamsApi = createApi({
   reducerPath: 'topicExams',
@@ -115,7 +144,7 @@ const topicExamsApi = createApi({
       },
       invalidatesTags: ['topicExams']
     }),
-    getDetailListExam: builder.query<any[], { id: string }>({
+    getDetailListExam: builder.query<Idetails, { id: string }>({
       query: ({ id }: { id: string }) => {
         return {
           url: `/get/details/listExam/${id}`,

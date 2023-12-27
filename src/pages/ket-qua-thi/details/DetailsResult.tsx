@@ -21,6 +21,7 @@ const DetailsResult = () => {
   } = useGetDetailListExamQuery({
     id: id as string
   })
+  console.log(dataDetailsExamUser, '2')
   const onClose = () => {
     setOpen(false)
   }
@@ -73,7 +74,13 @@ const DetailsResult = () => {
     {
       key: '4',
       label: <p className='text-black font-medium '>Ngày Thi</p>,
-      children: <p>{dataDetailsExamUser?.createdAt.split('T')[0]} </p>
+      children: <p>{dataDetailsExamUser?.createdAt.split('T')[0]} </p>,
+      span: 4
+    },
+    {
+      key: '4',
+      label: <p className='text-black font-medium '>Người chấm</p>,
+      children: <p>{dataDetailsExamUser?.admin} </p>
     }
   ]
   const dataSource = dataDetailsExamUser?.questionCheck.map((items: any, index: number) => {

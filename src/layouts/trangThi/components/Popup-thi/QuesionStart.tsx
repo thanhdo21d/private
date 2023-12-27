@@ -1,5 +1,5 @@
 import { Footer, Header } from 'antd/es/layout/layout'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '~/components'
@@ -15,23 +15,16 @@ import { TiTick } from 'react-icons/ti'
 import turnLeft from '../../../../assets/turn-left.png'
 import turnright from '../../../../assets/turn-right.png'
 import 'react-quill/dist/quill.snow.css'
-import { Checkbox, Divider, Form, Image, Input, Skeleton, message } from 'antd'
-import { container, formats } from '~/utils/quill'
-import Spreadsheet from 'react-spreadsheet'
-import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
+import { Divider, Image, Input, Skeleton, message } from 'antd'
 import {
   useInsertUserChooseMutation,
   useSessionExamsQuestionQuery,
   useSubmitExamsQuestionMutation
 } from '~/apis/topicQuestion/topicQuestion'
 import { AppContext } from '~/contexts/app.contexts'
-import { Loader } from '~/common'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
 import { decrementCount, incrementCount, setExamsData, updateSubmitData } from '~/store/slice/exams.slice'
-import axios from 'axios'
 import PopError from './PopError'
-import Popconfirm from './Popconfirm'
-import TextArea from 'antd/es/input/TextArea'
 const QuesionStart = () => {
   const uri = import.meta.env.VITE_API
   const socket = io(uri, {
@@ -43,9 +36,6 @@ const QuesionStart = () => {
   const [insertUserChoose] = useInsertUserChooseMutation()
   const listName = ['A', 'B', 'C', 'D']
   const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
-  //
-  const [SubmitData, setSubmitData] = useState<any[]>([])
-
   const [answers, setAnswers] = useState<any>({})
   const { profile } = useContext(AppContext)
   const { id } = useParams()
@@ -61,7 +51,6 @@ const QuesionStart = () => {
   const { count: countAction } = useAppSelector((state) => state.examAction)
   const { examsData } = useAppSelector((state) => state.examAction)
   const { count } = useAppSelector((state) => state.examAction)
-  console.log(examsData, 'countl')
   const {
     data: dataIdExmasDetails,
     isLoading: isLoadingDetails,
@@ -69,6 +58,9 @@ const QuesionStart = () => {
   } = useSessionExamsQuestionQuery({
     id: idSession as string
   })
+  const dataUserChoose = dataIdExmasDetails?.questions.map((question) => question.checkUserChoose)
+  dataUserChoose?.unshift('')
+  console.log(dataUserChoose)
   useEffect(() => {
     if (dataIdExmasDetails) {
       dispatch(setExamsData(dataIdExmasDetails?.questions[countAction]))
@@ -78,13 +70,12 @@ const QuesionStart = () => {
     setHeight((confetiRef.current = '2000px'))
     setWidth((confetiRef.current = '1200px'))
   }, [])
-
   const handelSubmit = () => {
     const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
     if (confirm) {
       actionSubmit({
         id: idSession as string,
-        data: checkDataSubmit,
+        data: dataUserChoose,
         mailUser: profile?.email as string,
         nameExams: ''
       })
@@ -112,35 +103,46 @@ const QuesionStart = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [])
-  const incrementCountData = () => {
-    console.log(checkDataSubmit[countAction + 1])
+  console.log(checkDataSubmit)
+  const incrementCountData = useCallback(() => {
     dispatch(incrementCount())
     insertUserChoose({
       id: idSession as string,
       index: countAction,
-      userChoose: checkDataSubmit[countAction + 1].join('')
+      userChoose: checkDataSubmit[countAction + 1]
     })
       .unwrap()
       .then(() => {
         console.log('insert success')
       })
       .catch(() => message.error('error'))
-  }
-  const decrementCountData = () => {
+  }, [dispatch, idSession, countAction, checkDataSubmit, insertUserChoose])
+
+  const decrementCountData = useCallback(() => {
     dispatch(decrementCount())
-  }
+    insertUserChoose({
+      id: idSession as string,
+      index: countAction,
+      userChoose: checkDataSubmit[countAction + 1]
+    })
+      .unwrap()
+      .then(() => {
+        console.log('insert success')
+      })
+      .catch(() => message.error('error'))
+  }, [dispatch, idSession, countAction, checkDataSubmit, insertUserChoose])
   useEffect(() => {
     document.onkeydown = function (event) {
       switch (event.keyCode) {
         case 37:
-          dispatch(decrementCount())
+          decrementCountData()
           break
         case 39:
-          dispatch(incrementCount())
+          incrementCountData()
           break
       }
     }
-  }, [dispatch, answers, countAction, count])
+  }, [dispatch, answers, countAction, count, decrementCountData, incrementCountData])
   const handleEditorChange = (event: any) => {
     const newContent = event.target.value
     setAnswers({
@@ -188,7 +190,6 @@ const QuesionStart = () => {
         <Skeleton />
       </div>
     )
-  console.log(countAction, 'ccc')
   return (
     <div className=' mx-auto px-4'>
       <div>{(dataIdExmasDetails?.statusError === '1' || showStop) && <PopError />}</div>
@@ -205,16 +206,10 @@ const QuesionStart = () => {
         >
           <div className='flex w-[100%] items-center  justify-between '>
             <div>
-              {/* <p className='text-xl  py-2 pl-5 font-bold text-white text-center items-center'>
-                {t('product.total_time')} : {dataIdExmasDetails?.TimeLeft} (phút)
-              </p> */}
               <p className='text-xl py-2 pl-5 font-bold text-white text-center items-center'>
                 {t('product.total_time')} :{' '}
-                <Countdown date={Date.now() + dataIdExmasDetails?.TimeLeft * 1000} renderer={renderer} />
+                <Countdown date={Date.now() + (dataIdExmasDetails?.TimeLeft as number) * 1000} renderer={renderer} />
               </p>
-            </div>
-            <div>
-              <h2 className='text-xl font-bold text-white'>{dataIdExmasDetails?.questions?.name} </h2>
             </div>
             <div className='justify-end flex items-center gap-5'>
               <Button
@@ -292,7 +287,8 @@ const QuesionStart = () => {
                           className={`w-full mt-[20px] border border-body  rounded-md  flex items-center text-start
                overflow-h-scroll min-h-[70px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
                hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5 ${
-                 examsData?.checkUserChoose?.includes(listName[index]) && examsData?.checkUserChoose != undefined
+                 (examsData?.checkUserChoose?.includes(listName[index]) && examsData?.checkUserChoose != undefined) ||
+                 (checkDataSubmit[count + 1]?.includes(listName[index]) && checkDataSubmit[count + 1] != undefined)
                    ? 'bg-warning'
                    : ''
                }`}

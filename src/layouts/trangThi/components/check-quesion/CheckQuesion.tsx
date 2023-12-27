@@ -1,14 +1,15 @@
-import { Avatar } from 'antd'
+import { Avatar, message } from 'antd'
 import { Footer, Header } from 'antd/es/layout/layout'
 import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { useSessionExamsQuestionQuery } from '~/apis/topicQuestion/topicQuestion'
+import { useInsertUserChooseMutation, useSessionExamsQuestionQuery } from '~/apis/topicQuestion/topicQuestion'
 import { AppContext } from '~/contexts/app.contexts'
 import { useAppDispatch, useAppSelector } from '~/store/root/hook'
 import { setAnserCheck, setCount } from '~/store/slice/exams.slice'
 const CheckQuesion = () => {
   const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
+  const [insertUserChoose] = useInsertUserChooseMutation()
   const { examsData } = useAppSelector((state) => state.examAction)
   const { profile } = useContext(AppContext)
   const [queryParameters] = useSearchParams()
@@ -26,6 +27,23 @@ const CheckQuesion = () => {
   console.log(dataIdExmasDetails)
   const handelSearchQuestion = (id: number) => {
     dispatch(setCount(id))
+  }
+  const handelCheckEnterByUser = (countAction: number) => {
+    try {
+      handelSearchQuestion(countAction)
+      insertUserChoose({
+        id: idSession as string,
+        index: countAction,
+        userChoose: checkDataSubmit[countAction + 1]
+      })
+        .unwrap()
+        .then(() => {
+          console.log('insert success')
+        })
+        .catch(() => message.error('error'))
+    } catch (error) {
+      message.error('error')
+    }
   }
   if (isLoadingDetails || isFetchingDetails) return <p>loading.........</p>
   return (
@@ -52,18 +70,18 @@ const CheckQuesion = () => {
             <div className='px-6 h-[5000px] '>
               <div className='grid grid-cols-3 gap-5 mx-auto'>
                 {dataIdExmasDetails?.questions?.map((items: any, index: number) => {
-                  console.log(dataIdExmasDetails.questions)
                   return (
                     <div
                       key={items?._id}
-                      onClick={() => handelSearchQuestion(index)}
+                      onClick={() => handelCheckEnterByUser(index)}
                       className='flex hover:scale-110 cursor-pointer justify-center items-center'
                     >
                       <Avatar
                         className={`${
-                          dataIdExmasDetails.questions[index]?.checkUserChoose != undefined &&
-                          dataIdExmasDetails.questions[index]?.checkUserChoose?.length > 0 &&
-                          dataIdExmasDetails.questions[index]?.checkUserChoose !== ''
+                          (dataIdExmasDetails.questions[index]?.checkUserChoose != undefined &&
+                            dataIdExmasDetails.questions[index]?.checkUserChoose?.length > 0 &&
+                            dataIdExmasDetails.questions[index]?.checkUserChoose !== '') ||
+                          (checkDataSubmit[index + 1] != undefined && checkDataSubmit[index + 1]?.length > 0)
                             ? 'bg-blue23'
                             : 'bg-black'
                         } `}

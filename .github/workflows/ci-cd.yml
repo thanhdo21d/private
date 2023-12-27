@@ -1,0 +1,38 @@
+name: deploy-docker
+on:
+  push:
+    branches:
+      - build
+jobs:
+  build:
+    runs-on: centos-8
+    steps:
+      - name: Checkout mã nguồn
+        uses: actions/checkout@v2
+
+      - name: Thiết lập Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20.10.0
+
+      - name: Cài đặt các phụ thuộc
+        run: npm install
+
+      - name: Xây dựng và đẩy hình ảnh Docker
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: your-docker-username/your-docker-repo:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout mã nguồn
+        uses: actions/checkout@v2
+
+      - name: Triển khai vào môi trường production
+        run: |
+          # Thêm các lệnh hoặc tập lệnh triển khai của bạn ở đây

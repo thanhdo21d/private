@@ -183,6 +183,18 @@ const topicExamsApi = createApi({
       },
       invalidatesTags: ['topicExams']
     }),
+    insertTime: builder.mutation<any[], { id: string; time: number }>({
+      query: ({ id, time }: { id: string; time: number }) => {
+        return {
+          url: '/insert/time/' + id,
+          method: 'POST',
+          params: {
+            dataTime: time
+          }
+        }
+      },
+      invalidatesTags: ['topicExams']
+    }),
     updateSesionUSer: builder.mutation<any[], { id: string; idSessionExam: string }>({
       query: ({ id, idSessionExam }: { id: string; idSessionExam: string }) => {
         return {
@@ -252,6 +264,7 @@ export const {
   useUpdateCommentAdminExamsUserMutation,
   useDoneExamsTlMutation,
   useInsertUserChooseMutation,
-  useUpdateSesionUSerMutation
+  useUpdateSesionUSerMutation,
+  useInsertTimeMutation
 } = topicExamsApi
 export default topicExamsApi

@@ -8,6 +8,7 @@ import { UserOutlined, FieldTimeOutlined } from '@ant-design/icons'
 import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import {
   useGetAllUserStartExamsQuery,
+  useInsertTimeMutation,
   useUpdateSesionUSerMutation,
   useUpdateStatusExamsUserMutation
 } from '~/apis/topicQuestion/topicQuestion'
@@ -59,8 +60,10 @@ const TakingExam = () => {
   const [queryParameters] = useSearchParams()
   const search: string | null = queryParameters.get('search')
   const idExamsUser: string | null = queryParameters.get('idExamsUser')
+  const idUser: string | null = queryParameters.get('userId')
   const queryConfig = useQueryConfig()
   const [updateStatusExam] = useUpdateStatusExamsUserMutation()
+  const [insertTime] = useInsertTimeMutation()
   const { statusError } = useAppSelector((state) => state.updateStatusExam)
   console.log(statusError)
   const {
@@ -230,11 +233,11 @@ const TakingExam = () => {
                 onClick={() => {
                   setCheckStop(false)
                   setCheckTime(true)
-                  // navigate({
-                  //   search: createSearchParams({
-                  //     userId: userId
-                  //   }).toString()
-                  // })
+                  navigate({
+                    search: createSearchParams({
+                      userId: userId
+                    }).toString()
+                  })
                 }}
                 className='w-[55px]  hover:scale-105 ease-linear cursor-pointer tremble'
                 src={addTime}
@@ -268,11 +271,16 @@ const TakingExam = () => {
     setMessageByAdmin('')
   }
   const handelAddTime = ({ time }: { time: number }) => {
-    // axios.get(`${uri}insert/time`, {
-    //   params: {
-    //     dataTime: Number(time)
-    //   }
-    // })
+    insertTime({
+      id: idUser as string,
+      time: Number(time)
+    })
+      .unwrap()
+      .then(() => {
+        message.success('Đã thêm' + time + 'Phút')
+        setCheckTime(false)
+      })
+      .catch(() => message.error('lỗi'))
     console.log('time: ' + time)
   }
   if (isLoading || isFetching)

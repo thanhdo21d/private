@@ -54,7 +54,7 @@ const FoldersCategories = () => {
   const onFinish = ({ name }: { name: string }) => {
     createCategories({
       name: name,
-      parentId: dataExamsQuery
+      parentId: dataExamsQuery || idCate
     })
       .unwrap()
       .then(() => {

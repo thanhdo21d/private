@@ -56,6 +56,9 @@ const examSlice = createSlice({
       const { counts, chooses } = action.payload
       console.log(counts, chooses)
       const newData = [...state.submitData]
+      if (!Array.isArray(newData[counts])) {
+        newData[counts] = []
+      }
       if (newData[counts] === undefined) {
         newData[counts] = [chooses]
       } else if (!newData[counts].includes(chooses)) {

@@ -32,6 +32,7 @@ import {
   updateSubmitData
 } from '~/store/slice/exams.slice'
 import PopError from './PopError'
+import PopEndTime from './PopEndTime'
 const QuesionStart = () => {
   const uri = import.meta.env.VITE_API
   const socket = io(uri, {
@@ -39,6 +40,8 @@ const QuesionStart = () => {
   })
   const [showPop, setShowPop] = useState<boolean>(false)
   const [showStop, setShowStop] = useState<boolean>(false)
+  const [showEndTime, setShowEndTime] = useState<boolean>(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const [Question, setQuestion] = useState<any[]>([])
   const [insertUserChoose] = useInsertUserChooseMutation()
   const listName = ['A', 'B', 'C', 'D']
@@ -49,7 +52,6 @@ const QuesionStart = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [height, setHeight] = useState<any>(null)
-  const [queryParameters] = useSearchParams()
   const idSession = sessionStorage.getItem('idSession2')
   const idExams = sessionStorage.getItem('idSession')
   const [actionSubmit] = useSubmitExamsQuestionMutation()
@@ -67,11 +69,11 @@ const QuesionStart = () => {
   } = useSessionExamsQuestionQuery({
     id: idSession as string
   })
+console.log(examsData)
   const dataUserChoose = dataIdExmasDetails?.questions?.map((question) => question.checkUserChoose)
   dataUserChoose?.unshift('')
-  console.log(dataUserChoose)
   useEffect(() => {
-    if (dataIdExmasDetails) {
+    if (dataIdExmasDetails?.status == true) {
       dispatch(setExamsData(dataIdExmasDetails?.questions[countAction]))
     }
   }, [dispatch, idSession, dataIdExmasDetails?.questions, dataIdExmasDetails, countAction])
@@ -79,10 +81,19 @@ const QuesionStart = () => {
     setHeight((confetiRef.current = '2000px'))
     setWidth((confetiRef.current = '1200px'))
   }, [])
+  useEffect(() => {
+    return () => {
+      setIsSubmitted(false)
+    }
+  }, [])
   const handelSubmit = (num: string) => {
+    if (isSubmitted) {
+      return false
+    }
     if (num == '0') {
       const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
       if (confirm) {
+        setIsSubmitted(true)
         actionSubmit({
           id: idSession as string,
           data: dataUserChoose,
@@ -124,6 +135,10 @@ const QuesionStart = () => {
             .then(() => console.log('1'))
         })
         .catch((error) => console.error(error))
+      setIsSubmitted(true)
+      setTimeout(() => {
+        // navigate('/')
+      }, 10000)
     }
   }
   useEffect(() => {
@@ -199,7 +214,7 @@ const QuesionStart = () => {
       setShowStop(true)
     })
     socket.on('startExamsUser', (data) => {
-      message.success(`nhân viên ${data?.user} đã bắt đầu lại bài thi của  bạn`)
+      message.success(`admin ${data?.user} đã bắt đầu lại bài thi của  bạn`)
       setShowStop(false)
       window.location.reload()
     })
@@ -209,9 +224,12 @@ const QuesionStart = () => {
       socket.disconnect()
     }
   }, [])
+
   const renderer = ({ minutes, seconds, completed }: any) => {
     if (completed) {
-      // return handelSubmit('1')
+      setShowEndTime(true)
+      handelSubmit('1')
+      setIsSubmitted(true)
     } else {
       return (
         <span>
@@ -232,10 +250,15 @@ const QuesionStart = () => {
         <Skeleton />
       </div>
     )
-  console.log('1')
+  if (dataIdExmasDetails?.status == false) {
+    return <p className='text-2xl text-white font-bold text-center decoration-primary'>đã hết giờ</p>
+  }
   return (
     <div className=' mx-auto px-4'>
       <div>{(dataIdExmasDetails?.statusError === '1' || showStop) && <PopError />}</div>
+      <div>
+        {showEndTime && <p className='text-2xl text-white font-bold text-center decoration-primary'>đã hết giờ</p>}
+      </div>
       <div className=' min-w-0 h-[750px] 2xl:h-[800px] overflow-y-scroll break-words   bg-white  shadow-xl rounded-lg relative'>
         <Header
           style={{
@@ -390,7 +413,7 @@ const QuesionStart = () => {
             </div>
           </div>
         </Footer>
-        di
+        di d
       </div>
     </div>
   )

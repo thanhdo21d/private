@@ -353,11 +353,6 @@ const CreateExams = () => {
                 </form>
               </div>
             </div>
-            <div className='mt-5 2xl:mt-0'>
-              <Button styleClass='py-2 bg-meta-4' onClick={handelTemporarySave}>
-                Lưu Tạm Thời
-              </Button>
-            </div>
           </div>
           <div className='mt-10'>
             <p>Tên Bài Thi</p>
@@ -505,9 +500,12 @@ const CreateExams = () => {
         </>
       )}
 
-      <div className=' mx-auto flex mt-15 justify-center items-center w-full'>
-        <Button onClick={handelInsertExams} styleClass='py-2 w-2/3 bg-[#24A19C]'>
+      <div className=' mx-auto flex mt-15 justify-center items-center w-full gap-10'>
+        <Button onClick={handelInsertExams} styleClass='py-2 w-1/2 bg-[#24A19C]'>
           Thêm Đề Thi
+        </Button>
+        <Button styleClass='py-2 bg-meta-4 w-1/2' onClick={handelTemporarySave}>
+          Lưu Tạm Thời
         </Button>
       </div>
     </>

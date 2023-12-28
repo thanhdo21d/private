@@ -1,5 +1,5 @@
-import React from 'react'
-import { Form, Input, Popconfirm, Table } from 'antd'
+import React, { useState } from 'react'
+import { Drawer, Form, Input, Popconfirm, Table } from 'antd'
 import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button, EmailIcon } from '~/components'
 import { useDeleteUserMutation, useGetAllUserQuery } from '~/apis/user/user.api'
@@ -9,6 +9,7 @@ import { toastService } from '~/utils/toask/toaskMessage'
 import Pagination from '~/pages/roles/Pagination'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 import { Footer } from 'antd/es/layout/layout'
+import axios from 'axios'
 type FieldType = {
   keyword?: string
 }
@@ -20,6 +21,16 @@ const AllMember = () => {
   const datalimitQueryChange: string | null = queryParameters.get('limit')
   const search: string | null = queryParameters.get('search')
   const uri = import.meta.env.VITE_API
+  const [open, setOpen] = useState(false)
+  const [isLoadings, setIsLoading] = useState(false)
+  const [file, setFile] = useState<any>(null)
+
+  const showDrawer = () => {
+    setOpen(true)
+  }
+  const onClose = () => {
+    setOpen(false)
+  }
   const queryConfig = useQueryConfig()
   const confirm = (id: string) => {
     removeMember(id)
@@ -141,13 +152,121 @@ const AllMember = () => {
       }).toString()
     })
   }
+  const handleSubmit = async (event: any) => {
+    event.preventDefault()
+    const formData = new FormData()
+    formData.append('file', file)
+    setIsLoading(true)
+    try {
+      const response = await axios.post(`${uri}importUserQuery`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      toastService.success(' uploading file successfully')
+      setIsLoading(false)
+    } catch (error) {
+      console.error(error)
+      toastService.error('Error uploading file')
+      setIsLoading(false)
+    }
+  }
+  const handleFileChange = (event: any) => {
+    setFile(event.target.files[0])
+  }
   return (
     <div className=''>
+      <Drawer title='Basic Drawer' width={700} placement='right' onClose={onClose} open={open}>
+        <div>
+          <div
+            className='relative min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-gray-500 bg-no-repeat bg-cover '
+            style={{
+              backgroundImage:
+                'url(https://images.unsplash.com/photo-1621243804936-775306a8f2e3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80)'
+            }}
+          >
+            <div className='absolute bg-black opacity-60 inset-0 z-0' />
+            <div className='sm:max-w-lg w-full p-10 bg-white rounded-xl z-10'>
+              <div className='text-center'>
+                <h2 className='mt-5 text-3xl font-bold text-gray-900'>File Upload!</h2>
+                <p className='mt-2 text-sm text-gray-400'>Lorem ipsum is placeholder text.</p>
+              </div>
+              <form onSubmit={handleSubmit} className='mt-8 space-y-3'>
+                <div className='grid grid-cols-1 space-y-2'>
+                  <label className='text-sm font-bold text-gray-500 tracking-wide'>Title</label>
+                  <input
+                    onChange={handleFileChange}
+                    className='text-base  p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
+                    type='file'
+                    id='clmm-title_modal'
+                    placeholder='mail@gmail.com'
+                  />
+                </div>
+                {isLoadings ? (
+                  <div className='loader'></div>
+                ) : (
+                  <div className='grid grid-cols-1 space-y-2'>
+                    <label className='text-sm font-bold text-gray-500 tracking-wide'>Attach Document</label>
+                    <div className='flex items-center justify-center w-full '>
+                      <label className='flex  cursor-pointer flex-col rounded-lg border-4 border-dashed w-full h-70 p-10 group text-center'>
+                        <div className='h-full w-full text-center flex flex-col mt-7 items-center justify-center  '>
+                          <div className='flex flex-auto max-h-48 w-2/5 mx-auto -mt-10'>
+                            <img
+                              className='has-mask h-36 object-center animate-bounce rounded-lg'
+                              src='https://img.freepik.com/free-vector/image-upload-concept-landing-page_52683-27130.jpg?size=338&ext=jpg'
+                              alt='freepik image'
+                            />
+                          </div>
+                          <p className='pointer-none text-gray-500 '>
+                            <span className='text-sm'>Drag and drop</span> files here <br /> or{' '}
+                            <a className='text-blue-600 hover:underline'>select a file</a> from your computer
+                          </p>
+                        </div>
+                        <input
+                          type='file'
+                          className='hidden'
+                          onChange={handleFileChange}
+                          onDragOver={(e) => e.preventDefault()}
+                          onDrop={(e) => {
+                            e.preventDefault()
+                            const files = Array.from(e.dataTransfer.files)
+                            console.log(files)
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                )}
+                <p className='text-sm text-gray-300'>
+                  <span>File type: Excel</span>
+                </p>
+                <div>
+                  <button
+                    type='submit'
+                    className='my-5 w-full btn flex justify-center bg-blue-500 text-gray-100 p-4 text-2xl text-white  rounded-full tracking-wide bg-secondary  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg  transition ease-in duration-300'
+                  >
+                    Upload
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </Drawer>
+      <Button
+        styleClass='bg-success  h-[40px]'
+        onClick={() => {
+          showDrawer()
+          // return setCheckExcel(true)
+        }}
+      >
+        Thêm mới Từ Excel
+      </Button>
       <div className='mt-10 flex gap-5'>
         <Form className='flex gap-5  justify-center' onFinishFailed={onFinishFailed} onFinish={onFinish}>
           <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your code!' }]}>
             <Input
-              className='h-[40px] w-[500px] xl:w-[600px] border border-[#ccc]'
+              className='h-[40px] w-[400px] 2xl:w-[600px] border border-[#ccc]'
               placeholder='Tìm Kiếm Theo code ....'
             />
           </Form.Item>

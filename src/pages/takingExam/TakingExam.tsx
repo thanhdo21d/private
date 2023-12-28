@@ -32,7 +32,6 @@ const TakingExam = () => {
   const [checkMessage, setCheckMessage] = useState(false)
   const [messageByAdmin, setMessageByAdmin] = useState('')
   const [updateSessionUser] = useUpdateSesionUSerMutation()
-
   const { id } = useParams()
   const socket = io(uri, {
     transports: ['websocket', 'pulling', 'flashsocket']
@@ -112,6 +111,7 @@ const TakingExam = () => {
   const handelClickOutExam = async () => {
     const confirm = window.confirm('Bạn có muốn kết thúc ')
     if (confirm) {
+      await axios.get(`${uri}update/session/${id}`)
       await axios.get(`${uri}update/done/exams/${id}`)
       message.success('success')
       setTimeout(() => {

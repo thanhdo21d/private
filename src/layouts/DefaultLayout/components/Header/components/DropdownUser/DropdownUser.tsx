@@ -96,7 +96,7 @@ const DropdownUser = () => {
               </Link>
             </button>
           )}
-          {dataCheckExaminer.length >= 1 && (
+          {dataCheckExaminer?.length >= 1 && (
             <button>
               <Link
                 to='/user-info/danh-sach-bai-thi'

@@ -260,7 +260,7 @@ const ChoosExam = () => {
                           Lưu ý : Không tự ý thoát khi làm bài
                         </div>
                         <div className='col-span-12 mt-20 mb-5 text-gray-100'>
-                          {data._id.toString() === dataUser.user.idSessionExam.toString() ? (
+                          {data._id?.toString() === dataUser.user?.idSessionExam?.toString() ? (
                             <button
                               className='rounded hover:bg-danger bg-warning w-full py-3 cursor-not-allowed'
                               onClick={() => {

@@ -99,7 +99,7 @@ const TakingExam = () => {
         if (data.message) toastService.success(num == '1' ? 'Đã tạm dừng bài thi' : 'Bài thi đã hoạt động')
       })
       .catch((error) => toastService.error('error updating '))
-      updateSessionUser({
+    updateSessionUser({
       id: userId,
       idSessionExam: ''
     })
@@ -230,6 +230,11 @@ const TakingExam = () => {
                 onClick={() => {
                   setCheckStop(false)
                   setCheckTime(true)
+                  // navigate({
+                  //   search: createSearchParams({
+                  //     userId: userId
+                  //   }).toString()
+                  // })
                 }}
                 className='w-[55px]  hover:scale-105 ease-linear cursor-pointer tremble'
                 src={addTime}
@@ -261,6 +266,14 @@ const TakingExam = () => {
   const onCancel = () => {
     setCheckMessage(false)
     setMessageByAdmin('')
+  }
+  const handelAddTime = ({ time }: { time: number }) => {
+    // axios.get(`${uri}insert/time`, {
+    //   params: {
+    //     dataTime: Number(time)
+    //   }
+    // })
+    console.log('time: ' + time)
   }
   if (isLoading || isFetching)
     return (
@@ -309,6 +322,7 @@ const TakingExam = () => {
                 {!checkStop ? (
                   <Form
                     name='basic'
+                    onFinish={handelAddTime}
                     style={{ maxWidth: 900, display: 'flex', justifyContent: 'start' }}
                     initialValues={{ remember: true }}
                     autoComplete='off'

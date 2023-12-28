@@ -37,6 +37,9 @@ const examSlice = createSlice({
   reducers: {
     incrementCount: (state) => {
       state.count = state.count + 1
+      if (state.count === state.submitData.length - 1) {
+        state.count = 0
+      }
     },
     decrementCount: (state) => {
       if (state.count > 0) {

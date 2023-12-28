@@ -38,7 +38,7 @@ const TaskRoleApi = createApi({
       },
       invalidatesTags: ['taskRole']
     }),
-    getAllTaskRole: builder.query<ItaskRoleDocs[], void>({
+    getAllTaskRole: builder.query<ItaskRoleDocs, void>({
       query: () => {
         return {
           url: `/task/role/all`,

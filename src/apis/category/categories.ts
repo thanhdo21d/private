@@ -26,7 +26,7 @@ const categorydepartmentAPI = createApi({
       },
       providesTags: ['Category']
     }),
-    getAllCategoriesDepartment: builder.query<any[], any>({
+    getAllCategoriesDepartment: builder.query<any, any>({
       query: ({ page, limit, search }: { page: string; limit: string; search: string }) => {
         return {
           url: '/query-department',

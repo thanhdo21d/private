@@ -9,6 +9,7 @@ import { EyeOutlined } from '@ant-design/icons'
 import { Col, DatePicker, Drawer, Form, Input, Row, Select, Skeleton, Space, Table } from 'antd'
 import {
   useCreateCategoriesMutation,
+  useEditCategoriesTreeMutation,
   useGetAllCategoriesDepartmentQuery,
   useGetAllCategoriesQuery,
   useGetCategoriesDepartmentsQuery,
@@ -23,6 +24,8 @@ const DsDethi = () => {
   const [queryParameters] = useSearchParams()
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
+  const isEdit: string | null = queryParameters.get('isEdit')
+  const isCreate: string | null = queryParameters.get('isCreate')
   const search: string | null = queryParameters.get('search')
   const navigate = useNavigate()
   const { data: dataAllCategoriesDepartment, isLoading: isGetCategoriesDepartmentLoading } =
@@ -34,6 +37,7 @@ const DsDethi = () => {
   console.log(dataAllCategoriesDepartment)
   const [createCategories, { isLoading: isCreateCategoriesLoading }] = useCreateCategoriesMutation()
   const [removeCategories, { isLoading: isRemoveLoading }] = useRemoveCategoriesTreeMutation()
+  const [editCategories] = useEditCategoriesTreeMutation()
   const queryConfig = useQueryConfig()
   const { profile, reset } = useContext(AppContext)
   console.log(profile)
@@ -49,15 +53,28 @@ const DsDethi = () => {
     setOpen(false)
   }
   const onFinish = ({ name }: { name: string }) => {
-    createCategories({
-      name: name,
-      parentCheck: '1'
-    })
-      .unwrap()
-      .then(() => {
-        toastService.success('Created categories successfully')
-        setOpen(false)
+    if (isCreate && isCreate == '1') {
+      createCategories({
+        name: name,
+        parentCheck: '1'
       })
+        .unwrap()
+        .then(() => {
+          toastService.success('Created categories successfully')
+          setOpen(false)
+        })
+    } else if (isEdit) {
+      editCategories({
+        id: isEdit,
+        name: name,
+        parentId: null
+      })
+        .unwrap()
+        .then(() => {
+          toastService.success('updated categories successfully')
+          setOpen(false)
+        })
+    }
   }
   const onFinishSearch = ({ keyword }: any) => {
     const keywordSpace = keyword.trim()
@@ -121,19 +138,34 @@ const DsDethi = () => {
               <span className='font-medium'> xem chi tiết </span>
             </Button>
             {dataUser?.user?.role.name == 'Admin' && (
-              <Button
-                onClick={() => {
-                  const confirmTrue = window.confirm('Are you sure you want to categories')
-                  sessionStorage.removeItem('categories')
-                  if (confirmTrue)
-                    removeCategories(id)
-                      .unwrap()
-                      .then(() => toastService.success('deleted successfully'))
-                }}
-                styleClass='bg-danger flex items-center w-fit '
-              >
-                <span className='font-medium  text-white'> xóa </span>
-              </Button>
+              <>
+                <Button
+                  onClick={() => {
+                    const confirmTrue = window.confirm('Are you sure you want to categories')
+                    sessionStorage.removeItem('categories')
+                    if (confirmTrue)
+                      removeCategories(id)
+                        .unwrap()
+                        .then(() => toastService.success('deleted successfully'))
+                  }}
+                  styleClass='bg-danger flex items-center w-fit '
+                >
+                  <span className='font-medium  text-white'> xóa </span>
+                </Button>
+                <Button
+                  onClick={() => {
+                    showDrawer()
+                    navigate({
+                      search: createSearchParams({
+                        isEdit: id
+                      }).toString()
+                    })
+                  }}
+                  styleClass='bg-meta-4 flex items-center w-fit '
+                >
+                  <span className='font-medium  text-white'> Sửa </span>
+                </Button>
+              </>
             )}
           </div>
         )
@@ -145,14 +177,8 @@ const DsDethi = () => {
     <div>
       <div className=' xl:flex justify-between mb-5'>
         <div>
-          {profile?.role.name == 'Admin' ? (
-            <Form
-              onFinish={onFinishSearch}
-              onFinishFailed={onFinishFailed}
-              className='flex gap-5'
-              layout='vertical'
-              hideRequiredMark
-            >
+          {dataUser?.user?.role.name == 'Admin' ? (
+            <Form onFinish={onFinishSearch} onFinishFailed={onFinishFailed} className='flex gap-5' layout='vertical'>
               <Form.Item
                 name='keyword'
                 className=''
@@ -182,7 +208,17 @@ const DsDethi = () => {
             onClick={() => setCheckOption(true)}
             className='text-[20px] p-2  border-[3px] border-[#EDF1F1] text-[#212529] ease-in-out bg-white shadow-lg rounded-md cursor-pointer hover:text-success'
           />
-          <button className='bg-success px-8 rounded-md text-white font-medium py-2.5' onClick={showDrawer}>
+          <button
+            className='bg-success px-8 rounded-md text-white font-medium py-2.5'
+            onClick={() => {
+              showDrawer()
+              navigate({
+                search: createSearchParams({
+                  isCreate: '1'
+                }).toString()
+              })
+            }}
+          >
             New department
           </button>
         </div>
@@ -198,21 +234,17 @@ const DsDethi = () => {
           </Space>
         }
       >
-        <Form onFinish={onFinish} layout='vertical' hideRequiredMark>
-          <Row gutter={22}>
-            <Col span={22}>
-              <Form.Item
-                name='name'
-                label={<p className='font-bold text-xl'>Tên Phòng Ban</p>}
-                rules={[{ required: true, message: 'vui lòng nhập Tên Phòng Ban ...!' }]}
-              >
-                <Input className='ml-7 rounded-md' placeholder='vui lòng nhập Tên Phòng Ban ...!' />
-              </Form.Item>
-            </Col>
-          </Row>
+        <Form onFinish={onFinish} layout='vertical'>
+          <Form.Item
+            name='name'
+            label={<p className='font-bold text-xl mb-5'>Tên Phòng Ban</p>}
+            rules={[{ required: true, message: 'vui lòng nhập Tên Phòng Ban ...!' }]}
+          >
+            <Input className='rounded-md mb-5 border border-[#ccc]' placeholder='vui lòng nhập Tên Phòng Ban ...!' />
+          </Form.Item>
           <button
             type='submit'
-            className='  w-full btn flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl text-white  rounded-full tracking-wide bg-secondary  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg  transition ease-in duration-300'
+            className=' mt-5  w-full btn flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl text-white  rounded-full tracking-wide bg-secondary  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg  transition ease-in duration-300'
           >
             Submit
           </button>

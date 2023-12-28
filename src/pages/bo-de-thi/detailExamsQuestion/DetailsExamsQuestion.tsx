@@ -55,6 +55,11 @@ const DetailsExamsQuestion = () => {
   const onClose = () => {
     setOpen(false)
     setCheckMember(true)
+    navigate({
+      search: createSearchParams({
+        search: ''
+      }).toString()
+    })
   }
   const { Column, ColumnGroup } = Table
   const { id } = useParams()
@@ -289,7 +294,14 @@ const DetailsExamsQuestion = () => {
     return result
   }
 
-  if (isLoadingDetails || isFetchingDetails) return <p>loading.....</p>
+  if (isLoadingDetails || isFetchingDetails)
+    return (
+      <div>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    )
   return (
     <div className='w-full'>
       <Drawer

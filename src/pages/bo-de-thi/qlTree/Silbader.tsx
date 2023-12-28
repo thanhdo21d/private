@@ -181,8 +181,8 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
               okButtonProps={{
                 style: { backgroundColor: 'blue', marginRight: '20px' }
               }}
-              title='Dịch Chuyển Categories'
-              description='Are you sure to delete this task?'
+              title='Dịch Chuyển Folders'
+              description='Bạn có muốn chuyển folder?'
               onConfirm={() => confirm(id)}
               okText='Yes'
               cancelText='No'
@@ -324,12 +324,17 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
       <Drawer
         title='cấu hình categories'
         placement={'right'}
-        width={500}
+        width={700}
         onClose={onClose}
         open={open}
         extra={
-          <div>
-            <Button onClick={onClose}>Cancel</Button>
+          <div className='flex items-center gap-10'>
+            <Button styleClass='bg-danger' onClick={onClose}>
+              Cancel
+            </Button>
+            {/* <Button styleClass='bg-success shadow-xl' onClick={() => onFinish('hihi')}>
+              submit
+            </Button> */}
           </div>
         }
       >
@@ -422,15 +427,23 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
                     </Popconfirm>
                   </div>
                   <div className='flex items-center gap-5'>
-                    <button onClick={showDrawer} className='font-bold text-success underline'>
-                      Edit
-                    </button>
+                    {category?.parentCheck !== '1' ? (
+                      <button onClick={showDrawer} className='font-bold text-success underline'>
+                        Edit
+                      </button>
+                    ) : (
+                      <div className='mr-8'></div>
+                    )}
                     <button onClick={handleCategoryClickDetails} className='font-bold text-success underline'>
                       Chi Tiết
                     </button>
-                    <button onClick={handelRemoveCategori} className='font-bold text-danger underline'>
-                      Delete
-                    </button>
+                    {category?.parentCheck !== '1' ? (
+                      <button onClick={handelRemoveCategori} className='font-bold text-danger underline'>
+                        Delete
+                      </button>
+                    ) : (
+                      <div className='mr-13'></div>
+                    )}
                   </div>
                 </div>
               )}

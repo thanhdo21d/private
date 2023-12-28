@@ -35,16 +35,16 @@ const EditRoles: React.FC = () => {
   const [removeLoad] = useRemoveTaskRoleMutation()
   const [changeRoleOtherAmin] = useChangeRoleOtherAdminMutation()
   const { data: dataAllCategories } = useGetAllCategoriesQuery()
-    const { data: dataAllCategoriesDepartment, isLoading: isGetCategoriesDepartmentLoading } =
+  const { data: dataAllCategoriesDepartment, isLoading: isGetCategoriesDepartmentLoading } =
     useGetAllCategoriesDepartmentQuery({
-      page:  1,
-      limit:  1000000,
+      page: 1,
+      limit: 1000000,
       search: ''
     })
   const OPTIONS = dataAllCategoriesDepartment?.data.map((data: any) => ({
-      id: data._id,
-      name: data.name
-    }))
+    id: data._id,
+    name: data.name
+  }))
   const [selectedItems, setSelectedItems] = useState<any[]>([])
   const [selectedItemIds, setSelectedItemIds] = useState<any[]>([])
   const filteredOptions = OPTIONS?.filter((o: any) => !selectedItemIds.includes(o.id))

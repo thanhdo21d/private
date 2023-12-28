@@ -114,9 +114,8 @@ const Roles = () => {
           className='text-danger flex gap-2 items-center text-center justify-center font-semibold text-md cursor-pointer'
         >
           <span>
-            {' '}
             <Tooltip title='Sắp xếp theo ngày sửa'>Ngày sửa</Tooltip>{' '}
-          </span>{' '}
+          </span>
           <span>
             {dataSortQuery == null || dataSortQuery == '' ? (
               <AiOutlineSortAscending className='text-2xl' />
@@ -144,24 +143,30 @@ const Roles = () => {
       title: <p className='flex gap-2 items-center text-center justify-center font-bold text-md '>Tác vụ</p>,
       render: ({ key: _id }: { key: string }) => (
         <div className='flex justify-center space-x-2'>
-          <Popconfirm
-            title='Delete the task'
-            description='Are you sure to delete this task?'
-            onConfirm={() => confirm(_id)}
-            okText='Yes'
-            okButtonProps={{
-              style: { backgroundColor: 'blue' }
-            }}
-            cancelText='No'
-            placement='rightBottom'
-          >
-            <Button styleClass='bg-danger flex items-center  w-[80px] xl:w-[100px]'>
-              <span>
-                <DeleteIcon />
-              </span>
-              <span> {isLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'Xóa'}</span>
-            </Button>
-          </Popconfirm>
+          {_id?.toString() !== '652e28d55ef2bbae1676192b' ? (
+            <Popconfirm
+              title='Delete the task'
+              description='Are you sure to delete this task?'
+              onConfirm={() => confirm(_id)}
+              okText='Yes'
+              okButtonProps={{
+                style: { backgroundColor: 'blue' }
+              }}
+              cancelText='No'
+              placement='rightBottom'
+            >
+              <Button styleClass='bg-danger flex items-center  w-[80px] xl:w-[100px]'>
+                <span>
+                  <DeleteIcon />
+                </span>
+                <span> {isLoading ? <AiOutlineLoading3Quarters className='animate-spin' /> : 'Xóa'}</span>
+              </Button>
+            </Popconfirm>
+          ) : (
+            <div>
+              <Button styleClass='flex items-center w-[80px] xl:w-[100px] opacity-0'></Button>
+            </div>
+          )}
           <Button
             styleClass='flex items-center w-[80px] xl:w-[100px]'
             onClick={() => navigate(`/admin/roles/edit/${_id}`)}

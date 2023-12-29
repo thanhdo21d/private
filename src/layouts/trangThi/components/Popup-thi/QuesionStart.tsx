@@ -1,5 +1,5 @@
 import { Footer, Header } from 'antd/es/layout/layout'
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '~/components'
@@ -41,7 +41,6 @@ const QuesionStart = () => {
   const [showPop, setShowPop] = useState<boolean>(false)
   const [showStop, setShowStop] = useState<boolean>(false)
   const [showEndTime, setShowEndTime] = useState<boolean>(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const [Question, setQuestion] = useState<any[]>([])
   const [insertUserChoose] = useInsertUserChooseMutation()
   const listName = ['A', 'B', 'C', 'D']
@@ -69,7 +68,6 @@ const QuesionStart = () => {
   } = useSessionExamsQuestionQuery({
     id: idSession as string
   })
-console.log(examsData)
   const dataUserChoose = dataIdExmasDetails?.questions?.map((question) => question.checkUserChoose)
   dataUserChoose?.unshift('')
   useEffect(() => {
@@ -81,42 +79,9 @@ console.log(examsData)
     setHeight((confetiRef.current = '2000px'))
     setWidth((confetiRef.current = '1200px'))
   }, [])
-  useEffect(() => {
-    return () => {
-      setIsSubmitted(false)
-    }
-  }, [])
-  const handelSubmit = (num: string) => {
-    if (isSubmitted) {
-      return false
-    }
-    if (num == '0') {
-      const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
-      if (confirm) {
-        setIsSubmitted(true)
-        actionSubmit({
-          id: idSession as string,
-          data: dataUserChoose,
-          mailUser: profile?.email as string,
-          nameExams: ''
-        })
-          .unwrap()
-          .then((data) => {
-            setQuestion(data)
-            setShowPop(true)
-            updateSessionUser({
-              id: profile?._id as string,
-              idSessionExam: ''
-            })
-              .unwrap()
-              .then(() => console.log('1'))
-          })
-          .catch((error) => console.error(error))
-        setTimeout(() => {
-          // navigate('/')
-        }, 10000)
-      }
-    } else {
+  const handelSubmit = () => {
+    const confirm = window.confirm('Bạn Đã Chắc Muốn Nộp Bài ?')
+    if (confirm) {
       actionSubmit({
         id: idSession as string,
         data: dataUserChoose,
@@ -127,6 +92,8 @@ console.log(examsData)
         .then((data) => {
           setQuestion(data)
           setShowPop(true)
+          sessionStorage.removeItem('idSession2')
+          sessionStorage.removeItem('idSession')
           updateSessionUser({
             id: profile?._id as string,
             idSessionExam: ''
@@ -135,18 +102,17 @@ console.log(examsData)
             .then(() => console.log('1'))
         })
         .catch((error) => console.error(error))
-      setIsSubmitted(true)
       setTimeout(() => {
-        // navigate('/')
+        navigate('/')
       }, 10000)
     }
   }
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        // alert(
-        //   'nhân viên đã thoát toàn màn hình! , Lưu ý việc thoát màn hình admin sẽ nhận được số lượt thoát của bạn , việc này có thể ảnh hưởng đến kết quả thi của bạn '
-        // )
+        alert(
+          'nhân viên đã thoát toàn màn hình! , Lưu ý việc thoát màn hình admin sẽ nhận được số lượt thoát của bạn , việc này có thể ảnh hưởng đến kết quả thi của bạn '
+        )
       }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
@@ -224,21 +190,6 @@ console.log(examsData)
       socket.disconnect()
     }
   }, [])
-
-  const renderer = ({ minutes, seconds, completed }: any) => {
-    if (completed) {
-      setShowEndTime(true)
-      handelSubmit('1')
-      setIsSubmitted(true)
-    } else {
-      return (
-        <span>
-          {minutes}:{seconds}
-        </span>
-      )
-    }
-  }
-
   if (isLoadingDetails || isFetchingDetails)
     return (
       <div>
@@ -270,17 +221,11 @@ console.log(examsData)
             alignItems: 'center'
           }}
         >
-          <div className='flex w-[100%] items-center  justify-between '>
-            <div>
-              <p className='text-xl py-2 pl-5 font-bold text-white text-center items-center'>
-                {t('product.total_time')} :{' '}
-                <Countdown date={Date.now() + (dataIdExmasDetails?.TimeLeft as number) * 1000} renderer={renderer} />
-              </p>
-            </div>
+          <div className='flex w-[100%] items-center  justify-end '>
             <div className='justify-end flex items-center gap-5'>
               <Button
                 styleClass=' w-[120px] 2xl:w-[200px] !px-0 text-xl font-bold h-[45px] bg-[#FF3366] rounded-md shadow-xl hover:bg-warning'
-                onClick={() => handelSubmit('0')}
+                onClick={handelSubmit}
               >
                 {t('product.submit_form')}
               </Button>

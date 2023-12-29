@@ -29,7 +29,7 @@ const RoleApi = createApi({
       },
       providesTags: ['role']
     }),
-    getAllRoles: builder.query<IRoleDocs[], { sort: string; page: string | number }>({
+    getAllRoles: builder.query<IRoleDocs, { sort: string; page: string | number }>({
       query: ({ sort, page }) => {
         return {
           url: '/roles',

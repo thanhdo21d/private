@@ -43,7 +43,7 @@ const QuesionStart = () => {
   const [showEndTime, setShowEndTime] = useState<boolean>(false)
   const [Question, setQuestion] = useState<any[]>([])
   const [insertUserChoose] = useInsertUserChooseMutation()
-  const listName = ['A', 'B', 'C', 'D']
+  const listName = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
   const { submitData: checkDataSubmit } = useAppSelector((state) => state.examAction)
   const [updateSessionUser] = useUpdateSesionUSerMutation()
   const [answers, setAnswers] = useState<any>({})

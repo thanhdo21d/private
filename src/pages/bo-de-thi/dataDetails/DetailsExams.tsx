@@ -1,4 +1,4 @@
-import { Badge, Breadcrumb, Button, Descriptions, DescriptionsProps, Skeleton, Tooltip } from 'antd'
+import { Badge, Breadcrumb, Button, Descriptions, DescriptionsProps, Skeleton, Tooltip, Image as ImageAnt } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { PiKeyReturn } from 'react-icons/pi'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -7,9 +7,8 @@ import { useGetDetailsExamsQuery, useGetIdDepartmentQuery } from '~/apis/departm
 const DetailsExams = () => {
   const url = import.meta.env.VITE_API
   const { id } = useParams()
+  const listName = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
   const [queryParameters] = useSearchParams()
-  const [showImage, setShowImage] = useState<boolean>(false)
-  const [Image, setImage] = useState<string>('')
   const navigate = useNavigate()
   const dataExamsQuery: string | null = queryParameters.get('exams')
   const { data: getDetailsExams, isFetching: isDeailFetching } = useGetDetailsExamsQuery({
@@ -27,16 +26,13 @@ const DetailsExams = () => {
       key: '4',
       label: 'Ảnh Câu Hỏi',
       children: (
-        <p
-          className='cursor-pointer '
-          onClick={() => {
-            setShowImage(!showImage)
-            setImage(`${url}${getDetailsExams?.dataDepartments?.image[0]}`)
-          }}
-        >
+        <p className='cursor-pointer '>
           {getDetailsExams?.dataDepartments?.image[0] && (
             <Tooltip title='Click details'>
-              <img className='w-[80px] hover:scale-125' src={`${url}${getDetailsExams?.dataDepartments?.image[0]}`} />
+              <ImageAnt
+                className='!w-[80px] hover:scale-125'
+                src={`${url}${getDetailsExams?.dataDepartments?.image[0]}`}
+              />
             </Tooltip>
           )}
         </p>
@@ -51,22 +47,17 @@ const DetailsExams = () => {
             <div key={index} className='w-full h-fit border my-2 shadow-xl rounded-md   border-danger'>
               <p className='flex gap-2 items-center ml-5 mt-2 py-5'>
                 <span className='bg-danger flex justify-center items-center w-[30px] h-[30px] rounded-full text-white font-bold'>
-                  {index === 0 && <a>A</a>}
-                  {index === 1 && <a>B</a>}
-                  {index === 2 && <a>C</a>}
-                  {index === 3 && <a>D</a>}
+                  {listName[index]}
                 </span>
                 <span> : {item.q}</span>
               </p>
-              <span
-                onClick={() => {
-                  setImage(`${url}${item.img}`)
-                  setShowImage(!showImage)
-                }}
-              >
+              <span>
                 {item.img && (
                   <Tooltip title='Click details'>
-                    <img className='w-[80px] ml-5 mt-2 mb-5 hover:scale-110 cursor-pointer' src={`${url}${item.img}`} />
+                    <ImageAnt
+                      className='!w-[80px] ml-5 mt-2 mb-5 hover:scale-110 cursor-pointer'
+                      src={`${url}${item.img}`}
+                    />
                   </Tooltip>
                 )}
               </span>
@@ -102,16 +93,6 @@ const DetailsExams = () => {
           }
         ]}
       />
-      {showImage && (
-        <div
-          onClick={() => setShowImage(false)}
-          className='absolute inset-0 w-full  h-screen bg-black bg-opacity-5 flex mx-auto justify-center items-center'
-        >
-          <div className='w-1/3 flex mx-auto justify-center items-center'>
-            <img className='w-full h-full' src={Image} />
-          </div>
-        </div>
-      )}
       <div>
         <Button
           className='flex hover:bg-warning hover:text-white  items-center gap-3 mt-10'

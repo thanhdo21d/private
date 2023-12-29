@@ -1,4 +1,4 @@
-import { Divider, Drawer, Form, Input, Popconfirm, Skeleton, Space, Table, Tooltip, Upload } from 'antd'
+import { Divider, Drawer, Form, Image, Input, Popconfirm, Skeleton, Space, Table, Tooltip, Upload } from 'antd'
 import logoExsl from '../../../assets/xlsx.png'
 import { Footer } from 'antd/es/layout/layout'
 import { useEffect, useState, useMemo } from 'react'
@@ -28,8 +28,6 @@ const FormData = () => {
   const { id } = useParams()
   const [open, setOpen] = useState(false)
   const [exportLoading, setExportLoading] = useState(false)
-  const [showImage, setShowImage] = useState<boolean>(false)
-  const [Image, setImage] = useState<string>('')
   const [queryParameters] = useSearchParams()
   const dataPageQuery: string | null = queryParameters.get('page')
   const datalimitQueryChange: string | null = queryParameters.get('limit')
@@ -135,12 +133,8 @@ const FormData = () => {
           <div>
             <Tooltip title='Click details'>
               {img && (
-                <img
-                  onClick={() => {
-                    setShowImage(!showImage)
-                    setImage(`${uri}${img}`)
-                  }}
-                  className='w-[50px] cursor-pointer hover:scale-110'
+                <Image
+                  className='!w-[50px] cursor-pointer hover:scale-110'
                   loading='lazy'
                   crossOrigin='anonymous'
                   src={`${uri}${img}`}
@@ -364,16 +358,6 @@ const FormData = () => {
               </Popconfirm>
             </div>
             {/*  */}
-            {showImage && (
-              <div
-                onClick={() => setShowImage(false)}
-                className='fixed inset-0 w-full z-10   h-screen bg-black bg-opacity-5 flex mx-auto justify-center items-center'
-              >
-                <div className='w-1/3 flex mx-auto justify-center items-center'>
-                  <img className='w-full h-full shadow-2xl' src={Image} />
-                </div>
-              </div>
-            )}
             <div
               onClick={showDrawer}
               className={` bg-white h-[40px]  border border-[#ccc] flex justify-center bg-blue-500 text-gray-100 p-2 text-2xl hover:text-white hover:bg-warning rounded-md float-right  tracking-wide cursor-pointer  font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600  transition ease-in duration-300`}

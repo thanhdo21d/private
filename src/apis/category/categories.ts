@@ -17,7 +17,7 @@ const categorydepartmentAPI = createApi({
   }),
   tagTypes: ['Category'],
   endpoints: (builder) => ({
-    getAllCategories: builder.query<any[], void>({
+    getAllCategories: builder.query<any, void>({
       query: () => {
         return {
           url: '/query-all/categoryDepartments',
@@ -40,7 +40,7 @@ const categorydepartmentAPI = createApi({
       },
       providesTags: ['Category']
     }),
-    createCategories: builder.mutation<any[], any>({
+    createCategories: builder.mutation<any, any>({
       query: (data) => {
         return {
           url: '/Categorydepartment/create',
@@ -50,7 +50,7 @@ const categorydepartmentAPI = createApi({
       },
       invalidatesTags: ['Category']
     }),
-    getIDcategories: builder.query<any[], any>({
+    getIDcategories: builder.query<any, any>({
       query: ({ id, page, limit, search }) => {
         return {
           url: `/query-id/category/${id}`,

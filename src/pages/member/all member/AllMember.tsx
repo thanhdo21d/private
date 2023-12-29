@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Drawer, Form, Input, Popconfirm, Table } from 'antd'
+import { Drawer, Form, Image, Input, Popconfirm, Table } from 'antd'
 import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button, EmailIcon } from '~/components'
 import { useDeleteUserMutation, useGetAllUserQuery } from '~/apis/user/user.api'
@@ -62,13 +62,14 @@ const AllMember = () => {
     gender: item.gender,
     email: item.email,
     role: item.role,
-    department: item.Department
+    department: item.Department,
+    employeeCode: item.employeeCode
   }))
   const columns = [
     {
       title: 'code',
-      dataIndex: 'users',
-      key: 'users',
+      dataIndex: 'employeeCode',
+      key: 'employeeCode',
       render: (text: string) => <a className='text-danger font-bold'>{text}</a>
     },
     {
@@ -90,9 +91,10 @@ const AllMember = () => {
     {
       title: 'Ảnh',
       dataIndex: 'avatar',
-
-      key: 'age',
-      render: (text: string) => <img className='text-md w-[50px] font-bold' src={`${uri}${text}`} />
+      key: 'avatar',
+      render: (text: string) => {
+        return <div>{text && <Image className='text-md !w-[50px] font-bold' src={`${uri}${text}`} />}</div>
+      }
     },
     {
       title: 'Ngày sửa',
@@ -165,6 +167,7 @@ const AllMember = () => {
       })
       toastService.success(' uploading file successfully')
       setIsLoading(false)
+      // window.location.reload()
     } catch (error) {
       console.error(error)
       toastService.error('Error uploading file')

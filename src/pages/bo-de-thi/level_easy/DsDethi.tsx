@@ -224,7 +224,7 @@ const DsDethi = () => {
         </div>
       </div>
       <Drawer
-        title='Create a new department'
+        title={`${isEdit ? 'Sửa phòng ban' : ' Tạo mới phòng ban'}`}
         width={720}
         onClose={onClose}
         open={open}

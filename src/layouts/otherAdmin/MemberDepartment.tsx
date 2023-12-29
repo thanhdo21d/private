@@ -1,4 +1,4 @@
-import { Checkbox, Col, Drawer, Form, Input, Popconfirm, Row, Skeleton, Space, Table } from 'antd'
+import { Checkbox, Col, Drawer, Form, Image, Input, Popconfirm, Row, Skeleton, Space, Table } from 'antd'
 import { Footer } from 'antd/es/layout/layout'
 import axios from 'axios'
 import React, { useState } from 'react'
@@ -134,7 +134,7 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember?: boo
       dataIndex: 'avatar',
       key: 'avatar',
       render: (avatar: string) => {
-        return <div>{avatar !== '' ? <img className='w-[50px]  rounded-sm' src={`${uri}${avatar}`} /> : ''}</div>
+        return <div>{avatar !== '' ? <Image className='!w-[50px]  rounded-sm' src={`${uri}${avatar}`} /> : ''}</div>
       }
     },
     {

@@ -224,7 +224,10 @@ export const CategoryTreeItem = React.memo(({ category, level, bg, button, creat
         toastService.success('generate success')
         sessionStorage.removeItem('categories')
       })
-      .catch(() => toastService.error('error'))
+      .catch((error) => {
+        console.error(error)
+         toastService.error(error.data.message)
+      })
   }
   return (
     <div className=''>

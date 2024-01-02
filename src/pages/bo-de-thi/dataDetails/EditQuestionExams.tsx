@@ -1,4 +1,4 @@
-import { Breadcrumb, Divider, Form, Input, Skeleton, Upload } from 'antd'
+import { Breadcrumb, Divider, Form, Image, Input, Radio, RadioChangeEvent, Skeleton, Upload } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import React, { useEffect, useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
@@ -13,9 +13,14 @@ import {
 } from '~/apis/department/department'
 import axios from 'axios'
 import { toastService } from '~/utils/toask/toaskMessage'
-
+import addIcons from '~/assets/add (1).png'
+interface IChoose {
+  q: string
+  img: string
+}
 const EditQuestionExams = () => {
   const [form] = Form.useForm()
+  const [dynamicQuestions, setDynamicQuestions] = useState<any>([])
   const navigate = useNavigate()
   const [upload] = useUploadImageQuestionMutation()
   const [Createupload] = useCreateUploadImageQuestionMutation()
@@ -23,14 +28,51 @@ const EditQuestionExams = () => {
   const [addExamQuestion] = useAddQuestionDataMutation()
   const [queryParameters] = useSearchParams()
   const idCategory: string | null = queryParameters.get('idCategory')
+  const listName = [
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z'
+  ]
   const { id } = useParams()
   const isAddQuestion = location.pathname.includes(`add`)
-  const [imageQuestion, setImageQuestion] = useState({
+  const [imageQuestion, setImageQuestion] = useState<any>({
     imageQuestion: '',
     imageChooseA: '',
     imageChooseB: '',
     imageChooseC: '',
-    imageChooseD: ''
+    imageChooseD: '',
+    imageChooseE: '',
+    imageChooseF: '',
+    imageChooseG: '',
+    imageChooseH: '',
+    imageChooseI: '',
+    imageChooseJ: '',
+    imageChooseK: '',
+    imageChooseL: '',
+    imageChooseM: ''
   })
   console.log(isAddQuestion)
   const {
@@ -40,20 +82,26 @@ const EditQuestionExams = () => {
   } = useGetDetailsExamsQuery({
     idDepartment: id
   })
-  console.log(getDetailsExams)
   const [dataQuestion, setDataQuestion] = useState({
     question: getDetailsExams?.dataDepartments?.question,
     questionA: getDetailsExams?.dataDepartments?.choose[0]?.q,
     questionB: getDetailsExams?.dataDepartments?.choose[1]?.q,
     questionC: getDetailsExams?.dataDepartments?.choose[2]?.q,
     questionD: getDetailsExams?.dataDepartments?.choose[3]?.q,
+    questionE: getDetailsExams?.dataDepartments?.choose[4]?.q,
+    questionF: getDetailsExams?.dataDepartments?.choose[5]?.q,
+    questionG: getDetailsExams?.dataDepartments?.choose[6]?.q,
+    questionH: getDetailsExams?.dataDepartments?.choose[7]?.q,
     answer: getDetailsExams?.dataDepartments?.answer,
-    point: getDetailsExams?.dataDepartments?.point
+    point: getDetailsExams?.dataDepartments?.point,
+    type: getDetailsExams?.dataDepartments?.type
   })
+  console.log(dataQuestion)
   const [file, setFile] = useState<any>(null)
   console.log(file, 'cd')
   const uri = import.meta.env.VITE_API
   const handleSubmit = async (num: string) => {
+    console.log(num, 'cd')
     const formData = new FormData()
     formData.append('question', file)
     formData.append('questionId', id as string)
@@ -76,10 +124,12 @@ const EditQuestionExams = () => {
         name: getDetailsExams?.dataDepartments?.question,
         point: getDetailsExams?.dataDepartments?.point,
         answer: getDetailsExams?.dataDepartments?.answer,
-        questionA: getDetailsExams?.dataDepartments?.choose[0]?.q,
-        questionB: getDetailsExams?.dataDepartments?.choose[1]?.q,
-        questionC: getDetailsExams?.dataDepartments?.choose[2]?.q,
-        questionD: getDetailsExams?.dataDepartments?.choose[3]?.q
+        ...getDetailsExams?.dataDepartments?.choose?.reduce((acc: any, chooseItem: IChoose, index: number) => {
+          console.log(acc)
+          acc[`question${index}`] = chooseItem.q
+          return acc
+        }, {}),
+        type: getDetailsExams?.dataDepartments?.type
       })
   }, [getDetailsExams, form, id])
   const createUploadImage = async (num: string) => {
@@ -154,6 +204,123 @@ const EditQuestionExams = () => {
             })
             .catch(() => toastService.error('error uploading'))
           break
+        case '6':
+          Createupload(formData)
+            .unwrap()
+            .then((data) => {
+              setImageQuestion({
+                ...imageQuestion,
+                imageChooseE: data.avatarFileName
+              })
+              console.log(data.avatarFileName, 'data ne')
+              toastService.success('question uploaded successfully')
+            })
+            .catch(() => toastService.error('error uploading'))
+          break
+        case '7':
+          Createupload(formData)
+            .unwrap()
+            .then((data) => {
+              setImageQuestion({
+                ...imageQuestion,
+                imageChooseF: data.avatarFileName
+              })
+              console.log(data.avatarFileName, 'data ne')
+              toastService.success('question uploaded successfully')
+            })
+            .catch(() => toastService.error('error uploading'))
+          break
+        case '8':
+          Createupload(formData)
+            .unwrap()
+            .then((data) => {
+              setImageQuestion({
+                ...imageQuestion,
+                imageChooseG: data.avatarFileName
+              })
+              console.log(data.avatarFileName, 'data ne')
+              toastService.success('question uploaded successfully')
+            })
+            .catch(() => toastService.error('error uploading'))
+          break
+        case '9':
+          Createupload(formData)
+            .unwrap()
+            .then((data) => {
+              setImageQuestion({
+                ...imageQuestion,
+                imageChooseH: data.avatarFileName
+              })
+              console.log(data.avatarFileName, 'data ne')
+              toastService.success('question uploaded successfully')
+            })
+            .catch(() => toastService.error('error uploading'))
+          break
+        case '10':
+          Createupload(formData)
+            .unwrap()
+            .then((data) => {
+              setImageQuestion({
+                ...imageQuestion,
+                imageChooseI: data.avatarFileName
+              })
+              console.log(data.avatarFileName, 'data ne')
+              toastService.success('question uploaded successfully')
+            })
+            .catch(() => toastService.error('error uploading'))
+          break
+        case '11':
+          Createupload(formData)
+            .unwrap()
+            .then((data) => {
+              setImageQuestion({
+                ...imageQuestion,
+                imageChooseJ: data.avatarFileName
+              })
+              console.log(data.avatarFileName, 'data ne')
+              toastService.success('question uploaded successfully')
+            })
+            .catch(() => toastService.error('error uploading'))
+          break
+        case '12':
+          Createupload(formData)
+            .unwrap()
+            .then((data) => {
+              setImageQuestion({
+                ...imageQuestion,
+                imageChooseK: data.avatarFileName
+              })
+              console.log(data.avatarFileName, 'data ne')
+              toastService.success('question uploaded successfully')
+            })
+            .catch(() => toastService.error('error uploading'))
+          break
+        case '13':
+          Createupload(formData)
+            .unwrap()
+            .then((data) => {
+              setImageQuestion({
+                ...imageQuestion,
+                imageChooseL: data.avatarFileName
+              })
+              console.log(data.avatarFileName, 'data ne')
+              toastService.success('question uploaded successfully')
+            })
+            .catch(() => toastService.error('error uploading'))
+          break
+        case '14':
+          Createupload(formData)
+            .unwrap()
+            .then((data) => {
+              setImageQuestion({
+                ...imageQuestion,
+                imageChooseM: data.avatarFileName
+              })
+              console.log(data.avatarFileName, 'data ne')
+              toastService.success('question uploaded successfully')
+            })
+            .catch(() => toastService.error('error uploading'))
+          break
       }
     } catch (error) {
       console.error(error)
@@ -171,20 +338,25 @@ const EditQuestionExams = () => {
       })
       .catch((error) => toastService.error(error))
   }
-  console.log(dataQuestion)
   const handelAddQuestion = () => {
+    const filteredChoices = [
+      { q: dataQuestion.questionA, img: imageQuestion.imageChooseA },
+      { q: dataQuestion.questionB, img: imageQuestion.imageChooseB },
+      { q: dataQuestion.questionC, img: imageQuestion.imageChooseC },
+      { q: dataQuestion.questionD, img: imageQuestion.imageChooseD },
+      { q: dataQuestion.questionE, img: imageQuestion.imageChooseE },
+      { q: dataQuestion.questionF, img: imageQuestion.imageChooseF },
+      { q: dataQuestion.questionG, img: imageQuestion.imageChooseG },
+      { q: dataQuestion.questionH, img: imageQuestion.imageChooseH }
+    ].filter((choice) => choice.q !== undefined)
     addExamQuestion({
       question: dataQuestion.question,
       image: imageQuestion.imageQuestion,
       point: dataQuestion.point,
-      choose: [
-        { q: dataQuestion.questionA, img: imageQuestion.imageChooseA },
-        { q: dataQuestion.questionB, img: imageQuestion.imageChooseB },
-        { q: dataQuestion.questionC, img: imageQuestion.imageChooseC },
-        { q: dataQuestion.questionD, img: imageQuestion.imageChooseD }
-      ],
+      choose: filteredChoices,
       answer: dataQuestion.answer,
-      idCategory: idCategory
+      idCategory: idCategory,
+      type: String(dataQuestion.type)
     })
       .unwrap()
       .then(() => {
@@ -192,6 +364,18 @@ const EditQuestionExams = () => {
       })
       .catch((error) => toastService.error(error))
   }
+  const handleAddQuestion = () => {
+    setDynamicQuestions((prevQuestions: any) => [...prevQuestions, { img: '', question: '' }])
+  }
+  const onChange = (e: RadioChangeEvent) => {
+    console.log('radio checked', e.target.value)
+    setDataQuestion({
+      ...dataQuestion,
+      type: e.target.value
+    })
+  }
+
+  console.log(dataQuestion?.type)
   return (
     <div className='m-10'>
       <Breadcrumb
@@ -278,242 +462,144 @@ const EditQuestionExams = () => {
               </div>
             </div>
             <Divider orientation='left'>Chi Tiết đáp án</Divider>
-            <div className='grid grid-cols-2 gap-15 items-center'>
-              <Form.Item
-                name='questionA'
-                label={<p className='font-bold text-xl'>Đáp án A </p>}
-                rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-              >
-                <TextArea
-                  onChange={(event) =>
-                    setDataQuestion({
-                      ...dataQuestion,
-                      questionA: event.target.value
-                    })
-                  }
-                  className='rounded-md border border-[#ccc] '
-                  placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
+            {isAddQuestion && (
+              <div className='flex justify-center'>
+                <img
+                  onClick={handleAddQuestion}
+                  className='w-[50px] cursor-pointer hover:scale-110 transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none'
+                  src={addIcons}
                 />
-              </Form.Item>
-              <div className='flex items-center w-full'>
-                <div className='w-1/2'>
-                  {!isAddQuestion && getDetailsExams?.dataDepartments?.choose[0]?.img !== '' ? (
-                    <img className='w-[200px]' src={`${uri}${getDetailsExams?.dataDepartments?.choose[0]?.img}`} />
-                  ) : (
-                    <div>
-                      {imageQuestion.imageChooseA !== '' && (
-                        <img className='w-[200px]' src={`${uri}${imageQuestion.imageChooseA}`} />
-                      )}
-                    </div>
-                  )}
-                </div>
-                <div className='block w-1/2'>
-                  <form className=''>
-                    <label
-                      htmlFor='fileInput'
-                      className='flex items-center w-1/3 justify-center py-2 bg-[#D7B978] group rounded-md shadow-lg cursor-pointer hover:text-white text-white hover:font-bold transition-all'
-                    >
-                      <input
-                        type='file'
-                        id='fileInput'
-                        className='w-full'
-                        onChange={(e: any) => setFile(e.target.files[0])}
-                        style={{ display: 'none' }}
-                      />
-                      Select Image
-                    </label>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        !isAddQuestion ? handleSubmit('2') : createUploadImage('2')
-                      }}
-                      type='submit'
-                      className='bg-success  py-2 w-1/3 mt-5 rounded-md text-white font-medium'
-                    >
-                      Upload
-                    </button>
-                  </form>
-                </div>
               </div>
-            </div>
-            <Divider></Divider>
-
-            <div className='grid grid-cols-2 gap-15 items-center'>
-              <Form.Item
-                name='questionB'
-                label={<p className='font-bold text-xl'>Đáp án B </p>}
-                rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-              >
-                <TextArea
-                  onChange={(event) =>
-                    setDataQuestion({
-                      ...dataQuestion,
-                      questionB: event.target.value
-                    })
-                  }
-                  className='rounded-md border border-[#ccc] '
-                  placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
-                />
-              </Form.Item>
-              <div className='flex items-center w-full'>
-                <div className='w-1/2'>
-                  {!isAddQuestion && getDetailsExams?.dataDepartments?.choose[1]?.img !== '' ? (
-                    <img className='w-[200px]' src={`${uri}${getDetailsExams?.dataDepartments?.choose[1]?.img}`} />
-                  ) : (
-                    <div>
-                      {imageQuestion.imageChooseB !== '' && (
-                        <img className='w-[200px]' src={`${uri}${imageQuestion.imageChooseB}`} />
-                      )}
-                    </div>
-                  )}
-                </div>
-                <div className='block w-1/2'>
-                  <form className=''>
-                    <label
-                      htmlFor='fileInput'
-                      className='flex items-center w-1/3 justify-center py-2 bg-[#D7B978] group rounded-md shadow-lg cursor-pointer hover:text-white text-white hover:font-bold transition-all'
+            )}
+            {dynamicQuestions.map((question: any, index: number) => {
+              // const imageName = listName[index + 1]
+              const imageName = `imageChoose${String.fromCharCode(65 + index)}`
+              const imageSrc = `${uri}${imageQuestion[imageName]}`
+              console.log(imageSrc)
+              return (
+                <div key={index}>
+                  <div className='grid grid-cols-2 gap-15 items-center'>
+                    <Form.Item
+                      name={`question${index}`}
+                      label={<p className='font-bold text-xl'>Đáp án {listName[index]} </p>}
+                      rules={[{ required: true, message: 'Vui lòng nhập Thêm Câu Hỏi ...!' }]}
                     >
-                      <input
-                        type='file'
-                        id='fileInput'
-                        className='w-full'
-                        onChange={(e: any) => setFile(e.target.files[0])}
-                        style={{ display: 'none' }}
+                      <TextArea
+                        onChange={(event) =>
+                          setDataQuestion({
+                            ...dataQuestion,
+                            [`question${listName[index]}`]: event.target.value
+                          })
+                        }
+                        className='rounded-md border border-[#ccc] '
+                        placeholder='Vui lòng nhập Thêm Câu Hỏi ...!'
                       />
-                      Select Image
-                    </label>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        !isAddQuestion ? handleSubmit('3') : createUploadImage('3')
-                      }}
-                      type='submit'
-                      className='bg-success  py-2 w-1/3 mt-5 rounded-md text-white font-medium'
-                    >
-                      Upload
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <Divider></Divider>
-            <div className='grid grid-cols-2 gap-15 items-center'>
-              <Form.Item
-                name='questionC'
-                label={<p className='font-bold text-xl'>Đáp án C </p>}
-                rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-              >
-                <TextArea
-                  onChange={(event) =>
-                    setDataQuestion({
-                      ...dataQuestion,
-                      questionC: event.target.value
-                    })
-                  }
-                  className='rounded-md border border-[#ccc] '
-                  placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
-                />
-              </Form.Item>
-              <div className='flex items-center w-full'>
-                <div className='w-1/2'>
-                  {!isAddQuestion && getDetailsExams?.dataDepartments?.choose[2]?.img !== '' ? (
-                    <img className='w-[200px]' src={`${uri}${getDetailsExams?.dataDepartments?.choose[2]?.img}`} />
-                  ) : (
-                    <div>
-                      {imageQuestion.imageChooseC !== '' && (
-                        <img className='w-[200px]' src={`${uri}${imageQuestion.imageChooseC}`} />
-                      )}
+                    </Form.Item>
+                    <div className='flex items-center w-full'>
+                      <div className='w-1/2'>
+                        {imageQuestion ? <Image className='!w-[200px]' src={`${imageSrc}`} /> : <div></div>}
+                      </div>
+                      <div className='block w-1/2'>
+                        <form className=''>
+                          <label
+                            htmlFor={`fileInput${index}`}
+                            className='flex items-center w-1/3 justify-center py-2 bg-[#D7B978] group rounded-md shadow-lg cursor-pointer hover:text-white text-white hover:font-bold transition-all'
+                          >
+                            <input
+                              type='file'
+                              id={`fileInput${index}`}
+                              className='w-full'
+                              onChange={(e: any) => setFile(e.target.files[0])}
+                              style={{ display: 'none' }}
+                            />
+                            Select Image
+                          </label>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault()
+                              createUploadImage(String(index + 2))
+                            }}
+                            type='submit'
+                            className='bg-success  py-2 w-1/3 mt-5 rounded-md text-white font-medium'
+                          >
+                            Upload
+                          </button>
+                        </form>
+                      </div>
                     </div>
-                  )}
+                  </div>
+                  <Divider></Divider>
                 </div>
-                <div className='block w-1/2'>
-                  <form className=''>
-                    <label
-                      htmlFor='fileInput'
-                      className='flex items-center w-1/3 justify-center py-2 bg-[#D7B978] group rounded-md shadow-lg cursor-pointer hover:text-white text-white hover:font-bold transition-all'
+              )
+            })}
+            {getDetailsExams?.dataDepartments?.choose?.map((data: IChoose, index: number) => {
+              return (
+                <div>
+                  <div className='grid grid-cols-2 gap-15 items-center'>
+                    <Form.Item
+                      name={`question${index}`}
+                      label={<p className='font-bold text-xl'>Đáp án {listName[index]} </p>}
+                      rules={[{ required: true, message: 'vui lòng nhập đáp án ...!' }]}
                     >
-                      <input
-                        type='file'
-                        id='fileInput'
-                        className='w-full'
-                        onChange={(e: any) => setFile(e.target.files[0])}
-                        style={{ display: 'none' }}
+                      <TextArea
+                        onChange={(event) =>
+                          setDataQuestion({
+                            ...dataQuestion,
+                            questionA: event.target.value
+                          })
+                        }
+                        className='rounded-md border border-[#ccc] '
+                        placeholder='vui lòng nhập đáp án ...!'
                       />
-                      Select Image
-                    </label>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        !isAddQuestion ? handleSubmit('4') : createUploadImage('4')
-                      }}
-                      type='submit'
-                      className='bg-success  py-2 w-1/3 mt-5 rounded-md text-white font-medium'
-                    >
-                      Upload
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <Divider></Divider>
-            <div className='grid grid-cols-2 gap-15 items-center'>
-              <Form.Item
-                name='questionD'
-                label={<p className='font-bold text-xl'>Đáp án D </p>}
-                rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
-              >
-                <TextArea
-                  onChange={(event) =>
-                    setDataQuestion({
-                      ...dataQuestion,
-                      questionD: event.target.value
-                    })
-                  }
-                  className='rounded-md border border-[#ccc] '
-                  placeholder='vui lòng nhập Thêm Câu Hỏi ...!'
-                />
-              </Form.Item>
-              <div className='flex items-center w-full'>
-                <div className='w-1/2'>
-                  {!isAddQuestion && getDetailsExams?.dataDepartments?.choose[3]?.img !== '' ? (
-                    <img className='w-[200px]' src={`${uri}${getDetailsExams?.dataDepartments?.choose[3]?.img}`} />
-                  ) : (
-                    <div>
-                      {imageQuestion.imageChooseD !== '' && (
-                        <img className='w-[200px]' src={`${uri}${imageQuestion.imageChooseD}`} />
-                      )}
+                    </Form.Item>
+                    <div className='flex items-center w-full'>
+                      <div className='w-1/2'>
+                        {!isAddQuestion && getDetailsExams?.dataDepartments?.choose[index]?.img !== '' ? (
+                          <Image
+                            className='!w-[200px]'
+                            src={`${uri}${getDetailsExams?.dataDepartments?.choose[index]?.img}`}
+                          />
+                        ) : (
+                          <div>
+                            {imageQuestion.imageChooseA !== '' && (
+                              <Image className='!w-[200px]' src={`${uri}${imageQuestion.imageChooseA}`} />
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <div className='block w-1/2'>
+                        <form className=''>
+                          <label
+                            htmlFor='fileInput'
+                            className='flex items-center w-1/3 justify-center py-2 bg-[#D7B978] group rounded-md shadow-lg cursor-pointer hover:text-white text-white hover:font-bold transition-all'
+                          >
+                            <input
+                              type='file'
+                              id='fileInput'
+                              className='w-full'
+                              onChange={(e: any) => setFile(e.target.files[0])}
+                              style={{ display: 'none' }}
+                            />
+                            Select Image
+                          </label>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault()
+                              !isAddQuestion ? handleSubmit(String(index + 2)) : createUploadImage(String(index + 2))
+                            }}
+                            type='submit'
+                            className='bg-success  py-2 w-1/3 mt-5 rounded-md text-white font-medium'
+                          >
+                            Upload
+                          </button>
+                        </form>
+                      </div>
                     </div>
-                  )}
+                  </div>
+                  <Divider></Divider>
                 </div>
-                <div className='block w-1/2'>
-                  <form className=''>
-                    <label
-                      htmlFor='fileInput'
-                      className='flex items-center w-1/3 justify-center py-2 bg-[#D7B978] group rounded-md shadow-lg cursor-pointer hover:text-white text-white hover:font-bold transition-all'
-                    >
-                      <input
-                        type='file'
-                        id='fileInput'
-                        className='w-full'
-                        onChange={(e: any) => setFile(e.target.files[0])}
-                        style={{ display: 'none' }}
-                      />
-                      Select Image
-                    </label>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        !isAddQuestion ? handleSubmit('5') : createUploadImage('5')
-                      }}
-                      type='submit'
-                      className='bg-success  py-2 w-1/3 mt-5 rounded-md text-white font-medium'
-                    >
-                      Upload
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
+              )
+            })}
             <Divider></Divider>
             <div className='grid grid-cols-2 gap-10'>
               <Form.Item
@@ -521,7 +607,7 @@ const EditQuestionExams = () => {
                 label={<p className='font-bold text-xl'>Đáp án Đúng </p>}
                 rules={[{ required: true, message: 'vui lòng nhập Thêm Câu Hỏi ...!' }]}
               >
-                <Input
+                <Input.TextArea
                   onChange={(event) =>
                     setDataQuestion({
                       ...dataQuestion,

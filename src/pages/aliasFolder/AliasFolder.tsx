@@ -22,6 +22,7 @@ const AliasFolder = () => {
   const idCate = localStorage.getItem('idCategories')
   const [queryParameters] = useSearchParams()
   const details: string | null = queryParameters.get('details')
+  const checkEdit: string | null = queryParameters.get('edit')
   const {
     data: dataAliasFoldersId,
     isLoading: isAliasIDLoading,
@@ -115,15 +116,23 @@ const AliasFolder = () => {
                   />
                 </Tooltip>
               </p>
-              {/* <p>
+              <p>
                 <Tooltip title='sửa'>
                   <img
-                    onClick={() => navigate(`edit/${id}`)}
+                    onClick={() => {
+                      showDrawer()
+                      return navigate({
+                        search: createSearchParams({
+                          details: id,
+                          edit: '1'
+                        }).toString()
+                      })
+                    }}
                     className='w-[35px] cursor-pointer hover:scale-110'
                     src={editIcon}
                   />
                 </Tooltip>
-              </p> */}
+              </p>
             </div>
             <div>
               <p>
@@ -186,6 +195,7 @@ const AliasFolder = () => {
               return (
                 <React.Fragment key={subCategory}>
                   {renderCategory(subCategory, data[subCategory], level + 1)}
+                  {checkEdit && <button>edit</button>}
                 </React.Fragment>
               )
             })}

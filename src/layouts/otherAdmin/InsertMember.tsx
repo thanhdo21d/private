@@ -24,18 +24,18 @@ const InsertMember = () => {
     page: dataPageQuery || 1,
     employeeCode: search || ''
   })
-  console.log(data,"d")
+  console.log(data, 'd')
   const confirm = (id: string) => {
-
     inSertMember({
       id: idCate,
       idUser: id
     })
       .unwrap()
       .then(() => toastService.success('Successfully'))
-      .catch((errror) => toastService.error('error'))
+      .catch((error) => {
+        toastService.error(error.data.message)
+      })
   }
-
   const dataSource = data?.docs.map((item: any) => ({
     key: item._id,
     name: item.username,

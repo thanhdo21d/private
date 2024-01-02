@@ -84,7 +84,7 @@ const DepartmentAPI = createApi({
       invalidatesTags: ['Department']
     }),
     addQuestionData: builder.mutation({
-      query: ({ question, image, point, choose, answer, idCategory }: any) => ({
+      query: ({ question, image, point, choose, answer, idCategory, type }: any) => ({
         url: `/question/add`,
         method: 'POST',
         body: {
@@ -93,7 +93,8 @@ const DepartmentAPI = createApi({
           point: point,
           choose: choose,
           answer: answer,
-          idCategory: idCategory
+          idCategory: idCategory,
+          type: type
         }
       }),
       invalidatesTags: ['Department']

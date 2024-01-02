@@ -116,7 +116,7 @@ const EditRoles: React.FC = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
   }
-  const textButton = id ? 'Sửa Roles' : 'Thêm Roles'
+  const textButton = id ? 'Save' : 'Thêm Mới'
   const handleOptionChange = (event: any) => {
     setSelectedOption(event.target.value)
     console.log(event.target.value.split('_'))

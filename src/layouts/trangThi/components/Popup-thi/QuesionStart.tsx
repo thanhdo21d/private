@@ -253,7 +253,7 @@ const QuesionStart = () => {
                       )}
                     </div>
                   </div>
-                  {examsData?.choose?.every((data: any) => data.img === '' && data.q === '') ? (
+                  {examsData?.choose?.every((data: any) => data.q === '' || data.q !== null || data.q !== undefined) ? (
                     <div className='mt-15'>
                       <p className='text-xl font-bold text-black mb-2'>Vui Lòng Nhập câu trả lời!</p>
                       {examsData && (

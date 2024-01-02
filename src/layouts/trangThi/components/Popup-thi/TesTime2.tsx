@@ -8,10 +8,13 @@ import {
   useUpdateSesionUSerMutation
 } from '~/apis/topicQuestion/topicQuestion'
 import { AppContext } from '~/contexts/app.contexts'
+import PopupSuccess from './PopupSuccess.tsx/PopupSuccess'
 
 const TesTime2 = () => {
   const idSession = sessionStorage.getItem('idSession2')
   const [actionSubmit] = useSubmitExamsQuestionMutation()
+  const [showPop, setShowPop] = useState<boolean>(false)
+  const [Question, setQuestion] = useState<any[]>([])
   const [updateSessionUser] = useUpdateSesionUSerMutation()
   const navigate = useNavigate()
   const { profile } = useContext(AppContext)
@@ -40,8 +43,10 @@ const TesTime2 = () => {
         nameExams: ''
       })
         .unwrap()
-        .then(() => {
+        .then((data) => {
           setIsSubmitted(true)
+          setQuestion(data)
+          setShowPop(true)
           sessionStorage.removeItem('idSession2')
           sessionStorage.removeItem('idSession')
           updateSessionUser({
@@ -52,7 +57,7 @@ const TesTime2 = () => {
             .then(() => console.log('1'))
           setTimeout(() => {
             navigate('/')
-          }, 5000)
+          }, 15000)
         })
     }
   }
@@ -88,6 +93,7 @@ const TesTime2 = () => {
       <p className='text-xl py-2 pl-5 font-bold text-white text-center items-center'>
         <Countdown date={Date.now() + (testTime as number) * 1000} renderer={renderer} onComplete={handleSubmit} />
       </p>
+      {showPop && <PopupSuccess Question={Question} />}
     </div>
   )
 }

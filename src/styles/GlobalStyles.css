@@ -604,11 +604,10 @@
   border: 2px solid white;
   border-radius: 5px;
   overflow: hidden;
-  animation: slideDownAnimation 1s ease;
 }
 .time {
   flex: 1;
   padding: 0.5rem;
   text-align: center;
-  background-color: #666666	;
+  background-color: #666666;
 }

@@ -1,4 +1,4 @@
-import { Drawer, Form, Input, Popconfirm, Table, Tooltip } from 'antd'
+import { Drawer, Form, Input, Popconfirm, Table, Tooltip, Button as ButtonAnt } from 'antd'
 import { Footer } from 'antd/es/layout/layout'
 import React, { useState } from 'react'
 import { Button } from '~/components'
@@ -182,20 +182,30 @@ const AliasFolder = () => {
       }).toString()
     })
   }
+  const handleAddSubFolder = (folderPath: any) => {
+    console.log(folderPath)
+    const subFolderName = prompt('Nhập tên mới ')
+    if (subFolderName) {
+      console.log('1')
+    }
+  }
   const renderCategory = (category: any, data: any, level: any) => {
+    console.log(data, '1)')
     const indent = 10
     const marginLeft = `${level * indent}px`
     return (
       <li key={category} style={{ marginLeft }}>
-        <strong>{category}</strong>
+        <p className='flex items-center gap-7 py-1'>
+          <strong>{category} </strong>
+          {checkEdit && <ButtonAnt onClick={() => handleAddSubFolder(data)}>edit</ButtonAnt>}
+        </p>
         {typeof data === 'object' ? (
           <ul>
             {Object.keys(data).map((subCategory) => {
               console.log(data)
               return (
                 <React.Fragment key={subCategory}>
-                  {renderCategory(subCategory, data[subCategory], level + 1)}
-                  {checkEdit && <button>edit</button>}
+                  <p className='flex items-center gap-7'>{renderCategory(subCategory, data[subCategory], level + 1)}</p>
                 </React.Fragment>
               )
             })}

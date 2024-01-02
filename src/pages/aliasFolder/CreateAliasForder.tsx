@@ -96,9 +96,11 @@ import { Divider } from 'antd'
 import axios from 'axios'
 import { toastService } from '~/utils/toask/toaskMessage'
 import Cookies from 'js-cookie'
+import { useCreateAliasFoldersMutation } from '~/apis/aliasFolder/aliasFolder'
 const CreateAliasFolder = () => {
   const uri = import.meta.env.VITE_API
   const idCate = localStorage.getItem('idCategories')
+  const [createAlias] = useCreateAliasFoldersMutation()
   const [data, setData] = useState({})
   const [name, setName] = useState('')
   const token = Cookies.get('token')
@@ -150,23 +152,18 @@ const CreateAliasFolder = () => {
       </ul>
     )
   }
-  const handelSubmitAliasFolders = async () => {
+  const handelSubmitAliasFolders = () => {
     try {
-      await axios.post(
-        `${uri}aliases/${idCate}`,
-        {
-          name: name,
-          data: data
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
-        }
-      )
-      toastService.success('created successfully')
-      navigate(-1)
+      createAlias({
+        id: idCate,
+        name: name,
+        data: data
+      })
+        .then(() => {
+          toastService.success('created successfully')
+          navigate(-1)
+        })
+        .catch(() => toastService.error('error creating'))
     } catch (error) {
       toastService.error('error creating')
     }

@@ -253,9 +253,7 @@ const QuesionStart = () => {
                       )}
                     </div>
                   </div>
-                  {examsData?.choose?.every(
-                    (data: any) => !data.q || data.q === '' || data.q !== null || data.q !== undefined
-                  ) ? (
+                  {examsData?.choose?.every((data: any) => data.q === '' || data.q === null || data.q === undefined) ? (
                     <div className='mt-15'>
                       <p className='text-xl font-bold text-black mb-2'>Vui Lòng Nhập câu trả lời!</p>
                       {examsData && (
@@ -286,33 +284,38 @@ const QuesionStart = () => {
                       )}
                     </div>
                   ) : (
-                    examsData?.choose?.map((data: any, index: number) => (
-                      <div key={index} className={``}>
-                        <div
-                          onClick={() => {
-                            dispatch(
-                              updateSubmitData({
-                                counts: count + 1,
-                                chooses: listName[index]
-                              })
-                            )
-                          }}
-                          className={`w-full mt-[20px] border border-body  rounded-md  flex items-center text-start
+                    examsData?.choose?.map((data: any, index: number) => {
+                      console.log(examsData)
+                      const checkAnswer = examsData.select
+                      const selectedOption = listName[index]
+                      return (
+                        <div key={index} className={``}>
+                          <div
+                            onClick={() => {
+                              dispatch(
+                                updateSubmitData({
+                                  counts: count + 1,
+                                  chooses: listName[index]
+                                })
+                              )
+                            }}
+                            className={`w-full mt-[20px] border border-body  rounded-md  flex items-center text-start
                overflow-h-scroll min-h-[70px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1
                hover:scale-80 hover:bg-indigo-500 duration-300 gap-2 pl-5 ${
                  checkDataSubmit[count + 1]?.includes(listName[index]) && checkDataSubmit[count + 1] != undefined
                    ? 'bg-warning'
                    : ''
                }`}
-                        >
-                          <span className='font-bold text-xl pl-5 text-black'>{listName[index]}</span>:{' '}
-                          <span className='font-medium text-md text-black'> {data?.q}</span>
+                          >
+                            <span className='font-bold text-xl pl-5 text-black'>{listName[index]}</span>:{' '}
+                            <span className='font-medium text-md text-black'> {data?.q}</span>
+                          </div>
+                          <div className='mt-5'>
+                            {data?.img ? <Image className='!w-[205px] rounded-md' src={`${uri}${data?.img}`} /> : ''}
+                          </div>
                         </div>
-                        <div className='mt-5'>
-                          {data?.img ? <Image className='!w-[205px] rounded-md' src={`${uri}${data?.img}`} /> : ''}
-                        </div>
-                      </div>
-                    ))
+                      )
+                    })
                   )}
                 </div>
               </div>

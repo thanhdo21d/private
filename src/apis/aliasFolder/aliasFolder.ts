@@ -63,6 +63,20 @@ const AliasApi = createApi({
         }
       },
       providesTags: ['alias']
+    }),
+    //aliases
+    createAliasFolders: builder.mutation({
+      query: ({ id, name, data }) => {
+        return {
+          url: `/aliases/${id}`,
+          method: 'POST',
+          body: {
+            name: name,
+            data: data
+          }
+        }
+      },
+      invalidatesTags: ['alias']
     })
   })
 })
@@ -70,6 +84,7 @@ export const {
   useQueryAliasAllQuery,
   useRemoveAliasDepartmentMutation,
   useDefaultAliasMutation,
-  useGetIdAliasFoldersQuery
+  useGetIdAliasFoldersQuery,
+  useCreateAliasFoldersMutation
 } = AliasApi
 export default AliasApi

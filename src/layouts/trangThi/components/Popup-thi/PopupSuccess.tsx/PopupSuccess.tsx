@@ -23,9 +23,7 @@ const PopupSuccess = ({ Question }: any) => {
                 <div className='text-center mx-auto flex justify-center'>
                   <img className='w-[200px] fade-in-out-dm' src={`${logoFInish}`} alt='' />
                 </div>
-                <p className='text-gray-600 font-semibold text-lg'>
-                  Xin chúc mừng, bạn hoàn thành bài thi này nhanh thứ 5 trong số những ng tham gia.
-                </p>
+                <p className='text-gray-600 font-semibold text-lg'>Xin chúc mừng, bạn hoàn thành bài thi .</p>
                 <p className='text-gray-600 text-md'>
                   tổng điểm Trắc Nghiệm : <span className='text-success font-bold text-lg'>{Question?.score} điểm</span>
                 </p>

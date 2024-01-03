@@ -29,7 +29,8 @@ import {
   incrementCount,
   setExamsData,
   setServerData,
-  updateSubmitData
+  updateSubmitData,
+  updateSubmitOneChoose
 } from '~/store/slice/exams.slice'
 import PopError from './PopError'
 import PopEndTime from './PopEndTime'
@@ -292,12 +293,21 @@ const QuesionStart = () => {
                         <div key={index} className={``}>
                           <div
                             onClick={() => {
-                              dispatch(
-                                updateSubmitData({
-                                  counts: count + 1,
-                                  chooses: listName[index]
-                                })
-                              )
+                              if (checkAnswer == '1') {
+                                dispatch(
+                                  updateSubmitData({
+                                    counts: count + 1,
+                                    chooses: listName[index]
+                                  })
+                                )
+                              } else {
+                                dispatch(
+                                  updateSubmitOneChoose({
+                                    counts: count + 1,
+                                    chooses: listName[index]
+                                  })
+                                )
+                              }
                             }}
                             className={`w-full mt-[20px] border border-body  rounded-md  flex items-center text-start
                overflow-h-scroll min-h-[70px] cursor-pointer transition-all	hover:bg-warning ease-in-out delay-150 bg-blue-500 hover:-translate-y-1

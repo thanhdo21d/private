@@ -23,6 +23,8 @@ import { useEditTopicExamIdMutation, useGetTopicExamsIDQuery } from '~/apis/exam
 import DeleteIcon from '~/components/Icons/DeleteIcon'
 import MemberDepartment from '~/layouts/otherAdmin/MemberDepartment'
 import { toastService } from '~/utils/toask/toaskMessage'
+import excelIcons from '~/assets/xlsx.png'
+import axios from 'axios'
 type FieldType = {
   keyword?: string
 }
@@ -44,6 +46,8 @@ const DetailsExamsQuestion = () => {
   const { pathname } = useLocation()
   const checkPath = pathname.includes('edit')
   const [dataToSend, setDataToSend] = useState<any[]>([])
+  const [file, setFile] = useState<any>(null)
+  const url = import.meta.env.VITE_API
   const showDrawer = (num: string) => {
     setOpen(true)
     if (num === '1') {
@@ -64,7 +68,6 @@ const DetailsExamsQuestion = () => {
   const { Column, ColumnGroup } = Table
   const { id } = useParams()
   const uri = import.meta.env.VITE_API
-
   const navigate = useNavigate()
   const {
     data: dataIdExmasDetails,
@@ -271,9 +274,6 @@ const DetailsExamsQuestion = () => {
       .unwrap()
       .then(() => {
         toastService.success('update success')
-        setTimeout(() => {
-          window.location.reload()
-        }, 400)
       })
       .catch(() => {
         toastService.error('update failed')
@@ -293,7 +293,43 @@ const DetailsExamsQuestion = () => {
     console.log(result, secretKey)
     return result
   }
-
+  const handleSubmit = async (num: string) => {
+    console.log('num', num)
+    const formData = new FormData()
+    formData.append('file', file)
+    try {
+      const { data } = await axios.post(`${url}api/imports/users/exams`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      if (num === '1') {
+        setDataExamsEdit({
+          ...dataExamsEdit,
+          examiner: {
+            ...dataExamsEdit.examiner,
+            add: data
+          }
+        })
+      } else {
+        setDataExamsEdit({
+          ...dataExamsEdit,
+          users: {
+            ...dataExamsEdit.users,
+            add: data
+          }
+        })
+      }
+      toastService.success('uploading file successfully')
+      console.log(data)
+    } catch (error) {
+      console.error(error)
+      toastService.error('Error uploading file')
+    }
+  }
+  const handleFileChange = (event: any) => {
+    setFile(event.target.files[0])
+  }
   if (isLoadingDetails || isFetchingDetails)
     return (
       <div>
@@ -443,15 +479,65 @@ const DetailsExamsQuestion = () => {
           </Form>
           <div className='mt-5'>
             <Divider orientation='left'>danh sách người chấm thi</Divider>
-            <Button onClick={() => showDrawer('1')} styleClass='py-2 bg-warning'>
-              xem dánh sách
-            </Button>
+            <div className={`${checkPath ? 'flex gap-5 items-center' : 'block'}`}>
+              <div>
+                <Button onClick={() => showDrawer('1')} styleClass='py-2 bg-warning'>
+                  {checkPath ? 'Sửa danh sách' : 'xem danh sách'}
+                </Button>
+              </div>
+              <div>
+                {checkPath && (
+                  <form
+                    onSubmit={(event) => {
+                      event.preventDefault()
+                      handleSubmit('1')
+                    }}
+                    className='flex items-center gap-10'
+                  >
+                    <img
+                      className='w-[60px] hover:scale-105 cursor-pointer ease-in-out duration-300'
+                      src={excelIcons}
+                    />
+                    <input onChange={handleFileChange} type='file' className='cursor-pointer' />
+                    <Button type='submit' styleClass='bg-warning py-2'>
+                      upload
+                    </Button>
+                  </form>
+                )}
+              </div>
+            </div>
           </div>
           <div className='mt-5'>
             <Divider orientation='left'>danh sách người thi</Divider>
-            <Button onClick={() => showDrawer('0')} styleClass='py-2'>
-              xem dánh sách
-            </Button>
+            <div className={`${checkPath ? 'flex gap-5 items-center' : 'block'}`}>
+              <div>
+                <Button onClick={() => showDrawer('0')} styleClass='py-2'>
+                  {checkPath ? 'Sửa danh sách' : 'xem danh sách'}
+                </Button>
+              </div>
+              <div>
+                <div>
+                  {checkPath && (
+                    <form
+                      onSubmit={(event) => {
+                        event.preventDefault()
+                        handleSubmit('2')
+                      }}
+                      className='flex items-center gap-10'
+                    >
+                      <img
+                        className='w-[60px] hover:scale-105 cursor-pointer ease-in-out duration-300'
+                        src={excelIcons}
+                      />
+                      <input onChange={handleFileChange} type='file' className='cursor-pointer' />
+                      <Button type='submit' styleClass=' py-2'>
+                        upload
+                      </Button>
+                    </form>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
           <div className='border-b mt-10 border-[#d9d9d9] mb-5'>
             <Divider orientation='left' plain>

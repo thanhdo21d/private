@@ -31,7 +31,7 @@ const categoryHistoryAPI = createApi({
   }),
   tagTypes: ['history'],
   endpoints: (builder) => ({
-    getHistoryCategories: builder.query<IhistoryForm[], string>({
+    getHistoryCategories: builder.query<IhistoryForm, string>({
       query: (id) => {
         return {
           url: `/history/${id}`,

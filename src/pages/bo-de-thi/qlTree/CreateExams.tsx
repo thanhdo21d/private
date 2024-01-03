@@ -31,7 +31,7 @@ const CreateExams = () => {
   })
   const { categoriesData } = useAppSelector((state) => state.dataCategories)
   const { id } = useParams()
-  const [dataExams, setDataExams] = useState({
+  const [dataExams, setDataExams] = useState<any>({
     startDate: '',
     endDate: '',
     timeOut: 0,
@@ -502,10 +502,10 @@ const CreateExams = () => {
 
       <div className=' mx-auto flex mt-15 justify-center items-center w-full gap-10'>
         <Button onClick={handelInsertExams} styleClass='py-2 w-1/2 bg-[#24A19C]'>
-          Thêm Đề Thi
+          Save
         </Button>
         <Button styleClass='py-2 bg-meta-4 w-1/2' onClick={handelTemporarySave}>
-          Lưu Tạm Thời
+          Temporary save
         </Button>
       </div>
     </>

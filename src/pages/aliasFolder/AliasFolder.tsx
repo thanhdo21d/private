@@ -191,6 +191,7 @@ const AliasFolder = () => {
   }
   const renderCategory = (category: any, data: any, level: any) => {
     console.log(data, '1)')
+    const listName = typeof data === 'object'
     const indent = 10
     const marginLeft = `${level * indent}px`
     return (

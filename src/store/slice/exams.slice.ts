@@ -73,6 +73,16 @@ const examSlice = createSlice({
       }
       state.submitData = newData
     },
+    updateSubmitOneChoose: (state, action: PayloadAction<{ counts: number; chooses: string }>) => {
+      const { counts, chooses } = action.payload
+      const newData = [...state.submitData]
+      if (!Array.isArray(newData[counts])) {
+        newData[counts] = []
+      }
+      const newChooseArray = [chooses]
+      newData[counts] = newChooseArray
+      state.submitData = newData
+    },
     setServerData: (state, action: PayloadAction<any>) => {
       state.submitData = action.payload
     }
@@ -85,6 +95,7 @@ export const {
   setCount,
   updateSubmitData,
   setAnserCheck,
-  setServerData
+  setServerData,
+  updateSubmitOneChoose
 } = examSlice.actions
 export const examsReducer = examSlice.reducer

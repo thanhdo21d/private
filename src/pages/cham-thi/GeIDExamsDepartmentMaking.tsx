@@ -28,7 +28,7 @@ const GeIDExamsDepartmentMaking = () => {
     id: id as string
   })
   const [doneExam] = useDoneExamsTlMutation()
-  console.log(dataDetailsExamUser)
+  console.log(dataDetailsExamUser,"11")
   const showDrawer = () => {
     setOpen(true)
   }

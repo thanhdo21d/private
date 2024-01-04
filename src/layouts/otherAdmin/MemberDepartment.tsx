@@ -1,4 +1,4 @@
-import { Checkbox, Col, Drawer, Form, Image, Input, Popconfirm, Row, Skeleton, Space, Table } from 'antd'
+import { Checkbox, Col, Drawer, Form, Image, Input, Popconfirm, Row, Skeleton, Space, Table, Tooltip, message } from 'antd'
 import { Footer } from 'antd/es/layout/layout'
 import axios from 'axios'
 import React, { useState } from 'react'
@@ -12,6 +12,7 @@ import Pagination from '~/pages/roles/Pagination'
 import { toastService } from '~/utils/toask/toaskMessage'
 import InsertMember from './InsertMember'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
+import excelIcons from '~/assets/xlsx.png'
 import { useAppDispatch } from '~/store/root/hook'
 type FieldType = {
   code?: string
@@ -201,6 +202,24 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember?: boo
       }).toString()
     })
   }
+  const handelExportExcel = async () => {
+    try {
+      const { data } = await axios.get(`${url}export-excel`, {
+        responseType: 'blob'
+      })
+      const urls = window.URL.createObjectURL(new Blob([data]))
+      const link = document.createElement('a')
+      link.href = urls
+      link.setAttribute('download', 'export.xlsx')
+      document.body.appendChild(link)
+      link.click()
+      window.URL.revokeObjectURL(urls)
+      document.body.removeChild(link)
+      message.success('exported')
+    } catch (error) {
+      message.error('error exporting')
+    }
+  }
   return (
     <div>
       <Drawer
@@ -295,7 +314,7 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember?: boo
         )}
       </Drawer>
       {!checkMember && (
-        <div className='flex space-x-2'>
+        <div className='flex space-x-5'>
           <Button
             styleClass='bg-warning'
             onClick={() => {
@@ -314,6 +333,13 @@ const MemberDepartment = ({ checkMember, sendDataToParent }: { checkMember?: boo
           >
             Thêm mới Từ Excel
           </Button>
+          <Tooltip title='Xuất file mẫu'>
+            <img
+              onClick={handelExportExcel}
+              className='w-[50px] hover:scale-105 cursor-pointer ease-in-out duration-300'
+              src={excelIcons}
+            />
+          </Tooltip>
         </div>
       )}
 

@@ -125,10 +125,10 @@ const ChoosExam = () => {
       <div className='w-11/12  bg-white bg-opacity-80 shadow-2xl rounded-sm'>
         {checkSecret && (
           <motion.div
-            variants={fadeIn('down', 0.25)}
+            variants={fadeIn('left', 0.05)}
             initial='hidden'
             whileInView={'show'}
-            viewport={{ once: false, amount: 0.7 }}
+            viewport={{ once: false, amount: 0.1 }}
             className='relative -top-10'
           >
             <div className='flex justify-center'>
@@ -229,6 +229,38 @@ const ChoosExam = () => {
                         <div className='col-span-11 text-sm flex items-center font-light pl-2'>
                           Hình Thức Thi : Tự Luận Trắc Nghiệm
                         </div>
+
+                        <div>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            className='h-5 w-5'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            stroke='currentColor'
+                            strokeWidth={2}
+                          >
+                            <path strokeLinecap='round' strokeLinejoin='round' d='M10 19l-7-7m0 0l7-7m-7 7h18' />
+                          </svg>
+                        </div>
+                        <div className='col-span-11 text-sm flex items-center font-light pl-2'>
+                          Ngày bắt đầu : <span className='font-bold text-md pl-2'>{data?.startDate.split('T')[0]}</span>
+                        </div>
+
+                        <div>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            className='h-5 w-5'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            stroke='currentColor'
+                            strokeWidth={2}
+                          >
+                            <path strokeLinecap='round' strokeLinejoin='round' d='M10 19l-7-7m0 0l7-7m-7 7h18' />
+                          </svg>
+                        </div>
+                        <div className='col-span-11 text-sm flex items-center font-light pl-2'>
+                          Ngày kết thúc : <span className='font-bold text-md pl-2'>{data?.endDate.split('T')[0]}</span>
+                        </div>
                         <div>
                           <svg
                             xmlns='http://www.w3.org/2000/svg'
@@ -259,8 +291,8 @@ const ChoosExam = () => {
                         <div className='col-span-11 text-sm flex items-center font-light pl-2'>
                           Lưu ý : Không tự ý thoát khi làm bài
                         </div>
-                        <div className='col-span-12 mt-20 mb-5 text-gray-100'>
-                          {data._id?.toString() === dataUser?.user?.idSessionExam?.toString() ? (
+                        <div className='col-span-12 mt-6 mb-5 text-gray-100'>
+                          {data._id?.toString() === dataUser?.user?.idSessionExam?.toString() && (
                             <button
                               className='rounded hover:bg-danger bg-warning w-full py-3 cursor-not-allowed'
                               onClick={() => {
@@ -269,24 +301,36 @@ const ChoosExam = () => {
                             >
                               Bạn đã ở trong bài thi này
                             </button>
-                          ) : (
+                          )}
+                          {data?.checkDayStart?.toString() === '1' && (
                             <button
-                              className='rounded hover:bg-success bg-teal-500 w-full py-3'
+                              className='rounded bg-danger hover:bg-warning w-full py-3 cursor-not-allowed'
                               onClick={() => {
-                                setCheckSecret(true)
-                                sessionStorage.setItem('idSession', data._id)
-
-                                // return navigate({
-                                //   search: createSearchParams({
-                                //     ...queryConfig,
-                                //     idExams: data._id
-                                //   }).toString()
-                                // })
+                                alert('Chưa đến ngày thi !')
                               }}
                             >
-                              Bắt Đầu Thi
+                              Chưa đến ngày thi
                             </button>
                           )}
+                          {data._id?.toString() !== dataUser?.user?.idSessionExam?.toString() &&
+                            data?.checkDayStart?.toString() === '0' && (
+                              <button
+                                className='rounded hover:bg-success bg-teal-500 w-full py-3'
+                                onClick={() => {
+                                  setCheckSecret(true)
+                                  sessionStorage.setItem('idSession', data._id)
+
+                                  // return navigate({
+                                  //   search: createSearchParams({
+                                  //     ...queryConfig,
+                                  //     idExams: data._id
+                                  //   }).toString()
+                                  // })
+                                }}
+                              >
+                                Bắt Đầu Thi
+                              </button>
+                            )}
 
                           <button
                             className='rounded hover:bg-warning bg-teal-500 w-full py-3 mt-5 flex items-center gap-3 justify-around'

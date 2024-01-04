@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Drawer, Form, Image, Input, Popconfirm, Table } from 'antd'
+import { Drawer, Form, Image, Input, Popconfirm, Table, Tooltip, message } from 'antd'
 import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button, EmailIcon } from '~/components'
 import { useDeleteUserMutation, useGetAllUserQuery } from '~/apis/user/user.api'
@@ -10,6 +10,7 @@ import Pagination from '~/pages/roles/Pagination'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
 import { Footer } from 'antd/es/layout/layout'
 import axios from 'axios'
+import excelIcons from '~/assets/xlsx.png'
 type FieldType = {
   keyword?: string
 }
@@ -177,6 +178,24 @@ const AllMember = () => {
   const handleFileChange = (event: any) => {
     setFile(event.target.files[0])
   }
+  const handelExportExcel = async () => {
+    try {
+      const { data } = await axios.get(`${uri}export-excel`, {
+        responseType: 'blob'
+      })
+      const urls = window.URL.createObjectURL(new Blob([data]))
+      const link = document.createElement('a')
+      link.href = urls
+      link.setAttribute('download', 'export.xlsx')
+      document.body.appendChild(link)
+      link.click()
+      window.URL.revokeObjectURL(urls)
+      document.body.removeChild(link)
+      message.success('exported')
+    } catch (error) {
+      message.error('error exporting')
+    }
+  }
   return (
     <div className=''>
       <Drawer title='Basic Drawer' width={700} placement='right' onClose={onClose} open={open}>
@@ -256,15 +275,25 @@ const AllMember = () => {
           </div>
         </div>
       </Drawer>
-      <Button
-        styleClass='bg-success  h-[40px]'
-        onClick={() => {
-          showDrawer()
-          // return setCheckExcel(true)
-        }}
-      >
-        Thêm mới Từ Excel
-      </Button>
+      <div className='flex items-center gap-6'>
+        <Button
+          styleClass='bg-success  h-[40px]'
+          onClick={() => {
+            showDrawer()
+            // return setCheckExcel(true)
+          }}
+        >
+          Thêm mới Từ Excel
+        </Button>
+        <Tooltip title='Xuất file mẫu'>
+          <img
+            onClick={handelExportExcel}
+            className='w-[50px] hover:scale-105 cursor-pointer ease-in-out duration-300'
+            src={excelIcons}
+          />
+        </Tooltip>
+      </div>
+
       <div className='mt-10 flex gap-5'>
         <Form className='flex gap-5  justify-center' onFinishFailed={onFinishFailed} onFinish={onFinish}>
           <Form.Item<FieldType> name='keyword' rules={[{ required: true, message: 'Please input your code!' }]}>

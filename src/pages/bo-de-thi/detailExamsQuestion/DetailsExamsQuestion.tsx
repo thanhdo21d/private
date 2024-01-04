@@ -15,7 +15,9 @@ import {
   Skeleton,
   Space,
   Table,
-  Tag
+  Tag,
+  Tooltip,
+  message
 } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -330,6 +332,24 @@ const DetailsExamsQuestion = () => {
   const handleFileChange = (event: any) => {
     setFile(event.target.files[0])
   }
+  const handelExportExcel = async () => {
+    try {
+      const { data } = await axios.get(`${url}export-excel`, {
+        responseType: 'blob'
+      })
+      const urls = window.URL.createObjectURL(new Blob([data]))
+      const link = document.createElement('a')
+      link.href = urls
+      link.setAttribute('download', 'export.xlsx')
+      document.body.appendChild(link)
+      link.click()
+      window.URL.revokeObjectURL(urls)
+      document.body.removeChild(link)
+      message.success('exported')
+    } catch (error) {
+      message.error('error exporting')
+    }
+  }
   if (isLoadingDetails || isFetchingDetails)
     return (
       <div>
@@ -494,10 +514,13 @@ const DetailsExamsQuestion = () => {
                     }}
                     className='flex items-center gap-10'
                   >
-                    <img
-                      className='w-[60px] hover:scale-105 cursor-pointer ease-in-out duration-300'
-                      src={excelIcons}
-                    />
+                    <Tooltip title='Xuất file mẫu'>
+                      <img
+                        onClick={handelExportExcel}
+                        className='w-[60px] hover:scale-105 cursor-pointer ease-in-out duration-300'
+                        src={excelIcons}
+                      />
+                    </Tooltip>
                     <input onChange={handleFileChange} type='file' className='cursor-pointer' />
                     <Button type='submit' styleClass='bg-warning py-2'>
                       upload
@@ -525,10 +548,14 @@ const DetailsExamsQuestion = () => {
                       }}
                       className='flex items-center gap-10'
                     >
-                      <img
-                        className='w-[60px] hover:scale-105 cursor-pointer ease-in-out duration-300'
-                        src={excelIcons}
-                      />
+                      <Tooltip title='Xuất file mẫu'>
+                        <img
+                          onClick={handelExportExcel}
+                          className='w-[60px] hover:scale-105 cursor-pointer ease-in-out duration-300'
+                          src={excelIcons}
+                        />
+                      </Tooltip>
+
                       <input onChange={handleFileChange} type='file' className='cursor-pointer' />
                       <Button type='submit' styleClass=' py-2'>
                         upload

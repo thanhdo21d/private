@@ -17,7 +17,7 @@ const GeIDExamsDepartmentMaking = () => {
     commentAdmin: ''
   })
   const [updateCommentAdmin] = useUpdateCommentAdminExamsUserMutation()
-  const [dataDetail, setDataDetail] = useState<any[]>([])
+  const [dataDetail, setDataDetail] = useState<any>([])
   const uri = import.meta.env.VITE_API
   const { id } = useParams()
   const {
@@ -132,7 +132,7 @@ const GeIDExamsDepartmentMaking = () => {
     )
   console.log(dataDetail)
   return (
-    <div>
+    <div className='m-10'>
       <Drawer title='Chi tiết' placement='top' onClose={onClose} open={open} size='large' destroyOnClose>
         <div>
           <p className='mb-7 text-black font-medium'>Đáp án nhân viên chọn</p>
@@ -140,7 +140,7 @@ const GeIDExamsDepartmentMaking = () => {
           <p className='mb-7 text-black font-medium'>Điểm chuẩn</p>
           <Input className='!text-black text-md font-medium' value={dataDetail?.point} disabled />
           <p className='mb-7 mt-4 text-black text-md font-medium'>Đáp án đúng</p>
-          <Input.TextArea value={dataDetail?.trueAnswer} disabled />
+          <Input.TextArea className='!text-black' value={dataDetail?.trueAnswer} disabled />
           <p className='mb-7 mt-4 text-black font-medium'>Số điểm bạn chấm</p>
           <Input
             onChange={(event: any) =>

@@ -117,7 +117,7 @@ const AliasFolder = () => {
                 </Tooltip>
               </p>
               <p>
-                <Tooltip title='sửa'>
+                {/* <Tooltip title='sửa'>
                   <img
                     onClick={() => {
                       showDrawer()
@@ -131,7 +131,7 @@ const AliasFolder = () => {
                     className='w-[35px] cursor-pointer hover:scale-110'
                     src={editIcon}
                   />
-                </Tooltip>
+                </Tooltip> */}
               </p>
             </div>
             <div>
@@ -282,7 +282,7 @@ const AliasFolder = () => {
             Design by thanhdo
           </div>
           <div>
-            <Pagination pageSize={32} queryConfig={queryConfig} />
+            {/* <Pagination pageSize={32} queryConfig={queryConfig} /> */}
           </div>
         </Footer>
       </div>

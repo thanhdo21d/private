@@ -134,7 +134,7 @@ const GetAllExamsDepartment = () => {
       </div>
     )
   return (
-    <div>
+    <div className={`${aliasFolder ? 'm-10' : ''}`}>
       <div className='mb-5'>
         <Divider orientation='left'>Danh sách bài thi </Divider>
       </div>

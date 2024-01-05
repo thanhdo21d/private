@@ -34,7 +34,6 @@ const DsDethi = () => {
       limit: datalimitQueryChange || 10,
       search: search || ''
     })
-  console.log(dataAllCategoriesDepartment)
   const [createCategories, { isLoading: isCreateCategoriesLoading }] = useCreateCategoriesMutation()
   const [removeCategories, { isLoading: isRemoveLoading }] = useRemoveCategoriesTreeMutation()
   const [editCategories] = useEditCategoriesTreeMutation()
@@ -172,7 +171,15 @@ const DsDethi = () => {
       }
     }
   ]
-  if (isLoading || isFetching) return <div>Loading...</div>
+  if (isLoading || isFetching || isGetCategoriesDepartmentLoading)
+    return (
+      <div>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    )
   return (
     <div>
       <div className=' xl:flex justify-between mb-5'>
@@ -208,19 +215,21 @@ const DsDethi = () => {
             onClick={() => setCheckOption(true)}
             className='text-[20px] p-2  border-[3px] border-[#EDF1F1] text-[#212529] ease-in-out bg-white shadow-lg rounded-md cursor-pointer hover:text-success'
           />
-          <button
-            className='bg-success px-8 rounded-md text-white font-medium py-2.5'
-            onClick={() => {
-              showDrawer()
-              navigate({
-                search: createSearchParams({
-                  isCreate: '1'
-                }).toString()
-              })
-            }}
-          >
-            New department
-          </button>
+          {dataUser?.user?.role.name == 'Admin' && (
+            <button
+              className='bg-success px-8 rounded-md text-white font-medium py-2.5'
+              onClick={() => {
+                showDrawer()
+                navigate({
+                  search: createSearchParams({
+                    isCreate: '1'
+                  }).toString()
+                })
+              }}
+            >
+              New department
+            </button>
+          )}
         </div>
       </div>
       <Drawer

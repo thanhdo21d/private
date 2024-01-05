@@ -76,7 +76,12 @@ const FoldersCategories = () => {
   return (
     <div className='relative'>
       {isLoading || isFetching ? (
-        <div>Loading...</div>
+        <div>
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+        </div>
       ) : (
         <div className='min-h-screen '>
           <Drawer
@@ -90,7 +95,7 @@ const FoldersCategories = () => {
               </Space>
             }
           >
-            <Form onFinish={onFinish} layout='vertical' hideRequiredMark>
+            <Form onFinish={onFinish} layout='vertical'>
               <div>
                 <Form.Item
                   name='name'
@@ -118,7 +123,6 @@ const FoldersCategories = () => {
                   return null
                 })}
               </div>
-
               <Button type='submit' styleClass=' w-full mt-3'>
                 {isCreateCategoriesLoading ? <div>....Loading</div> : 'Submit'}
               </Button>

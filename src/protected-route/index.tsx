@@ -3,6 +3,7 @@ import NotPermitted from './not-permitted'
 import { useContext, useEffect, useState } from 'react'
 import { AppContext } from '~/contexts/app.contexts'
 import axios from 'axios'
+import { Skeleton } from 'antd'
 const RoleBaseRoute = (props: any) => {
   const { profile } = useContext(AppContext)
   const [hasPermission, setHasPermission] = useState<any>(null)
@@ -24,11 +25,16 @@ const RoleBaseRoute = (props: any) => {
         setHasPermission(false)
       }
     }
-
     checkPermission()
   }, [pathname, uri, profile?.role])
   if (hasPermission == null) {
-    return <p>loading.......</p>
+    return (
+      <p>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </p>
+    )
   }
   if (hasPermission) {
     return <>{props.children}</>

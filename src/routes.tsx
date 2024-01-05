@@ -59,17 +59,7 @@ import GeIDExamsDepartmentMaking from './pages/cham-thi/GeIDExamsDepartmentMakin
 import ProtectedRoute from './protected-route'
 import DsExamsMiner from './pages/cham-thi/DsExamsMiner'
 import CheckSessionExams from './permissions/CheckSessionExams'
-export const PrivateRoute = () => {
-  const cookie = Cookies.get('token')
-  const { profile } = useContext(AppContext)
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (profile?.role.name === '') {
-      navigate('/login')
-    }
-  }, [profile, navigate])
-  return profile?.role.name === '' && cookie != 'undefined' ? <Outlet /> : <Navigate to='/login' />
-}
+import CheckUserAccepted from './pages/accept-phong-ban/CheckUserAccepted'
 export const routers = createBrowserRouter([
   {
     path: '*',
@@ -109,6 +99,8 @@ export const routers = createBrowserRouter([
   },
   { path: 'details-exams/:id', element: <DetailsExams /> },
   { path: '/GuideLine', element: <GuideLine /> },
+  { path: '/iii', element: <CheckUserAccepted /> },
+
   { path: 'question/edit/:id', element: <EditQuestionExams /> },
   { path: 'question/add', element: <EditQuestionExams /> },
   { path: 'action/home', element: <Home /> },
@@ -210,8 +202,6 @@ export const routers = createBrowserRouter([
           { path: 'details/dethi/:id', element: <FormData /> },
           { path: 'details/dethi/edit/:id', element: <EditExams /> },
           { path: 'level_easy/details/:id', element: <DetailsDsEasy /> },
-          { path: 'de-trung-binh', element: <DsDeThiTB /> },
-          { path: 'de-de', element: <DsDeThiEszy /> },
           { path: 'member/:id/edit', element: <EditMember /> },
           {
             path: 'all-member',

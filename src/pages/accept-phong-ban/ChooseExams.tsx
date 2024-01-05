@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import Slider from 'react-slick'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useGetAllExamsCategoriesQuery } from '~/apis/examSetting/examSetting'
-import { Empty } from 'antd'
+import { Empty, Skeleton } from 'antd'
 import { IoMdReturnLeft } from 'react-icons/io'
 import { AppContext } from '~/contexts/app.contexts'
 import Pagination from '../roles/Pagination'
@@ -38,7 +38,12 @@ const ChooseExams = () => {
   return (
     <div className='flex justify-center'>
       {isDataExamsCategoriesLoading || isFetching ? (
-        <div>Loading...</div>
+        <div>
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+        </div>
       ) : (
         <div className='w-10/12  bg-white bg-opacity-80 shadow-2xl rounded-sm'>
           <div className='grid grid-cols-3'>

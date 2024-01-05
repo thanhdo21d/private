@@ -1,4 +1,4 @@
-import { Drawer, Form, Input, Popconfirm, Table, Tooltip, Button as ButtonAnt } from 'antd'
+import { Drawer, Form, Input, Popconfirm, Table, Tooltip, Button as ButtonAnt, Skeleton } from 'antd'
 import { Footer } from 'antd/es/layout/layout'
 import React, { useState } from 'react'
 import { Button } from '~/components'
@@ -267,7 +267,11 @@ const AliasFolder = () => {
       <Table dataSource={dataSource} columns={columns} pagination={false} />
       <Drawer title='Basic Drawer' width={600} placement='right' onClose={onClose} open={open}>
         {isAliasIDLoading || isAliasIdFetching ? (
-          <div>loading....</div>
+          <div>
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+          </div>
         ) : (
           <div>
             <p className='text-black underline font-bold pb-5 '>{dataAliasFoldersId?.name}</p>
@@ -281,9 +285,7 @@ const AliasFolder = () => {
             Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved. <br />
             Design by thanhdo
           </div>
-          <div>
-            {/* <Pagination pageSize={32} queryConfig={queryConfig} /> */}
-          </div>
+          <div>{/* <Pagination pageSize={32} queryConfig={queryConfig} /> */}</div>
         </Footer>
       </div>
     </div>

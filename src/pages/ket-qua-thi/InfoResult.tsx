@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Form, Input, Skeleton, Table, Tooltip } from 'antd'
 import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Footer } from 'antd/es/layout/layout'
@@ -14,6 +14,7 @@ const InfoResult: React.FC = () => {
   const { profile } = useContext(AppContext)
   const queryConfig = useQueryConfig()
   const navigate = useNavigate()
+  const [isCheck, setIsCheck] = useState('0')
   const [queryParameters] = useSearchParams()
   const dataisCheckQuery: string | null = queryParameters.get('isCheck')
   const pageQuery: string | null = queryParameters.get('page')
@@ -40,6 +41,14 @@ const InfoResult: React.FC = () => {
     isCheck: items.isCheck
   }))
 
+  useEffect(() => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        isCheck: isCheck
+      }).toString()
+    })
+  }, [isCheck, navigate])
   const columns = [
     {
       title: 'Tên Bài Thi',
@@ -150,7 +159,7 @@ const InfoResult: React.FC = () => {
           </Form>
         </div>
         <div className='flex justify-between items-center'>
-          <div className=' w-[250px] px-3 mb-6 md:mb-0'>
+          <div className='w-[250px] px-3 mb-6 md:mb-0'>
             <label className='block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2' htmlFor='grid-state'>
               Trạng Thái
             </label>
@@ -158,15 +167,8 @@ const InfoResult: React.FC = () => {
               <select
                 className='block appearance-none w-full bg-white-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
                 id='grid-state'
-                onChange={(event) => {
-                  const selectedValue = event.target.value
-                  navigate({
-                    search: createSearchParams({
-                      ...queryConfig,
-                      isCheck: selectedValue
-                    }).toString()
-                  })
-                }}
+                value={isCheck}
+                onChange={(event) => setIsCheck(event.target.value)}
               >
                 <option value='0'>Chưa chấm</option>
                 <option value='1'>Đã chấm</option>

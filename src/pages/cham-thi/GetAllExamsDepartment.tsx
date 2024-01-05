@@ -1,7 +1,7 @@
 import { Button, DatePicker, Divider, Form, Skeleton, Table } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { Footer } from 'antd/es/layout/layout'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useGetMakingExamsDepartMentQuery } from '~/apis/making/makingExamDepartment'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
@@ -10,7 +10,7 @@ const GetAllExamsDepartment = () => {
   const idCate = localStorage.getItem('idCategories')
   const { id } = useParams()
   const aliasFolder = location.pathname.includes(`examiner-Exams`)
-
+  const [isCheck, setIsCheck] = useState('0')
   const [queryParameters] = useSearchParams()
   const queryConfig = useQueryConfig()
   const dataPageQuery: string | null = queryParameters.get('marking')
@@ -124,6 +124,14 @@ const GetAllExamsDepartment = () => {
     //   }).toString()
     // })
   }
+  useEffect(() => {
+    navigate({
+      search: createSearchParams({
+        ...queryConfig,
+        marking: isCheck
+      }).toString()
+    })
+  }, [isCheck, navigate])
   if (isFetching || isLoading)
     return (
       <div>
@@ -158,15 +166,8 @@ const GetAllExamsDepartment = () => {
             <select
               className='block appearance-none w-full bg-white-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
               id='grid-state'
-              onChange={(event) => {
-                const selectedValue = event.target.value
-                navigate({
-                  search: createSearchParams({
-                    ...queryConfig,
-                    marking: selectedValue
-                  }).toString()
-                })
-              }}
+              value={isCheck}
+              onChange={(event) => setIsCheck(event.target.value)}
             >
               <option value='0'>Chưa chấm</option>
               <option value='1'>Đã chấm</option>

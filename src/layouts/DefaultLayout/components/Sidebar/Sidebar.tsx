@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useRef, useState } from 'react'
 import { BarsIcon } from '~/components'
-import { Menu, Tooltip } from 'antd'
+import { Menu, Skeleton, Tooltip } from 'antd'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { items, itemsUser, settingsSystem, settingsSystemLogs } from './components'
 import { AiFillHome } from 'react-icons/ai'
@@ -19,15 +19,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
   const url = import.meta.env.VITE_API
   const { pathname } = useLocation()
   const { profile } = useContext(AppContext)
-  const navigate = useNavigate()
-  const [dataTask, setDataTask] = useState<any[]>([])
   const trigger = useRef<any>(null)
-  const [checkMenu, setCheckMenu] = useState<boolean>(false)
   const {
     data: dataTaskRole,
     isLoading: taskLoading,
     isFetching: isTaskFetching
-  } = useGetTaskRoleForUserQuery(profile?.role)
+  } = useGetTaskRoleForUserQuery(profile?.role as string)
   const sidebar = useRef<any>(null)
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
@@ -58,27 +55,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
       document.querySelector('body')?.classList.remove('sidebar-expanded')
     }
   }, [sidebarExpanded])
-  useEffect(() => {
-    fetch(`${url}users/${profile?._id}`)
-      .then((res: any) => res.json())
-      .then((data: any) => {
-        setDataTask(data)
-        // const demo = data.user.role.tasks.some(
-        //   ({ _id, task, path, role }: { _id: string; task: string; path: string; role: string }) => {
-        //     const lastSlashIndex = pathname.lastIndexOf('/')
-        //     if (pathname.includes('edit')) {
-        //       const modifiedUrl = pathname.substring(0, lastSlashIndex)
-        //     } else {
-        //     }
-        //     path.includes(pathname)
-        //   }
-        // )
-        if (checkMenu == false) {
-          // navigate('*')
-        }
-      })
-  }, [pathname])
-  if (taskLoading || isTaskFetching) return <p>loading......</p>
+  if (taskLoading || isTaskFetching)
+    return (
+      <div>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    )
   return (
     <aside
       ref={sidebar}
@@ -98,7 +83,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
             </NavLink>
           </Tooltip>
         </span>
-        <button
+        {/* <button
           ref={trigger}
           onClick={() => setSidebarOpen(!sidebarOpen)}
           aria-controls='sidebar'
@@ -106,7 +91,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, textUi, checkInfo }: SidebarProp
           className=''
         >
           <BarsIcon />
-        </button>
+        </button> */}
       </div>
       {/* <!-- SIDEBAR HEADER --> */}
       <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>

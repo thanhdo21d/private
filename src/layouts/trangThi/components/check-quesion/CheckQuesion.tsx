@@ -1,4 +1,4 @@
-import { Avatar, message } from 'antd'
+import { Avatar, Skeleton, message } from 'antd'
 import { Footer, Header } from 'antd/es/layout/layout'
 import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -47,7 +47,15 @@ const CheckQuesion = () => {
       message.error('error')
     }
   }
-  if (isLoadingDetails || isFetchingDetails) return <p>loading.........</p>
+  if (isLoadingDetails || isFetchingDetails)
+    return (
+      <div>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    )
   return (
     <div>
       <div>

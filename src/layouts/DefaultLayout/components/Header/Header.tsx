@@ -84,7 +84,7 @@ const Header = (props: { sidebarOpen: string | boolean | undefined; setSidebarOp
           </ul>
 
           {/* <!-- User Area --> */}
-          <DropdownUser />
+          <DropdownUser color={false} />
         </div>
       </div>
     </header>

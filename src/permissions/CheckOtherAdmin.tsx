@@ -1,4 +1,4 @@
-import { Result } from 'antd'
+import { Result, Skeleton } from 'antd'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { result } from 'lodash'
@@ -35,7 +35,15 @@ const CheckOtherAdmin = () => {
     }
     fetchData()
   }, [id, profile?._id, uri, profile?.role])
-  if (loading) return <p>loading....</p>
+  if (loading)
+    return (
+      <p>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </p>
+    )
   return permissions ? (
     <Outlet />
   ) : (

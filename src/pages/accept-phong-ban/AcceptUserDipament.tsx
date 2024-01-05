@@ -4,13 +4,14 @@ import { PiKeyReturnFill } from 'react-icons/pi'
 import { Button } from '~/components'
 import { motion } from 'framer-motion'
 import fadeIn from '~/utils/animation/variant'
-import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AppContext } from '~/contexts/app.contexts'
 import { IDepartmentType } from '~/types/department/department.type'
 import { useGetAllCategoriesDepartmentQuery } from '~/apis/category/categories'
 import { Footer } from 'antd/es/layout/layout'
 import Pagination from '../roles/Pagination'
 import useQueryConfig from '~/hooks/configPagination/useQueryConfig'
+import { Skeleton } from 'antd'
 const AcceptUserDipament = () => {
   const queryConfig = useQueryConfig()
   const [queryParameters] = useSearchParams()
@@ -26,19 +27,17 @@ const AcceptUserDipament = () => {
     limit: datalimitQueryChange || 6,
     search: search || ''
   })
-  const dataPageQuery: string | null = queryParameters.get('department')
   const { t } = useTranslation(['header'])
   const { profile } = useContext(AppContext)
   const navigate = useNavigate()
-  const handelGoon = () => {
-    if (dataPageQuery != null) {
-      navigate(`/choose-exam/${dataPageQuery}`)
-    } else {
-      alert('Vui Lòng Chọn Phòng Ban')
-      return false
-    }
-  }
-  if (isGetCategoriesDepartmentLoading || isFetching) return <p>loading...........</p>
+  if (isGetCategoriesDepartmentLoading || isFetching)
+    return (
+      <div>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    )
   return (
     <div className='relative'>
       <div>
@@ -69,13 +68,7 @@ const AcceptUserDipament = () => {
                         <div className='flex justify-center items-center' key={items._id}>
                           <div
                             className='w-full h-[45px]  hover:bg-warning border border-[#ccc] cursor-pointer bg-bodydark flex justify-center shadow-2xl rounded-md items-center  hover:text-white font-medium hover:scale-105 '
-                            onClick={() =>
-                              navigate({
-                                search: createSearchParams({
-                                  department: items._id
-                                }).toString()
-                              })
-                            }
+                            onClick={() => navigate(`/choose-exam/${items._id}`)}
                           >
                             {items.name}
                           </div>
@@ -85,16 +78,6 @@ const AcceptUserDipament = () => {
                   </div>
                 </div>
                 <div className='w-full absolute  bottom-0 '>
-                  <div className=''>
-                    <Button
-                      styleClass='bg-success flex m-auto hover:bg-danger  w-[80%] active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none mb-1 ease-linear transition-all duration-150'
-                      type='button'
-                      onClick={handelGoon}
-                    >
-                      {t('product.enter_bt')}
-                      <PiKeyReturnFill />
-                    </Button>
-                  </div>
                   <Footer className='mt-5  flex justify-between dark:bg-black '>
                     <div className='text-md font-semibold text-center dark:text-white'>
                       Copyright © 2023 DMVN/IS-APPLICATION. All rights reserved.

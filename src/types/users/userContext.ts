@@ -7,12 +7,14 @@ export interface IuserContext {
   username: string
   code: string
   address: string
-  role: {
-    name: string
-    status: string
-    updatedAt: string
-    adminDepartMent: any
-  }
+  role:
+    | {
+        name: string
+        status: string
+        updatedAt: string
+        adminDepartMent: any
+      }
+    | string
   transcript: []
   updatedAt: string
 }

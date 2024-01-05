@@ -178,7 +178,9 @@ const TakingExam = () => {
       render: (status: string) => {
         return (
           <p className={`${status == '1' ? 'font-bold text-xl text-danger' : 'font-bold text-xl text-success'}`}>
-            {status == '1' ? 'Tạm dừng' : 'Đang thi'}
+            {status == '1' && 'Tạm dừng'}
+            {status == '0' && 'Đang thi'}
+            {status == '2' && 'Đã nộp bài'}
           </p>
         )
       }

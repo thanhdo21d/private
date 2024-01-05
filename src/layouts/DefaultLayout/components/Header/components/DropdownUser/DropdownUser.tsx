@@ -10,7 +10,7 @@ import exmasLogo from '../../../../../../assets/exam (2).png'
 import { useGetIdUserQuery } from '~/apis/user/user.api'
 import { Skeleton } from 'antd'
 import { useCheckExaminerQuery } from '~/apis/examSetting/examSetting'
-const DropdownUser = () => {
+const DropdownUser = ({ color }: { color: boolean }) => {
   const navigate = useNavigate()
   const { profile, reset } = useContext(AppContext)
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -56,7 +56,9 @@ const DropdownUser = () => {
     <div className='relative'>
       <Link ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='flex items-center gap-4' to='#'>
         <span className='lg:block hidden text-right'>
-          <span className='dark:text-white block text-sm font-medium text-black'>{profile?.email}</span>
+          <span className={`dark:text-white block text-sm font-medium ${color ? 'text-white' : 'text-black'}`}>
+            {profile?.email}
+          </span>
           <span className='flex items-center gap-6 float-right'>
             <span className='block text-xl font-medium underline'>{dataUser?.user?.role?.name}</span>
             <span className='block text-xl font-bold text-danger'>{profile?.code}</span>
@@ -71,11 +73,11 @@ const DropdownUser = () => {
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
-        className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
-          dropdownOpen === true ? 'block' : 'hidden'
-        }`}
+        className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke ${
+          !color ? 'bg-white' : 'bg-black bg-opacity-50'
+        } shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen === true ? 'block' : 'hidden'}`}
       >
-        <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark'>
+        <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark '>
           <li>
             <Link
               to='/user-info/profile'
@@ -88,7 +90,7 @@ const DropdownUser = () => {
           {dataUser?.user?.role?.name !== 'Staff' && (
             <button>
               <Link
-                to='/admin/dashboard'
+                to='/admin/de-kho'
                 className='flex items-center  gap-3.5  text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
               >
                 <SettingIcon />

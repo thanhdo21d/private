@@ -10,6 +10,7 @@ import { removeProfileFromLS } from '~/utils/utils'
 import styles from './header.module.css' // Import CSS module
 import { AppContext } from '~/contexts/app.contexts'
 import { useTranslation } from 'react-i18next'
+import { DropdownUser } from '~/layouts/DefaultLayout/components/Header/components'
 
 const Header = () => {
   const [scroll, setScroll] = useState(false)
@@ -87,14 +88,14 @@ const Header = () => {
                 </span>
               </div>
 
-              <div className=''>
+              {/* <div className=''>
                 <p className='text-md font-medium'>
                   <span className='pr-2'>{t('product.hello_user')} </span>{' '}
                   <span className='text-danger font-bold text-xl'>{profile?.username}</span>{' '}
                 </p>
-              </div>
+              </div> */}
               <div className='cursor-pointer   pl-2 '>
-                <p className='text-md font-medium '>
+                {/* <p className='text-md font-medium '>
                   <Tooltip placement='leftTop' title={t('product.navigate_profile')}>
                     <Popconfirm
                       title={t('product.user_info')}
@@ -111,7 +112,8 @@ const Header = () => {
                       <RxAvatar className='text-[40px] hover:bg-warning' />
                     </Popconfirm>
                   </Tooltip>
-                </p>
+                </p> */}
+                <DropdownUser color={true}/>
               </div>
             </div>
           </div>

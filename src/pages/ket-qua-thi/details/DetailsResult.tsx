@@ -1,4 +1,4 @@
-import { Badge, Descriptions, Divider, Drawer, Image, Popconfirm, Table, Tooltip } from 'antd'
+import { Badge, Descriptions, Divider, Drawer, Image, Popconfirm, Skeleton, Table, Tooltip } from 'antd'
 import React, { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '~/components'
@@ -200,7 +200,15 @@ const DetailsResult = () => {
       }
     }
   ]
-  if (isFetching || isLoading) return <p>loading......</p>
+  if (isFetching || isLoading)
+    return (
+      <p>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </p>
+    )
   return (
     <div>
       <Drawer

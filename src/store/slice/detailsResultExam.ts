@@ -1,6 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-const initialState = {
+interface IintialValue {
+  status: boolean
+  indexResult: string | number
+}
+const initialState: IintialValue = {
   status: false,
   indexResult: 0
 }

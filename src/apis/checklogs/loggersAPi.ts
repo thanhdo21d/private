@@ -19,7 +19,7 @@ const loggersAPI = createApi({
   }),
   tagTypes: ['Loggers'],
   endpoints: (builder) => ({
-    getAllLoggers: builder.query<any[], any>({
+    getAllLoggers: builder.query<any, any>({
       query: ({ page, limit, startDate, endDate, search }) => {
         return {
           url: '/query-loggers',

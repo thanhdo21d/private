@@ -87,7 +87,7 @@ const UserProfile = () => {
                     <input
                       disabled
                       id='email'
-                      className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full'
+                      className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full cursor-not-allowed'
                       type='email'
                       defaultValue={profile?.code}
                     />
@@ -100,7 +100,7 @@ const UserProfile = () => {
                       <input
                         disabled
                         id='username'
-                        className='border-1 border-[#ccc] rounded-r px-4 py-2 w-full'
+                        className='border-1 border-[#ccc] rounded-r px-4 py-2 w-full cursor-not-allowed'
                         type='text'
                         defaultValue={profile?.username}
                       />
@@ -113,7 +113,7 @@ const UserProfile = () => {
                     <input
                       disabled
                       id='email'
-                      className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full'
+                      className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full cursor-not-allowed'
                       type='email'
                       defaultValue={profile?.email}
                     />
@@ -125,7 +125,19 @@ const UserProfile = () => {
                     <input
                       disabled
                       id='email'
-                      className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full'
+                      className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full cursor-not-allowed'
+                      type='email'
+                      defaultValue={dataUser?.user?.role?.name}
+                    />
+                  </div>
+                  <div className='pb-4'>
+                    <label htmlFor='about' className='font-semibold text-gray-700 block pb-1'>
+                      Phòng ban
+                    </label>
+                    <input
+                      disabled
+                      id='email'
+                      className='border-1 border-[#ccc]  rounded-r px-4 py-2 w-full cursor-not-allowed'
                       type='email'
                       defaultValue={dataUser?.user?.role?.name}
                     />

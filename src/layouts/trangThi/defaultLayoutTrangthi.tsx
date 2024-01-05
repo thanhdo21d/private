@@ -11,6 +11,7 @@ import Cookies from 'js-cookie'
 import { AppContext } from '~/contexts/app.contexts'
 import { removeProfileFromLS } from '~/utils/utils'
 import { useGetIdBannersQuery } from '~/apis/banner/banner.api'
+import { DropdownUser } from '../DefaultLayout/components/Header/components'
 const DefaultLayoutTrangthi = () => {
   const { data: dataBannerID, isFetching } = useGetIdBannersQuery('652ccbbabef876631483308b')
   const { profile, reset } = useContext(AppContext)
@@ -26,12 +27,6 @@ const DefaultLayoutTrangthi = () => {
       removeProfileFromLS()
       navigate('/login')
     }
-  }
-  const confirm = () => {
-    navigate('/user-info')
-  }
-  const cancel = () => {
-    return
   }
   const changeLanguage = (lng: 'en' | 'vi') => {
     Cookies.set('language', lng)
@@ -79,13 +74,13 @@ const DefaultLayoutTrangthi = () => {
         </div>
 
         <div className=''>
-          <p className='text-md font-medium'>
+          {/* <p className='text-md font-medium'>
             <span className='pr-2'>{t('product.hello_user')} </span>{' '}
             <span className='text-danger font-bold text-xl'>{profile?.username}</span>{' '}
-          </p>
+          </p> */}
         </div>
         <div className='cursor-pointer   pl-2 '>
-          <p className='text-md font-medium '>
+          {/* <p className='text-md font-medium '>
             <Tooltip placement='leftTop' title={t('product.navigate_profile')}>
               <Popconfirm
                 title={t('product.user_info')}
@@ -102,7 +97,8 @@ const DefaultLayoutTrangthi = () => {
                 <RxAvatar className='text-[40px] hover:bg-warning' />
               </Popconfirm>
             </Tooltip>
-          </p>
+          </p> */}
+          <DropdownUser color={true} />
         </div>
       </div>
       {/*  */}
@@ -112,4 +108,4 @@ const DefaultLayoutTrangthi = () => {
     </section>
   )
 }
-export default React.memo(DefaultLayoutTrangthi)
+export default DefaultLayoutTrangthi

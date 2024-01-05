@@ -5,7 +5,7 @@ import detailsIcons from '../../../assets/file.png'
 import cancel from '../../../assets/close.png'
 import excelExport from '../../../assets/images/logo/excel2-svgrepo-com.svg'
 import { Button } from '~/components'
-import { DatePicker, Divider, Drawer, Empty, Input, InputNumber, Modal, Space, Table } from 'antd'
+import { DatePicker, Divider, Drawer, Empty, Input, InputNumber, Modal, Skeleton, Space, Table } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { useGetCategoriesDepartmentsQuery } from '~/apis/category/categories'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -271,7 +271,15 @@ const CreateExams = () => {
       })
   }, [idHistory, keepCreating, dataHistoryExams])
   const { RangePicker } = DatePicker
-  if (isHistoryFetch || isFetching || isHistoryLoading || isLoading) return <p>loading.........</p>
+  if (isHistoryFetch || isFetching || isHistoryLoading || isLoading)
+    return (
+      <p>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </p>
+    )
   return (
     <>
       <Divider orientation='left'>Create Exams</Divider>

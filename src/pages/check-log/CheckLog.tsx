@@ -266,7 +266,7 @@ const CheckLog = () => {
           <Skeleton />
         </div>
       ) : (
-        <Table className='mt-5' dataSource={dataSource} columns={columns} pagination={false} />
+        <Table className='mt-5' dataSource={dataSource} columns={columns} pagination={false} bordered />
       )}
       <div>
         <Footer className='mt-5 flex justify-between dark:bg-black '>

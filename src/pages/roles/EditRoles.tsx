@@ -28,6 +28,8 @@ const EditRoles: React.FC = () => {
     id: id as string,
     search: ''
   })
+  console.log(taskRoleData, 'aaa')
+  console.log(roleData, 'abc')
   const [addTaskRole] = useAddTaskRoleMutation()
   const [selectedOption, setSelectedOption] = useState('')
   const [updateRoles, { isLoading: isUpdateLoading }] = useUpdateRoleMutation()
@@ -90,7 +92,7 @@ const EditRoles: React.FC = () => {
           }
           toastService.success('Roles updated successfully')
           setTimeout(() => {
-            // window.location.reload()
+            window.location.reload()
           }, 450)
         })
         .catch(() => toastService.error('Error updating roles'))
@@ -214,7 +216,7 @@ const EditRoles: React.FC = () => {
                               value={`reject_${_id}`}
                               checked={selectedOption === `reject_${_id}`}
                               onChange={handleOptionChange}
-                              className='cursor-pointer'
+                              className={`cursor-pointer ${checkData !== true ? 'bg-danger' : ''}`}
                             />
                             <label
                               className='pl-5 text-danger !text-xl cursor-pointer font-semibold'
